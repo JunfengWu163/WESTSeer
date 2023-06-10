@@ -15,4 +15,9 @@ There is also CiteSpace, which is excellent for visualising the current hot spot
 There are four main modules of the program: the data collector (OpenAlex.cpp and OpenAlex.h) module collects data from OpenAlex, the data storage module (ResearchScope.cpp and ResearchScope.h) maintains the database for the collected data and the intermediate results of the analysis, the topic trend analysis module (AETT.cpp and AETT.h) finds influential innovative publications and their emerging topics, the topic inspection module (ResearchTopic.cpp and ResearchTopic.h) analyses an emerging topic's current stat and predicts its trend.
 
 ## 5. Development Environment
-CodeBlocks with TDM GCC x64 Toolchain. Unzip lib.zip.* before development.
+CodeBlocks with TDM GCC x64 Toolchain. Unzip lib.zip.* before development. If dialogs are not shown in the Resources explorer, execute the following commands in the script console of CodeBlocks (under the View menu):
+
+WxsRecoverWxsFile(_( "wxDialog wxs=\"wxsmith/LogDialog.wxs\" src=\"LogDialog.cpp\" hdr=\"LogDialog.h\" name=\"LogDialog\" language=\"CPP\" "));
+WxsRecoverWxsFile(_( "wxDialog wxs=\"wxsmith/SettingsDialog.wxs\" src=\"SettingsDialog.cpp\" hdr=\"SettingsDialog.h\" name=\"SettingsDialog\" language=\"CPP\" "));
+WxsRecoverWxsFile(_( "wxDialog wxs=\"wxsmith/OpenAlexImportDialog.wxs\" src=\"OpenAlexImportDialog.cpp\" hdr=\"OpenAlexImportDialog.h\" name=\"OpenAlexImportDialog\" language=\"CPP\" "));
+WxsRecoverWxsFile(_( "wxDialog wxs=\"wxsmith/SQLDialog.wxs\" src=\"SQLDialog.cpp\" hdr=\"SQLDialog.h\" name=\"SQLDialog\" language=\"CPP\" "));
