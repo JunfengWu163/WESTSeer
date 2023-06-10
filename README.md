@@ -9,10 +9,10 @@ Since widely known specialties are usually already explored, the exploration sho
 ## 3. Comparison of Existing Computer Programs
 There are some programs based on the RPYS method (e.g., CR Explorer), but RPYS is retrospective, i.e., only good for looking backward in time. The exploration should focusing on looking forward in time instead.
 
-There is also CiteSeer, which is excellent for visualising the current hot spots of the research scope, but the hot spots are in the present, and aiming the research to a hot spot will typically leads to working on a mature specialty where the main research problems have already been well answered; CiteSeer also has a burst detection for detecting the increasingly hot papers, but the increasing hotness of a paper have many reasons, not always due to an emerging topic. The exploration should guarantee the results are emerging-topic relevent.
+There is also CiteSpace, which is excellent for visualising the current hot spots of the research scope, but the hot spots are in the present, and aiming the research to a hot spot will typically leads to working on a mature specialty where the main research problems have already been well answered; CiteSeer also has a burst detection for detecting the increasingly hot papers, but the increasing hotness of a paper have many reasons, not always due to an emerging topic. The exploration should guarantee the results are emerging-topic relevent.
 
 ## 4. Outline of the Design
 There are four main modules of the program: the data collector (OpenAlex.cpp and OpenAlex.h) module collects data from OpenAlex, the data storage module (ResearchScope.cpp and ResearchScope.h) maintains the database for the collected data and the intermediate results of the analysis, the topic trend analysis module (AETT.cpp and AETT.h) finds influential innovative publications and their emerging topics, the topic inspection module (ResearchTopic.cpp and ResearchTopic.h) analyses an emerging topic's current stat and predicts its trend.
 
 ## 5. Development Environment
-CodeBlocks with TDM GCC x64 Toolchain.
+CodeBlocks with TDM GCC x64 Toolchain. Unzip lib.zip.* before development.

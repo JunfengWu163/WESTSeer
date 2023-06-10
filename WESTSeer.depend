@@ -1,12 +1,12 @@
 # depslib dependency file v1.0
-1686425185 source:d:\c++\westseer\resource.rc
+1686429858 source:d:\c++\westseer\resource.rc
 	"wx/msw/wx.rc"
 
-1676295939 d:\c++\westseer\include\wx\msw\wx.rc
+1686429858 d:\c++\westseer\include\wx\msw\wx.rc
 	<windows.h>
 	"wx/msw/rcdefs.h"
 
-1676295939 d:\c++\westseer\include\wx\msw\rcdefs.h
+1686429858 d:\c++\westseer\include\wx\msw\rcdefs.h
 
 1686424327 source:d:\c++\westseer\westseerapp.cpp
 	"WESTSeerApp.h"
