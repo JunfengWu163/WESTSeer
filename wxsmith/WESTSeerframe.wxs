@@ -2,7 +2,7 @@
 <wxsmith>
 	<object class="wxFrame" name="WESTSeerFrame">
 		<title>Worldwide Emerging Scientific Topic Seer </title>
-		<icon>D:\C++\WESTSeer2.0\westseer-logo.ico</icon>
+		<icon>westseer-logo.ico</icon>
 		<id_arg>0</id_arg>
 		<object class="wxFlexGridSizer" variable="FlexGridSizer1" member="no">
 			<cols>1</cols>
