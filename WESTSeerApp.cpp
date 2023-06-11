@@ -22,10 +22,16 @@
 IMPLEMENT_APP(WESTSeerApp);
 
 wxFileConfig *WESTSeerApp::_fileConfig = NULL;
+wxFFileLog *WESTSeerApp::_log = NULL;
 
 wxFileConfig *WESTSeerApp::getFileConfig()
 {
     return _fileConfig;
+}
+
+void WESTSeerApp::FlushLog()
+{
+    _log->Flush();
 }
 
 bool WESTSeerApp::OnInit()
@@ -44,6 +50,21 @@ bool WESTSeerApp::OnInit()
 
 	// start logging
 	wxString logFileName(wxFileName(appDir, "log.txt").GetFullPath());
+	if (wxFileExists(logFileName))
+    {
+        wxString oldLogFileName1(wxFileName(appDir, "log.old.1.txt").GetFullPath());
+        if (wxFileExists(oldLogFileName1))
+        {
+            wxString oldLogFileName2(wxFileName(appDir, "log.old.2.txt").GetFullPath());
+            if (wxFileExists(oldLogFileName2))
+            {
+                wxString oldLogFileName3(wxFileName(appDir, "log.old.3.txt").GetFullPath());
+                wxRenameFile(oldLogFileName2, oldLogFileName3);
+            }
+            wxRenameFile(oldLogFileName1, oldLogFileName2);
+        }
+        wxRenameFile(logFileName, oldLogFileName1);
+    }
     _log = new wxFFileLog(logFileName);
     if (_log->IsLogFileOK())
     {
@@ -105,6 +126,7 @@ int WESTSeerApp::OnExit()
         wxLog::SetActiveTarget(NULL);
         delete _logChain;
         delete _log;
+        _log = NULL;
 	}
 	wxConfigBase::Set(NULL);
 	return 0;

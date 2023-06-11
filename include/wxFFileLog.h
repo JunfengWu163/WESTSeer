@@ -88,34 +88,10 @@ private:
     wxFFile  m_logFile;
 };
 
-inline void logError(std::string s)
-{
-    wxString t(s);
-    wxLogError(t);
-}
-
-inline void logWarning(std::string s)
-{
-    wxString t(s);
-    wxLogWarning(t);
-}
-
-inline void logMessage(std::string s)
-{
-    wxString t(s);
-    wxLogMessage(t);
-}
-
-inline void logVerbose(std::string s)
-{
-    wxString t(s);
-    wxLogVerbose(t);
-}
-
-inline void logDebug(std::string s)
-{
-    wxString t(s);
-    wxLogDebug(t);
-}
+#define logError wxLogError
+#define logWarning wxLogWarning
+#define logVerbose wxLogVerbose
+#define logDebug wxLogDebug
+#define logMessage wxLogMessage
 
 #endif // WXFFILELOG_H_INCLUDED

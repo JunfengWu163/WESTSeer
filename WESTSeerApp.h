@@ -20,9 +20,10 @@ class WESTSeerApp : public wxApp
         virtual bool OnInit();
         virtual int OnExit();
         static wxFileConfig *getFileConfig();
+        static void FlushLog();
     private:
         static wxFileConfig *_fileConfig;
-        wxFFileLog *_log;
+        static wxFFileLog *_log;
         wxLogChain *_logChain;
 };
 

@@ -1,4 +1,15 @@
 #include "SQLDialog.h"
+#include <algorithm>
+#include <stdexcept>
+#include <string>
+#include <vector>
+#include <map>
+#include <StringProcessing.h>
+#include <sqlite3.h>
+#include <time.h>
+#include <GeneralConfig.h>
+#include <wxFFileLog.h>
+#include <CallbackData.h>
 
 //(*InternalHeaders(SQLDialog)
 #include <wx/intl.h>
@@ -45,7 +56,7 @@ SQLDialog::SQLDialog(wxWindow* parent,wxWindowID id,const wxPoint& pos,const wxS
 	ButtonExecute = new wxButton(this, ID_BUTTON1, _("Execute"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON1"));
 	FlexGridSizer2->Add(ButtonExecute, 1, wxALL|wxEXPAND, 5);
 	FlexGridSizer1->Add(FlexGridSizer2, 1, wxALL|wxEXPAND, 5);
-	ListCtrlResults = new wxListCtrl(this, ID_LISTCTRL1, wxDefaultPosition, wxDefaultSize, wxLC_LIST, wxDefaultValidator, _T("ID_LISTCTRL1"));
+	ListCtrlResults = new wxListCtrl(this, ID_LISTCTRL1, wxDefaultPosition, wxDefaultSize, wxLC_REPORT|wxVSCROLL|wxHSCROLL, wxDefaultValidator, _T("ID_LISTCTRL1"));
 	FlexGridSizer1->Add(ListCtrlResults, 1, wxALL|wxEXPAND, 5);
 	FlexGridSizer3 = new wxFlexGridSizer(0, 3, 0, 0);
 	FlexGridSizer3->AddGrowableCol(1);
@@ -67,6 +78,8 @@ SQLDialog::SQLDialog(wxWindow* parent,wxWindowID id,const wxPoint& pos,const wxS
 	SetSizer(FlexGridSizer1);
 	SetSizer(FlexGridSizer1);
 	Layout();
+
+	Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&SQLDialog::OnButtonExecuteClick);
 	//*)
 }
 
@@ -76,3 +89,62 @@ SQLDialog::~SQLDialog()
 	//*)
 }
 
+void SQLDialog::OnButtonExecuteClick(wxCommandEvent& event)
+{
+    ListCtrlResults->ClearAll();
+    ListCtrlResults->DeleteAllColumns();
+
+    GeneralConfig config;
+
+    sqlite3 *db = NULL;
+    int rc = sqlite3_open(config.getDatabase().c_str(), &db);
+    if (rc != SQLITE_OK)
+    {
+        ListCtrlResults->AppendColumn("error", wxLIST_FORMAT_LEFT, 600);
+        wxString strError = wxString::Format("Cannot open database at location %d", config.getDatabase().c_str());
+        logError(strError);
+        ListCtrlResults->InsertItem(0, strError);
+        return;
+    }
+
+    CallbackData data;
+    char *errorMessage = NULL;
+    rc = sqlite3_exec(db, TextCtrlSQL->GetValue().ToAscii(), sqliteCallback, &data, &errorMessage);
+    if (rc == SQLITE_OK)
+    {
+        if (data.results.size() > 0)
+        {
+            std::vector<std::string> columns;
+            for (auto keyToValue: data.results[0])
+            {
+                columns.push_back(keyToValue.first);
+                ListCtrlResults->AppendColumn(keyToValue.first);
+            }
+            if (columns.size() > 0)
+            {
+                for (auto result: data.results)
+                {
+                    long idxItem = ListCtrlResults->InsertItem(0, result[columns[0]]);
+                    for (size_t i = 1; i < columns.size(); i++)
+                    {
+                        ListCtrlResults->SetItem(idxItem, i, result[columns[i]]);
+                    }
+                }
+            }
+        }
+        else
+        {
+            ListCtrlResults->AppendColumn("Message", wxLIST_FORMAT_LEFT, 600);
+            wxString strMessage("No results found");
+            ListCtrlResults->InsertItem(0, strMessage);
+        }
+    }
+    else
+    {
+        ListCtrlResults->AppendColumn("error", wxLIST_FORMAT_LEFT, 600);
+        logError(errorMessage);
+        ListCtrlResults->InsertItem(0, errorMessage);
+    }
+    sqlite3_close(db);
+    return;
+}

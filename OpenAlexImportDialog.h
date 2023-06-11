@@ -3,6 +3,7 @@
 #include <ProgressReporter.h>
 #include <Publication.h>
 #include <vector>
+#include <OpenAlex.h>
 
 //(*Headers(OpenAlexImportDialog)
 #include <wx/button.h>
@@ -22,6 +23,8 @@ class OpenAlexImportDialog: public wxDialog
 		OpenAlexImportDialog(wxWindow* parent,wxWindowID id=wxID_ANY);
 		virtual ~OpenAlexImportDialog();
 
+		OpenAlex *_openAlex;
+
 		//(*Declarations(OpenAlexImportDialog)
 		wxButton* ButtonCancel;
 		wxButton* ButtonGetSamples;
@@ -29,12 +32,12 @@ class OpenAlexImportDialog: public wxDialog
 		wxChoice* ChoiceKeywordPair;
 		wxGauge* GaugeSamplingProgress;
 		wxListCtrl* ListCtrlSamples;
+		wxStaticText* StaticText1;
 		wxStaticText* StaticText2;
 		wxStaticText* StaticText3;
 		wxStaticText* StaticText4;
 		wxStaticText* StaticText5;
 		wxStaticText* StaticText6;
-		wxStaticText* StaticText7;
 		wxStaticText* StaticTextSamplingPrompt;
 		wxTextCtrl* TextCtrlKeywords1;
 		wxTextCtrl* TextCtrlKeywords2;
@@ -55,9 +58,9 @@ class OpenAlexImportDialog: public wxDialog
 		static const long ID_STATICTEXT6;
 		static const long ID_STATICTEXT7;
 		static const long ID_CHOICE1;
-		static const long ID_LISTCTRL1;
-		static const long ID_STATICTEXT8;
-		static const long ID_TEXTCTRL4;
+		static const long ID_LISTCTRL2;
+		static const long ID_STATICTEXT1;
+		static const long ID_TEXTCTRL1;
 		static const long ID_BUTTON3;
 		static const long ID_BUTTON4;
 		//*)
@@ -72,6 +75,8 @@ class OpenAlexImportDialog: public wxDialog
 		void OnChoiceKeywordPairSelect(wxCommandEvent& event);
 		void OnListCtrlSamplesItemSelect(wxListEvent& event);
 		void OnTextCtrlEmailText(wxCommandEvent& event);
+		void OnTextCtrlKeywords2Text(wxCommandEvent& event);
+		void OnTextCtrlKeywords1Text(wxCommandEvent& event);
 		//*)
 
 		DECLARE_EVENT_TABLE()
@@ -87,17 +92,44 @@ class OpenAlexImportDialog: public wxDialog
 		class MyProgressReporter: public ProgressReporter
 		{
             private:
-                wxGauge *_gauge;
+                OpenAlexImportDialog * _dlg;
 
             public:
-                MyProgressReporter(wxGauge *gauge)
+                MyProgressReporter(OpenAlexImportDialog * dlg)
                 {
-                    _gauge = gauge;
-                    _gauge->SetRange(100);
+                    _dlg = dlg;
+                    _dlg->GaugeSamplingProgress->SetRange(100);
                 }
                 virtual void report(const char *taskName, int taskId, int numTasks, int taskProgress)
                 {
-                    _gauge->SetValue((100 * taskId + taskProgress) / numTasks);
+                    int progress = (100 * taskId + taskProgress) / numTasks;
+                    if (strcmp(taskName, "Done") == 0 || strcmp(taskName, "Cancelled") == 0)
+                    {
+                        _dlg->TextCtrlKeywords1->Enable();
+                        _dlg->TextCtrlKeywords2->Enable();
+                        _dlg->ButtonGetSamples->Enable();
+                        _dlg->ButtonOK->Enable();
+                        _dlg->ChoiceKeywordPair->Enable();
+                        _dlg->ListCtrlSamples->Enable();
+                        if (strcmp(taskName, "Done") == 0)
+                        {
+                            _dlg->_samples = _dlg->_openAlex->samples();
+                            const ResearchScope &scope = _dlg->_openAlex->scope();
+                            int n = scope.numCombinations();
+                            for (int i = 0; i < n; i++)
+                            {
+                                _dlg->_keywordPairs.push_back(scope.getCombination(i));
+                                _dlg->ChoiceKeywordPair->Append(scope.getCombination(i));
+                            }
+                            if (n > 0)
+                            {
+                                _dlg->ChoiceKeywordPair->SetSelection(0);
+                                _dlg->showSamples(0);
+                            }
+                        }
+                    }
+                    _dlg->GaugeSamplingProgress->SetValue(progress);
+                    _dlg->StaticTextSamplingPrompt->SetLabel(wxString::Format("%d\%", progress));
                 }
 		} *_progressReporter;
 };

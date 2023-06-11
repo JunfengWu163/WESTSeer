@@ -11,8 +11,7 @@
 #include <httplib.h>
 
 OpenAlex::OpenAlex(const std::string email, const std::string path,
-                   const std::string kws1, const std::string kws2,
-                   ProgressReporter *progressReporter) : _scope(path, kws1, kws2)
+                   const std::string kws1, const std::string kws2) : _scope(path, kws1, kws2)
 {
     _email = email;
     std::time_t t = std::time(0);   // get time now
@@ -20,9 +19,6 @@ OpenAlex::OpenAlex(const std::string email, const std::string path,
     _y2 = now->tm_year + 1900;
     _y1 = _y2 - 5;
     _y0 = _y1 - 25;
-    _progressReporter = progressReporter;
-    _cancelled.store(false);
-    _downloadThread = NULL;
 
     int numCombs = _scope.numCombinations();
     for (int y = _y2 - 1; y >= _y0; y--)
@@ -46,26 +42,38 @@ OpenAlex::OpenAlex(const std::string email, const std::string path,
         _urls.push_back(yUrls);
     }
     _samples.resize(numCombs);
-
-    if (!_scope.init())
-    {
-        _error = "Cannot init scope.";
-    }
+    _scope.init();
 }
 
 OpenAlex::~OpenAlex()
 {
-    cancel();
-    if (_downloadThread != NULL)
-    {
-        _downloadThread->join();
-        delete _downloadThread;
-    }
 }
 
-void OpenAlex::cancel()
+bool OpenAlex::finished()
 {
-    _cancelled.store(true);
+    int numCombs = _scope.numCombinations();
+    for (int y = _y2 - 1; y >= _y0; y--)
+    {
+        for (int i = 0; i < numCombs; i++)
+        {
+            if (!_scope.load(i, y))
+                return false;
+        }
+    }
+    return true;
+}
+
+const char *OpenAlex::name()
+{
+    return "Collect Data from OpenAlex";
+}
+
+int OpenAlex::numSteps()
+{
+    if (_urls.size() > 0)
+        return _urls.size() * _urls[0].second.size();
+    else
+        return 0;
 }
 
 int getResultCount(const nlohmann::json& response)
@@ -101,100 +109,143 @@ std::string getNextCursor(const nlohmann::json& response)
     return nextCursor;
 }
 
-void OpenAlex::download(bool samplesOnly)
+void OpenAlex::doStep(int stepId)
 {
-    _samplesOnly = samplesOnly;
-    _downloadThread = new std::thread([this]()
+    int numCombs = _scope.numCombinations();
+    int i = stepId / numCombs;
+    int j = stepId % numCombs;
+    int y = _urls[i].first;
+    if (_scope.load(j, y) || (i > 0 && _samplesOnly))
+        return;
+
+    std::vector<std::string> urlsOfY = _urls[i].second;
+    std::string url = urlsOfY[j];
+    std::map<uint64_t, Publication> pubsOfY;
+
+    // get first page of this download url
+    httplib::Client client("http://api.openalex.org");
+    auto res = client.Get(url + "&cursor=*");
+    while (res->status != 200)
     {
-
         if (_cancelled.load() == true)
-        {
             return;
-        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        res = client.Get(url + "&cursor=*");
+    }
+    if (_cancelled.load() == true)
+        return;
 
-        httplib::Client client("http://api.openalex.org");
-        for (auto &yUrls : _urls)
+    // parse the response on the first page
+    nlohmann::json response = nlohmann::json::parse(res->body);
+    std::string nextCursor = getNextCursor(response);
+    auto resultsOnPage = response["results"];
+    int numResultsOnPage = resultsOnPage.size();
+    _samples[j].clear();
+    if (numResultsOnPage > 0)
+    {
+        for (auto &result: resultsOnPage)
         {
-            int y = yUrls.first;
-            std::vector<std::string> urlsOfY = yUrls.second;
-            for (size_t idxComb = 0; idxComb < urlsOfY.size(); idxComb++)
-            {
-                std::string url = urlsOfY[idxComb];
-                std::map<uint64_t, Publication> pubsOfY;
-
-                // get first page of this download url
-                auto res = client.Get(url + "&cursor=*");
-                while (res->status != 200)
-                {
-                    if (_cancelled.load() == true)
-                        break;
-                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-                    res = client.Get(url + "&cursor=*");
-                }
-                if (_cancelled.load() == true)
-                    break;
-
-                // parse the response on the first page
-                nlohmann::json response = nlohmann::json::parse(res->body);
-                std::string nextCursor = getNextCursor(response);
-                auto resultsOnPage = response["results"];
-                int numResultsOnPage = resultsOnPage.size();
-                _samples[idxComb].clear();
-                if (numResultsOnPage > 0)
-                {
-                    for (auto &result: resultsOnPage)
-                    {
-                        Publication pub(result);
-                        pubsOfY[pub.id()] = pub;
-                        _samples[idxComb].push_back(pub);
-                    }
-                }
-
-                if (_samplesOnly)
-                    break;
-
-                // repeatedly get next page
-                while (nextCursor != "")
-                {
-                    // request next page
-                    std::string pageURL = url + "&cursor=" + nextCursor;
-                    res = client.Get(pageURL);
-                    while (res->status != 200)
-                    {
-                        if (_cancelled.load() == true)
-                            break;
-                        std::this_thread::sleep_for(std::chrono::milliseconds(100));
-                        res = client.Get(pageURL);
-                    }
-                    if (_cancelled.load() == true)
-                        break;
-
-                    // parse the page
-                    response = nlohmann::json::parse(res->body);
-                    nextCursor = getNextCursor(response);
-                    resultsOnPage = response["results"];
-                    for (auto &result: resultsOnPage)
-                    {
-                        Publication pub(result);
-                        pubsOfY[pub.id()] = pub;
-                    }
-                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-                }
-
-                if (_cancelled.load() == true)
-                {
-                    break;
-                }
-
-                if (!_scope.save(idxComb, y, pubsOfY))
-                {
-                    _error = "Cannot save publications.";
-                }
-            }
-
-            if (_samplesOnly)
-                break;
+            Publication pub(result);
+            pubsOfY[pub.id()] = pub;
+            _samples[j].push_back(pub);
         }
-    });
+    }
+
+    if (_samplesOnly)
+        return;
+
+    // repeatedly get next page
+    while (nextCursor != "")
+    {
+        // request next page
+        std::string pageURL = url + "&cursor=" + nextCursor;
+        res = client.Get(pageURL);
+        while (res->status != 200)
+        {
+            if (_cancelled.load() == true)
+                return;
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            res = client.Get(pageURL);
+        }
+        if (_cancelled.load() == true)
+            return;
+
+        // parse the page
+        response = nlohmann::json::parse(res->body);
+        nextCursor = getNextCursor(response);
+        resultsOnPage = response["results"];
+        for (auto &result: resultsOnPage)
+        {
+            Publication pub(result);
+            pubsOfY[pub.id()] = pub;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
+
+    _scope.save(j, y, pubsOfY);
+
+    if (_cancelled.load() == true)
+    {
+        return;
+    }
+
+     // get references
+     std::map<uint64_t, Publication> refsOfY;
+     std::vector<uint64_t> newRefIds;
+     if (_scope.getMissingRefIds(j, y, newRefIds))
+     {
+        // get new references
+		for (size_t idxRef0 = 0; idxRef0 < newRefIds.size(); idxRef0 += 50)
+        {
+			size_t idxRef1 = idxRef0 + 50;
+			if (idxRef1 > newRefIds.size())
+			{
+				idxRef1 = newRefIds.size();
+			}
+
+			// create url
+			std::stringstream ssURL;
+			ssURL << "/works?mailto=" << _email
+				<< "&per-page=200&filter=language:en,ids.openalex:"
+				<< Publication::convertId(newRefIds[idxRef0], 'W');
+			for (size_t idxRef = idxRef0 + 1; idxRef < idxRef1; idxRef++)
+            {
+				ssURL << "|" << Publication::convertId(newRefIds[idxRef], 'W');
+			}
+			std::string url = ssURL.str();
+
+			// make request
+			res = client.Get(url);
+			while (res->status != 200)
+			{
+				if (_cancelled.load() == true)
+                {
+					return;
+				}
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+				res = client.Get(url);
+			}
+			if (_cancelled.load() == true)
+            {
+				return;
+			}
+
+			// parse response
+			response = nlohmann::json::parse(res->body);
+			auto resultsOfResponse = response["results"];
+			for (auto result: resultsOfResponse) {
+                Publication refPub(result);
+				refsOfY[refPub.id()] = refPub;
+			}
+
+			if (_cancelled.load() == true)
+            {
+				return;
+			}
+		}
+		_scope.save(refsOfY);
+		_scope.save(j, y);
+     }
 }
+
 

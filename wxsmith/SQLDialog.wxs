@@ -31,6 +31,7 @@
 					<object class="sizeritem">
 						<object class="wxButton" name="ID_BUTTON1" variable="ButtonExecute" member="yes">
 							<label>Execute</label>
+							<handler function="OnButtonExecuteClick" entry="EVT_BUTTON" />
 						</object>
 						<flag>wxALL|wxEXPAND</flag>
 						<border>5</border>
@@ -42,7 +43,9 @@
 				<option>1</option>
 			</object>
 			<object class="sizeritem">
-				<object class="wxListCtrl" name="ID_LISTCTRL1" variable="ListCtrlResults" member="yes" />
+				<object class="wxListCtrl" name="ID_LISTCTRL1" variable="ListCtrlResults" member="yes">
+					<style>wxLC_REPORT|wxVSCROLL|wxHSCROLL</style>
+				</object>
 				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
 				<option>1</option>

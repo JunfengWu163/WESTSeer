@@ -182,6 +182,26 @@
 					<label>&amp;Test</label>
 				</object>
 			</object>
+			<object class="wxMenu" variable="Menu4" member="yes">
+				<label>&amp;Debug</label>
+				<object class="wxMenuItem" name="ID_MENUITEM6" variable="MenuItemSQL" member="yes">
+					<label>&amp;SQL</label>
+					<handler function="OnMenuItemSQLSelected" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="ID_MENUITEM7" variable="MenuItemLog" member="yes">
+					<label>&amp;Log</label>
+					<handler function="OnMenuItemLogSelected" entry="EVT_MENU" />
+				</object>
+				<object class="wxMenuItem" name="ID_MENUITEM8" variable="MenuItemForward" member="yes">
+					<label>&amp;Recollect Data</label>
+				</object>
+				<object class="wxMenuItem" name="ID_MENUITEM9" variable="MenuItemBackward" member="yes">
+					<label>&amp;Analyse Again</label>
+				</object>
+				<object class="wxMenuItem" name="ID_MENUITEM10" variable="MenuItem5" member="yes">
+					<label>&amp;Back to Last Task</label>
+				</object>
+			</object>
 			<object class="wxMenu" variable="Menu2" member="no">
 				<label>&amp;Help</label>
 				<object class="wxMenuItem" name="idMenuAbout" variable="MenuItem2" member="no">

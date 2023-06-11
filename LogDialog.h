@@ -40,6 +40,7 @@ class LogDialog: public wxDialog
 	private:
 
 		//(*Handlers(LogDialog)
+		void OnInit(wxInitDialogEvent& event);
 		//*)
 
 		DECLARE_EVENT_TABLE()

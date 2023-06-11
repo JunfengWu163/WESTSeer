@@ -16,6 +16,7 @@
 					<Add option="-g" />
 					<Add option="-D__WXDEBUG__" />
 					<Add directory="lib/gcc_dll/mswud" />
+					<Add directory="include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="lib/gcc_dll/mswud" />
@@ -37,6 +38,7 @@
 				<Compiler>
 					<Add option="-O2" />
 					<Add directory="lib/gcc_dll/mswu" />
+					<Add directory="include" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="lib/gcc_dll/mswu" />
@@ -85,6 +87,8 @@
 		<Unit filename="WESTSeerApp.h" />
 		<Unit filename="WESTSeerMain.cpp" />
 		<Unit filename="WESTSeerMain.h" />
+		<Unit filename="include/AbstractTask.h" />
+		<Unit filename="include/CallbackData.h" />
 		<Unit filename="include/EmailValidator.h" />
 		<Unit filename="include/GeneralConfig.h" />
 		<Unit filename="include/LLMConfig.h" />
@@ -103,6 +107,8 @@
 		<Unit filename="resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="src/AbstractTask.cpp" />
+		<Unit filename="src/CallbackData.cpp" />
 		<Unit filename="src/EmailValidator.cpp" />
 		<Unit filename="src/GeneralConfig.cpp" />
 		<Unit filename="src/LLMConfig.cpp" />
@@ -128,6 +134,10 @@
 				<gui name="wxWidgets" src="WESTSeerApp.cpp" main="WESTSeerFrame" init_handlers="necessary" language="CPP" />
 				<resources>
 					<wxFrame wxs="wxsmith/WESTSeerframe.wxs" src="WESTSeerMain.cpp" hdr="WESTSeerMain.h" fwddecl="0" i18n="1" name="WESTSeerFrame" language="CPP" />
+					<wxDialog wxs="wxsmith/LogDialog.wxs" src="LogDialog.cpp" hdr="LogDialog.h" fwddecl="0" i18n="1" name="LogDialog" language="CPP" />
+					<wxDialog wxs="wxsmith/SettingsDialog.wxs" src="SettingsDialog.cpp" hdr="SettingsDialog.h" fwddecl="0" i18n="1" name="SettingsDialog" language="CPP" />
+					<wxDialog wxs="wxsmith/OpenAlexImportDialog.wxs" src="OpenAlexImportDialog.cpp" hdr="OpenAlexImportDialog.h" fwddecl="0" i18n="1" name="OpenAlexImportDialog" language="CPP" />
+					<wxDialog wxs="wxsmith/SQLDialog.wxs" src="SQLDialog.cpp" hdr="SQLDialog.h" fwddecl="0" i18n="1" name="SQLDialog" language="CPP" />
 				</resources>
 			</wxsmith>
 		</Extensions>

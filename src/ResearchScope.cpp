@@ -5,23 +5,8 @@
 #include <StringProcessing.h>
 #include <sqlite3.h>
 #include <time.h>
-
-struct CallbackData
-{
-    vector<map<string,string>> results;
-};
-
-int sqliteCallback(void *pData, int argc, char**argv, char**columnNames)
-{
-    CallbackData *data = (CallbackData *)pData;
-    map<string,string> result;
-    for (int i = 0; i < argc; i++)
-    {
-        result[columnNames[i]] = argv[i] ? argv[i] : "NULL";
-    }
-    data->results.push_back(result);
-    return argc;
-}
+#include <CallbackData.h>
+#include <wxFFileLog.h>
 
 std::vector<std::string> ResearchScope::getResearchScopes(const std::string path)
 {
@@ -29,7 +14,11 @@ std::vector<std::string> ResearchScope::getResearchScopes(const std::string path
     sqlite3 *db = NULL;
     int rc = sqlite3_open(path.c_str(), &db);
     if (rc != SQLITE_OK)
+    {
+        logError(wxT("Cannot open database at" + path));
         return results;
+    }
+
     const char *sql = "SELECT keywords FROM researchScopes ORDERY BY update_time ASC;";
     CallbackData data;
     char *errorMessage = NULL;
@@ -40,6 +29,10 @@ std::vector<std::string> ResearchScope::getResearchScopes(const std::string path
         {
             results.push_back(result["keywords"]);
         }
+    }
+    else
+    {
+        logError(errorMessage);
     }
     sqlite3_close(db);
     return results;
@@ -78,7 +71,10 @@ bool ResearchScope::storable()
     sqlite3 *db = NULL;
     int rc = sqlite3_open(_path.c_str(), &db);
     if (rc != SQLITE_OK)
+    {
+        logError(wxT("Cannot open database at" + _path));
         return false;
+    }
     char *errorMessage = NULL;
     const char*sqls[] =
     {
@@ -100,9 +96,15 @@ bool ResearchScope::storable()
         "ref_ids TEXT,"
         "PRIMARY KEY(combination,year));",
 
+        "CREATE TABLE IF NOT EXISTS openalex_tokens("
+        "combination TEXT,"
+        "year INTEGER,"
+        "update_time INTEGER,"
+        "PRIMARY KEY(combination,year));",
+
         "CREATE TABLE IF NOT EXISTS research_scopes("
         "keywords TEXT PRIMARY KEY,"
-        "combinations TEXT,",
+        "combinations TEXT,"
         "update_time INTEGER);",
 
         "CREATE TABLE IF NOT EXISTS pub_terms("
@@ -115,20 +117,21 @@ bool ResearchScope::storable()
         "year INTEGER,"
         "update_time INTEGER,"
         "terms TEXT,"
-        "PRIMARY_KEY(id,scope_keywords))",
+        "PRIMARY KEY(id,scope_keywords))",
 
         "CREATE TABLE IF NOT EXISTS scope_terms("
         "keywords TEXT,"
         "year INTEGER,"
         "update_time INTEGER,"
         "terms TEXT,"
-        "PRIMARY_KEY(keywords,year));",
+        "PRIMARY KEY(keywords,year));",
     };
     for (const char*sql: sqls)
     {
         rc = sqlite3_exec(db, sql, NULL, NULL, &errorMessage);
         if (rc != SQLITE_OK)
         {
+            logError(errorMessage);
             sqlite3_close(db);
             return false;
         }
@@ -181,12 +184,12 @@ std::string ResearchScope::getCombinations()
     return ss.str();
 }
 
-int ResearchScope::numCombinations()
+int ResearchScope::numCombinations() const
 {
     return _kws1.size() * _kws2.size();
 }
 
-std::string ResearchScope::getCombination(int i)
+std::string ResearchScope::getCombination(int i) const
 {
     int temp = i % numCombinations();
     int i1 = temp % _kws1.size();
@@ -206,7 +209,10 @@ bool ResearchScope::init()
     sqlite3 *db = NULL;
     int rc = sqlite3_open(_path.c_str(), &db);
     if (rc != SQLITE_OK)
+    {
+        logError(wxT("Cannot open database at" + _path));
         return false;
+    }
     CallbackData data;
     char *errorMessage = NULL;
 
@@ -215,13 +221,16 @@ bool ResearchScope::init()
     time_t t;
     time(&t);
     std::stringstream ss;
-    ss << "INSERT INTO research_scopes(keywords,combinations,update_time) VALUES('"
+    ss << "INSERT OR IGNORE INTO research_scopes(keywords,combinations,update_time) VALUES('"
        << keywords << "','" << combinations << "'," << (int)t
-       << ") WHERE NOT EXISTS (SELECT keywords FROM research_scopes WHERE keywords = '"
-       << keywords << "');";
+       << ");";
     std::string sql = ss.str();
     rc = sqlite3_exec(db, sql.c_str(), NULL, NULL, &errorMessage);
     sqlite3_close(db);
+    if (rc != SQLITE_OK)
+    {
+        logError(errorMessage);
+    }
     return rc == SQLITE_OK;
 }
 
@@ -239,6 +248,10 @@ bool ResearchScope::load(int idxComb, const int y, std::map<uint64_t, Publicatio
     ss << "SELECT combination, year, ids FROM openalex_queries"
        " WHERE combination = '" << getCombination(idxComb) << "' AND year = " << y << ";";
     rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
+    if (rc != SQLITE_OK)
+    {
+        logError(errorMessage);
+    }
     if (rc != SQLITE_OK || data.results.size() == 0)
     {
         sqlite3_close(db);
@@ -253,6 +266,7 @@ bool ResearchScope::load(int idxComb, const int y, std::map<uint64_t, Publicatio
     rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
     if (rc != SQLITE_OK)
     {
+        logError(errorMessage);
         sqlite3_close(db);
         return false;
     }
@@ -266,12 +280,41 @@ bool ResearchScope::load(int idxComb, const int y, std::map<uint64_t, Publicatio
     return true;
 }
 
-bool ResearchScope::save(const std::map<uint64_t, Publication> &pubs)
+bool ResearchScope::load(int idxComb, const int y)
 {
     sqlite3 *db = NULL;
     int rc = sqlite3_open(_path.c_str(), &db);
     if (rc != SQLITE_OK)
         return false;
+    CallbackData data;
+    char *errorMessage = NULL;
+
+    std::stringstream ss;
+    ss << "SELECT combination, year FROM openalex_tokens"
+       " WHERE combination = '" << getCombination(idxComb) << "' AND year = " << y << ";";
+    rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
+    if (rc != SQLITE_OK)
+    {
+        logError(errorMessage);
+    }
+    if (rc != SQLITE_OK || data.results.size() == 0)
+    {
+        sqlite3_close(db);
+        return false;
+    }
+    sqlite3_close(db);
+    return true;
+}
+
+bool ResearchScope::save(const std::map<uint64_t, Publication> &pubs)
+{
+    sqlite3 *db = NULL;
+    int rc = sqlite3_open(_path.c_str(), &db);
+    if (rc != SQLITE_OK)
+    {
+        logError(wxT("Cannot open database at" + _path));
+        return false;
+    }
     CallbackData data;
     char *errorMessage = NULL;
 
@@ -290,6 +333,7 @@ bool ResearchScope::save(const std::map<uint64_t, Publication> &pubs)
     rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
     if (rc != SQLITE_OK)
     {
+        logError(errorMessage);
         sqlite3_close(db);
         return false;
     }
@@ -344,6 +388,10 @@ bool ResearchScope::save(const std::map<uint64_t, Publication> &pubs)
     ss << ";";
 
     rc = sqlite3_exec(db, ss.str().c_str(), NULL, NULL, &errorMessage);
+    if (rc != SQLITE_OK)
+    {
+        logError(errorMessage);
+    }
     sqlite3_close(db);
     return rc == SQLITE_OK;
 }
@@ -355,7 +403,10 @@ bool ResearchScope::save(int idxComb, const int y, const std::map<uint64_t, Publ
     sqlite3 *db = NULL;
     int rc = sqlite3_open(_path.c_str(), &db);
     if (rc != SQLITE_OK)
+    {
+        logError(wxT("Cannot open database at" + _path));
         return false;
+    }
     CallbackData data;
     char *errorMessage = NULL;
 
@@ -393,7 +444,37 @@ bool ResearchScope::save(int idxComb, const int y, const std::map<uint64_t, Publ
     }
     ss << "');";
     rc = sqlite3_exec(db, ss.str().c_str(), NULL, NULL, &errorMessage);
+    if (rc != SQLITE_OK)
+    {
+        logError(errorMessage);
+    }
+    sqlite3_close(db);
+    return rc == SQLITE_OK;
+}
 
+bool ResearchScope::save(int idxComb, const int y)
+{
+    sqlite3 *db = NULL;
+    int rc = sqlite3_open(_path.c_str(), &db);
+    if (rc != SQLITE_OK)
+    {
+        logError(wxT("Cannot open database at" + _path));
+        return false;
+    }
+    CallbackData data;
+    char *errorMessage = NULL;
+
+    std::string combination = getCombination(idxComb);
+    time_t t;
+    time(&t);
+    std::stringstream ss;
+    ss << "INSERT INTO openalex_tokens(combination,year,update_time) VALUES ('"
+       << combination << "'," << y << "," << (int) t << ");";
+    rc = sqlite3_exec(db, ss.str().c_str(), NULL, NULL, &errorMessage);
+    if (rc != SQLITE_OK)
+    {
+        logError(errorMessage);
+    }
     sqlite3_close(db);
     return rc == SQLITE_OK;
 }
@@ -403,7 +484,10 @@ bool ResearchScope::getMissingRefIds(int idxComb, const int y, std::vector<uint6
     sqlite3 *db = NULL;
     int rc = sqlite3_open(_path.c_str(), &db);
     if (rc != SQLITE_OK)
+    {
+        logError(wxT("Cannot open database at" + _path));
         return false;
+    }
     CallbackData data;
     char *errorMessage = NULL;
 
@@ -413,6 +497,10 @@ bool ResearchScope::getMissingRefIds(int idxComb, const int y, std::vector<uint6
     ss << "SELECT combination, year, ref_ids FROM openalex_queries"
        " WHERE combination = '" << getCombination(idxComb) << "' AND year = " << y << ";";
     rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
+    if (rc != SQLITE_OK)
+    {
+        logError(errorMessage);
+    }
     if (rc != SQLITE_OK || data.results.size() == 0)
     {
         sqlite3_close(db);
@@ -432,6 +520,10 @@ bool ResearchScope::getMissingRefIds(int idxComb, const int y, std::vector<uint6
     data.results.clear();
     ss << "SELECT id FROM publications WHERE id IN (" << refIdsStr << ");";
     rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
+    if (rc != SQLITE_OK)
+    {
+        logError(errorMessage);
+    }
     if (rc != SQLITE_OK || data.results.size() == 0)
     {
         sqlite3_close(db);

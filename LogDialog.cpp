@@ -1,4 +1,8 @@
 #include "LogDialog.h"
+#include "WESTSeerApp.h"
+#include <GeneralConfig.h>
+#include <fstream>
+
 
 //(*InternalHeaders(LogDialog)
 #include <wx/intl.h>
@@ -52,7 +56,11 @@ LogDialog::LogDialog(wxWindow* parent,wxWindowID id)
 	SetSizer(FlexGridSizer1);
 	FlexGridSizer1->Fit(this);
 	FlexGridSizer1->SetSizeHints(this);
+
+	Connect(wxID_ANY,wxEVT_INIT_DIALOG,(wxObjectEventFunction)&LogDialog::OnInit);
 	//*)
+
+	ListCtrlLog->AppendColumn("Record", wxLIST_FORMAT_LEFT, 600);
 }
 
 LogDialog::~LogDialog()
@@ -61,3 +69,16 @@ LogDialog::~LogDialog()
 	//*)
 }
 
+
+
+void LogDialog::OnInit(wxInitDialogEvent& event)
+{
+    WESTSeerApp::FlushLog();
+    std::string line;
+    GeneralConfig config;
+    std::ifstream logFile(config.getLogFile());
+    while (std::getline(logFile, line))
+    {
+        ListCtrlLog->InsertItem(0, line);
+    }
+}

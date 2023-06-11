@@ -3,7 +3,7 @@
 #include <sstream>
 #include <map>
 
-uint64_t convertId(const std::string idString, const char chType)
+uint64_t Publication::convertId(const std::string idString, const char chType)
 {
     vector<string> idFields = splitString(idString, "/", false);
     if (idFields.size() == 0)
@@ -31,7 +31,7 @@ uint64_t convertId(const std::string idString, const char chType)
     return id;
 }
 
-string convertId(const uint64_t id, const char chType)
+string Publication::convertId(const uint64_t id, const char chType)
 {
     std::stringstream ss;
     std::string c;

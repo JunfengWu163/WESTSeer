@@ -46,6 +46,7 @@ class SQLDialog: public wxDialog
 	private:
 
 		//(*Handlers(SQLDialog)
+		void OnButtonExecuteClick(wxCommandEvent& event);
 		//*)
 
 		DECLARE_EVENT_TABLE()

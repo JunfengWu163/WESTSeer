@@ -37,6 +37,7 @@ class GeneralConfig
         void setBiterms(int value);
         void setTfirdf(double value);
         void setCitations(int value);
+        const std::string getLogFile();
 
     protected:
 

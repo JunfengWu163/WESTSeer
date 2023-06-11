@@ -76,3 +76,10 @@ void GeneralConfig::setCitations(int value)
     config->SetPath("/General");
     config->Write("Citations", _citations);
 }
+
+const std::string GeneralConfig::getLogFile()
+{
+    wxString appDir = wxStandardPaths::Get().GetUserLocalDataDir();
+    wxString logFileName(wxFileName(appDir, "log.txt").GetFullPath());
+    return logFileName.ToStdString();
+}

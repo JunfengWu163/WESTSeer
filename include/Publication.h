@@ -61,6 +61,8 @@ public:
     {
         return _refIds[i];
     }
+    static uint64_t convertId(const std::string idString, const char chType);
+    static string convertId(const uint64_t id, const char chType);
 
 protected:
 

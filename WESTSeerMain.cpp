@@ -10,6 +10,8 @@
 #include "WESTSeerMain.h"
 #include "OpenAlexImportDialog.h"
 #include "SettingsDialog.h"
+#include "SQLDialog.h"
+#include "LogDialog.h"
 #include <wx/msgdlg.h>
 
 //(*InternalHeaders(WESTSeerFrame)
@@ -71,6 +73,11 @@ const long WESTSeerFrame::ID_MENUITEM5 = wxNewId();
 const long WESTSeerFrame::idMenuQuit = wxNewId();
 const long WESTSeerFrame::ID_MENUITEM1 = wxNewId();
 const long WESTSeerFrame::ID_MENUITEM2 = wxNewId();
+const long WESTSeerFrame::ID_MENUITEM6 = wxNewId();
+const long WESTSeerFrame::ID_MENUITEM7 = wxNewId();
+const long WESTSeerFrame::ID_MENUITEM8 = wxNewId();
+const long WESTSeerFrame::ID_MENUITEM9 = wxNewId();
+const long WESTSeerFrame::ID_MENUITEM10 = wxNewId();
 const long WESTSeerFrame::idMenuAbout = wxNewId();
 const long WESTSeerFrame::ID_STATUSBAR1 = wxNewId();
 //*)
@@ -160,6 +167,18 @@ WESTSeerFrame::WESTSeerFrame(wxWindow* parent,wxWindowID id)
     MenuItem4 = new wxMenuItem(Menu3, ID_MENUITEM2, _("&Test"), wxEmptyString, wxITEM_NORMAL);
     Menu3->Append(MenuItem4);
     MenuBar1->Append(Menu3, _("&Mode"));
+    Menu4 = new wxMenu();
+    MenuItemSQL = new wxMenuItem(Menu4, ID_MENUITEM6, _("&SQL"), wxEmptyString, wxITEM_NORMAL);
+    Menu4->Append(MenuItemSQL);
+    MenuItemLog = new wxMenuItem(Menu4, ID_MENUITEM7, _("&Log"), wxEmptyString, wxITEM_NORMAL);
+    Menu4->Append(MenuItemLog);
+    MenuItemForward = new wxMenuItem(Menu4, ID_MENUITEM8, _("&Recollect Data"), wxEmptyString, wxITEM_NORMAL);
+    Menu4->Append(MenuItemForward);
+    MenuItemBackward = new wxMenuItem(Menu4, ID_MENUITEM9, _("&Analyse Again"), wxEmptyString, wxITEM_NORMAL);
+    Menu4->Append(MenuItemBackward);
+    MenuItem5 = new wxMenuItem(Menu4, ID_MENUITEM10, _("&Back to Last Task"), wxEmptyString, wxITEM_NORMAL);
+    Menu4->Append(MenuItem5);
+    MenuBar1->Append(Menu4, _("&Debug"));
     Menu2 = new wxMenu();
     MenuItem2 = new wxMenuItem(Menu2, idMenuAbout, _("&About\tF1"), _("Show info about this application"), wxITEM_NORMAL);
     Menu2->Append(MenuItem2);
@@ -177,6 +196,8 @@ WESTSeerFrame::WESTSeerFrame(wxWindow* parent,wxWindowID id)
     Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&WESTSeerFrame::OnButtonNewClick);
     Connect(ID_MENUITEM3,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnMenuItemOptionsSelected);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnQuit);
+    Connect(ID_MENUITEM6,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnMenuItemSQLSelected);
+    Connect(ID_MENUITEM7,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnMenuItemLogSelected);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnAbout);
     //*)
 }
@@ -210,6 +231,18 @@ void WESTSeerFrame::OnButtonNewClick(wxCommandEvent& event)
 
 void WESTSeerFrame::OnMenuItemOptionsSelected(wxCommandEvent& event)
 {
-    SettingsDialog dlg(NULL);
+    SettingsDialog dlg(this);
+    dlg.ShowModal();
+}
+
+void WESTSeerFrame::OnMenuItemSQLSelected(wxCommandEvent& event)
+{
+    SQLDialog dlg(this);
+    dlg.ShowModal();
+}
+
+void WESTSeerFrame::OnMenuItemLogSelected(wxCommandEvent& event)
+{
+    LogDialog dlg(this);
     dlg.ShowModal();
 }

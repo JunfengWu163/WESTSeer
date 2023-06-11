@@ -8,7 +8,7 @@
 
 1686429858 d:\c++\westseer\include\wx\msw\rcdefs.h
 
-1686429858 source:d:\c++\westseer\westseerapp.cpp
+1686439664 source:d:\c++\westseer\westseerapp.cpp
 	"WESTSeerApp.h"
 	<wx/stdpaths.h>
 	<wx/filefn.h>
@@ -18,7 +18,7 @@
 	"WESTSeerMain.h"
 	<wx/image.h>
 
-1686429858 d:\c++\westseer\westseerapp.h
+1686437976 d:\c++\westseer\westseerapp.h
 	<wx/app.h>
 	<wx/fileconf.h>
 	<wxFFileLog.h>
@@ -1573,7 +1573,7 @@
 	"wx/longlong.h"
 	"wx/file.h"
 
-1686429858 d:\c++\westseer\include\wxffilelog.h
+1686479498 d:\c++\westseer\include\wxffilelog.h
 	<string>
 	<wx/wx.h>
 	<wx/log.h>
@@ -2705,7 +2705,7 @@
 
 1686429858 d:\c++\westseer\include\wx\unix\stdpaths.h
 
-1686429858 d:\c++\westseer\include\generalconfig.h
+1686438344 d:\c++\westseer\include\generalconfig.h
 	<string>
 
 1686429858 d:\c++\westseer\settingsdialog.h
@@ -2825,7 +2825,7 @@
 	"wx/compositewin.h"
 	"wx/textctrl.h"
 
-1686429858 d:\c++\westseer\westseermain.h
+1686445765 d:\c++\westseer\westseermain.h
 	<wx/button.h>
 	<wx/choice.h>
 	<wx/frame.h>
@@ -2839,12 +2839,15 @@
 	<ProgressReporter.h>
 	<sstream>
 
-1686429858 source:d:\c++\westseer\logdialog.cpp
+1686439062 source:d:\c++\westseer\logdialog.cpp
 	"LogDialog.h"
+	"WESTSeerApp.h"
+	<GeneralConfig.h>
+	<fstream>
 	<wx/intl.h>
 	<wx/string.h>
 
-1686429858 d:\c++\westseer\logdialog.h
+1686437569 d:\c++\westseer\logdialog.h
 	<wx/button.h>
 	<wx/dialog.h>
 	<wx/listctrl.h>
@@ -2852,17 +2855,19 @@
 	<wx/stattext.h>
 	<wx/textctrl.h>
 
-1686429858 source:d:\c++\westseer\openaleximportdialog.cpp
+1686485064 source:d:\c++\westseer\openaleximportdialog.cpp
 	"OpenAlexImportDialog.h"
 	<EmailValidator.h>
+	<GeneralConfig.h>
 	<wx/msgdlg.h>
 	<wx/intl.h>
 	<wx/string.h>
 
-1686429858 d:\c++\westseer\openaleximportdialog.h
+1686485887 d:\c++\westseer\openaleximportdialog.h
 	<ProgressReporter.h>
 	<Publication.h>
 	<vector>
+	<OpenAlex.h>
 	<wx/button.h>
 	<wx/choice.h>
 	<wx/dialog.h>
@@ -2874,7 +2879,7 @@
 
 1686429858 d:\c++\westseer\include\progressreporter.h
 
-1686429858 d:\c++\westseer\include\publication.h
+1686476993 d:\c++\westseer\include\publication.h
 	<string>
 	<vector>
 	<set>
@@ -3332,12 +3337,23 @@
 	<wx/intl.h>
 	<wx/string.h>
 
-1686429858 source:d:\c++\westseer\sqldialog.cpp
+1686479555 source:d:\c++\westseer\sqldialog.cpp
 	"SQLDialog.h"
+	<algorithm>
+	<stdexcept>
+	<string>
+	<vector>
+	<map>
+	<StringProcessing.h>
+	<sqlite3.h>
+	<time.h>
+	<GeneralConfig.h>
+	<wxFFileLog.h>
+	<CallbackData.h>
 	<wx/intl.h>
 	<wx/string.h>
 
-1686429858 d:\c++\westseer\sqldialog.h
+1686434946 d:\c++\westseer\sqldialog.h
 	<wx/button.h>
 	<wx/dialog.h>
 	<wx/listctrl.h>
@@ -3348,7 +3364,7 @@
 1686429858 source:d:\c++\westseer\src\emailvalidator.cpp
 	"EmailValidator.h"
 
-1686429858 source:d:\c++\westseer\src\openalex.cpp
+1686482941 source:d:\c++\westseer\src\openalex.cpp
 	<winsock.h>
 	<OpenAlex.h>
 	<StringProcessing.h>
@@ -3359,20 +3375,18 @@
 	<algorithm>
 	<httplib.h>
 
-1686429858 d:\c++\westseer\include\openalex.h
+1686483359 d:\c++\westseer\include\openalex.h
 	<string>
-	<thread>
 	<vector>
 	<map>
 	<set>
-	<mutex>
-	<atomic>
 	<stdint.h>
+	<AbstractTask.h>
 	<Publication.h>
 	<ResearchScope.h>
 	<ProgressReporter.h>
 
-1686429858 d:\c++\westseer\include\researchscope.h
+1686484140 d:\c++\westseer\include\researchscope.h
 	<cstdint>
 	<string>
 	<vector>
@@ -3445,13 +3459,13 @@
 1686429858 source:d:\c++\westseer\src\progressreporter.cpp
 	"ProgressReporter.h"
 
-1686429858 source:d:\c++\westseer\src\publication.cpp
+1686476932 source:d:\c++\westseer\src\publication.cpp
 	"Publication.h"
 	"StringProcessing.h"
 	<sstream>
 	<map>
 
-1686429858 source:d:\c++\westseer\src\researchscope.cpp
+1686484168 source:d:\c++\westseer\src\researchscope.cpp
 	"ResearchScope.h"
 	<algorithm>
 	<stdexcept>
@@ -3459,6 +3473,8 @@
 	<StringProcessing.h>
 	<sqlite3.h>
 	<time.h>
+	<CallbackData.h>
+	<wxFFileLog.h>
 
 1686429858 source:d:\c++\westseer\src\sqlite3.c
 	<vxWorks.h>
@@ -3534,10 +3550,12 @@
 	<regex>
 	<map>
 
-1686432977 source:d:\c++\westseer\westseermain.cpp
+1686445773 source:d:\c++\westseer\westseermain.cpp
 	"WESTSeerMain.h"
 	"OpenAlexImportDialog.h"
 	"SettingsDialog.h"
+	"SQLDialog.h"
+	"LogDialog.h"
 	<wx/msgdlg.h>
 	<wx/bitmap.h>
 	<wx/icon.h>
@@ -3545,7 +3563,7 @@
 	<wx/intl.h>
 	<wx/string.h>
 
-1686429858 source:d:\c++\westseer\src\generalconfig.cpp
+1686438801 source:d:\c++\westseer\src\generalconfig.cpp
 	"GeneralConfig.h"
 	"../WESTSeerApp.h"
 
@@ -3568,4 +3586,21 @@
 1686429858 d:\c++\westseer\include\scopehistory.h
 	<string>
 	<vector>
+
+1686437058 d:\c++\westseer\include\callbackdata.h
+	<string>
+	<vector>
+	<map>
+
+1686481150 source:d:\c++\westseer\src\callbackdata.cpp
+	"CallbackData.h"
+
+1686484506 source:d:\c++\westseer\src\abstracttask.cpp
+	"AbstractTask.h"
+
+1686475659 d:\c++\westseer\include\abstracttask.h
+	<cstdlib>
+	<thread>
+	<atomic>
+	<ProgressReporter.h>
 
