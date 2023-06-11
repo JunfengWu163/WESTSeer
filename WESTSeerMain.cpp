@@ -225,7 +225,10 @@ void WESTSeerFrame::OnButtonNewClick(wxCommandEvent& event)
     OpenAlexImportDialog dlg(this, -1);
     if (dlg.ShowModal())
     {
-        wxMessageBox("OK");
+        if (dlg._openAlex != NULL)
+        {
+
+        }
     }
 }
 
