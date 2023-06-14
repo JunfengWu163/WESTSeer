@@ -205,6 +205,7 @@ WESTSeerFrame::WESTSeerFrame(wxWindow* parent,wxWindowID id)
     //*)
 
     _openAlex = NULL;
+    _progressReporter = new MyProgressReporter(GaugeOverall, GaugeStep, StatusBar1);
     GeneralConfig config;
     std::vector<std::string> scopes = ResearchScope::getResearchScopes(config.getDatabase());
     for (std::string scope: scopes)

@@ -24,7 +24,7 @@ std::vector<std::string> ResearchScope::getResearchScopes(const std::string path
     CallbackData data;
     char *errorMessage = NULL;
     logDebug(sql);
-    rc = sqlite3_exec(db, sql, sqliteCallback, &data, &errorMessage);
+    rc = sqlite3_exec(db, sql, CallbackData::sqliteCallback, &data, &errorMessage);
     if (rc == SQLITE_OK)
     {
         for (auto &result: data.results)
@@ -253,7 +253,7 @@ bool ResearchScope::load(int idxComb, const int y, std::map<uint64_t, Publicatio
         ss << "SELECT combination, year, ids FROM openalex_queries"
            " WHERE combination = '" << getCombination(idxComb) << "' AND year = " << y << ";";
         logDebug(ss.str().c_str());
-        rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
+        rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK)
         {
             logError(errorMessage);
@@ -273,7 +273,7 @@ bool ResearchScope::load(int idxComb, const int y, std::map<uint64_t, Publicatio
         ss << "SELECT id, year, title, abstract, source, language, authors, ref_ids FROM publications WHERE id in ("
            << strIds << ");";
         logDebug(ss.str().c_str());
-        rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
+        rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK)
         {
             logError(errorMessage);
@@ -305,7 +305,7 @@ bool ResearchScope::load(int idxComb, const int y)
     ss << "SELECT combination, year FROM openalex_tokens"
        " WHERE combination = '" << getCombination(idxComb) << "' AND year = " << y << ";";
     logDebug(ss.str().c_str());
-    rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
+    rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
     if (rc != SQLITE_OK)
     {
         logError(errorMessage);
@@ -345,7 +345,7 @@ bool ResearchScope::save(const std::map<uint64_t, Publication> &pubs)
         }
         ss << ");";
         logDebug(ss.str().c_str());
-        rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
+        rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK)
         {
             logError(errorMessage);
@@ -525,7 +525,7 @@ bool ResearchScope::getMissingRefIds(int idxComb, const int y, std::vector<uint6
         ss << "SELECT combination, year, ref_ids FROM openalex_queries"
            " WHERE combination = '" << getCombination(idxComb) << "' AND year = " << y << ";";
         logDebug(ss.str().c_str());
-        rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
+        rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK)
         {
             logError(errorMessage);
@@ -551,7 +551,7 @@ bool ResearchScope::getMissingRefIds(int idxComb, const int y, std::vector<uint6
         data.results.clear();
         ss << "SELECT id FROM publications WHERE id IN (" << refIdsStr << ");";
         logDebug(ss.str().c_str());
-        rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
+        rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         logDebug(ss.str().c_str());
         if (rc != SQLITE_OK)
         {

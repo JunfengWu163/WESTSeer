@@ -139,7 +139,7 @@ class WESTSeerFrame: public wxFrame
                     ss2 << taskProgress << "%";
                     _statusBar->SetStatusText(ss2.str().c_str(), 2);
                     _gaugeStep->SetValue(taskProgress);
-                    _gaugeOverall->SetValue(100 * (taskId + 1) / numTasks);
+                    _gaugeOverall->SetValue(100 * taskId / numTasks);
                 }
         } *_progressReporter;
         OpenAlex *_openAlex;

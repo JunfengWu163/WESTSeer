@@ -8,15 +8,16 @@ using namespace std;
 class CallbackData
 {
     public:
-        CallbackData();
+        CallbackData(int n = 0);
         virtual ~CallbackData();
         vector<map<string,string>> results;
+        static int sqliteCallback(void *pData, int argc, char**argv, char**columnNames);
 
     protected:
 
     private:
+        int _n;
+        int _i;
 };
-
-int sqliteCallback(void *pData, int argc, char**argv, char**columnNames);
 
 #endif // CALLBACKDATA_H
