@@ -73,7 +73,7 @@ void AbstractTask::runAll()
                     task = task->_next;
                 }
                 if (_progressReporter != NULL)
-                    _progressReporter->report("Done", getNumTasks() - 1, getNumTasks(), 100);
+                    _progressReporter->report("Done", getNumTasks(), getNumTasks(), 0);
             });
     }
     else if (_next != NULL)
@@ -82,7 +82,7 @@ void AbstractTask::runAll()
     }
     else
     {
-        _progressReporter->report("Done", getTaskId(), getNumTasks(), 100);
+        _progressReporter->report("Done", getNumTasks(), getNumTasks(), 100);
     }
 }
 

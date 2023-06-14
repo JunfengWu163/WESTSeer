@@ -263,8 +263,8 @@ void OpenAlex::doStep(int stepId)
 			}
 		}
 		_scope.save(refsOfY);
-		_scope.save(j, y);
      }
+     _scope.save(j, y);
 }
 
 

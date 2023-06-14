@@ -1,8 +1,10 @@
 #include "CallbackData.h"
 
-CallbackData::CallbackData()
+CallbackData::CallbackData(int n)
 {
     //ctor
+    _n = n;
+    _i = 0;
 }
 
 CallbackData::~CallbackData()
@@ -10,7 +12,7 @@ CallbackData::~CallbackData()
     //dtor
 }
 
-int sqliteCallback(void *pData, int argc, char**argv, char**columnNames)
+int CallbackData::sqliteCallback(void *pData, int argc, char**argv, char**columnNames)
 {
     CallbackData *data = (CallbackData *)pData;
     map<string,string> result;
@@ -19,5 +21,16 @@ int sqliteCallback(void *pData, int argc, char**argv, char**columnNames)
         result[columnNames[i]] = argv[i] ? argv[i] : "NULL";
     }
     data->results.push_back(result);
-    return 0;
+    data->_i++;
+    if (data->_n >0)
+    {
+        if (data->_i < data->_n)
+            return 0;
+        else
+            return -1;
+    }
+    else
+    {
+        return 0;
+    }
 }

@@ -87,6 +87,7 @@
 		<Unit filename="WESTSeerApp.h" />
 		<Unit filename="WESTSeerMain.cpp" />
 		<Unit filename="WESTSeerMain.h" />
+		<Unit filename="include/AbstractMatcher.h" />
 		<Unit filename="include/AbstractTask.h" />
 		<Unit filename="include/CallbackData.h" />
 		<Unit filename="include/EmailValidator.h" />
@@ -97,7 +98,7 @@
 		<Unit filename="include/ProgressReporter.h" />
 		<Unit filename="include/Publication.h" />
 		<Unit filename="include/ResearchScope.h" />
-		<Unit filename="include/ScopeHistory.h" />
+		<Unit filename="include/StopWordMatcher.h" />
 		<Unit filename="include/StopWords.h" />
 		<Unit filename="include/StringProcessing.h" />
 		<Unit filename="include/httplib.h" />
@@ -107,6 +108,7 @@
 		<Unit filename="resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="src/AbstractMatcher.cpp" />
 		<Unit filename="src/AbstractTask.cpp" />
 		<Unit filename="src/CallbackData.cpp" />
 		<Unit filename="src/EmailValidator.cpp" />
@@ -117,7 +119,7 @@
 		<Unit filename="src/ProgressReporter.cpp" />
 		<Unit filename="src/Publication.cpp" />
 		<Unit filename="src/ResearchScope.cpp" />
-		<Unit filename="src/ScopeHistory.cpp" />
+		<Unit filename="src/StopWordMatcher.cpp" />
 		<Unit filename="src/StopWords.cpp" />
 		<Unit filename="src/StringProcessing.cpp" />
 		<Unit filename="src/sqlite3.c">
