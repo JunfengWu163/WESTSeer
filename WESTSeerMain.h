@@ -24,6 +24,7 @@
 //*)
 
 #include <ProgressReporter.h>
+#include <OpenAlex.h>
 #include <sstream>
 
 class WESTSeerFrame: public wxFrame
@@ -42,6 +43,7 @@ class WESTSeerFrame: public wxFrame
         void OnMenuItemOptionsSelected(wxCommandEvent& event);
         void OnMenuItemSQLSelected(wxCommandEvent& event);
         void OnMenuItemLogSelected(wxCommandEvent& event);
+        void OnChoiceScopeSelect(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(WESTSeerFrame)
@@ -140,6 +142,7 @@ class WESTSeerFrame: public wxFrame
                     _gaugeOverall->SetValue(100 * (taskId + 1) / numTasks);
                 }
         } *_progressReporter;
+        OpenAlex *_openAlex;
 };
 
 #endif // WESTSEERMAIN_H

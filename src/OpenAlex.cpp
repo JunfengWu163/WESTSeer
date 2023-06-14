@@ -3,6 +3,7 @@
 #endif // _WIN32
 #include <OpenAlex.h>
 #include <StringProcessing.h>
+#include <wxFFileLog.h>
 #include <ctime>
 #include <sstream>
 #include <regex>
@@ -10,10 +11,8 @@
 #include <algorithm>
 #include <httplib.h>
 
-OpenAlex::OpenAlex(const std::string email, const std::string path,
-                   const std::string kws1, const std::string kws2) : _scope(path, kws1, kws2)
+void OpenAlex::init()
 {
-    _email = email;
     std::time_t t = std::time(0);   // get time now
     std::tm* now = std::localtime(&t);
     _y2 = now->tm_year + 1900;
@@ -43,6 +42,20 @@ OpenAlex::OpenAlex(const std::string email, const std::string path,
     }
     _samples.resize(numCombs);
     _scope.init();
+    _samplesOnly = false;
+}
+
+OpenAlex::OpenAlex(const std::string email, const std::string path,
+                   const std::string kws1, const std::string kws2) : _scope(path, kws1, kws2)
+{
+    _email = email;
+    init();
+}
+
+OpenAlex::OpenAlex(const std::string email, const std::string path, const std::string kws): _scope(path, kws)
+{
+    _email = email;
+    init();
 }
 
 OpenAlex::~OpenAlex()
@@ -121,6 +134,7 @@ void OpenAlex::doStep(int stepId)
     std::vector<std::string> urlsOfY = _urls[i].second;
     std::string url = urlsOfY[j];
     std::map<uint64_t, Publication> pubsOfY;
+    logDebug(url.c_str());
 
     // get first page of this download url
     httplib::Client client("http://api.openalex.org");
@@ -136,6 +150,7 @@ void OpenAlex::doStep(int stepId)
         return;
 
     // parse the response on the first page
+    logDebug("parse the response on the first page");
     nlohmann::json response = nlohmann::json::parse(res->body);
     std::string nextCursor = getNextCursor(response);
     auto resultsOnPage = response["results"];
@@ -158,6 +173,7 @@ void OpenAlex::doStep(int stepId)
     while (nextCursor != "")
     {
         // request next page
+        logDebug("request next page");
         std::string pageURL = url + "&cursor=" + nextCursor;
         res = client.Get(pageURL);
         while (res->status != 200)
@@ -171,6 +187,7 @@ void OpenAlex::doStep(int stepId)
             return;
 
         // parse the page
+        logDebug("parse the page");
         response = nlohmann::json::parse(res->body);
         nextCursor = getNextCursor(response);
         resultsOnPage = response["results"];
@@ -182,6 +199,7 @@ void OpenAlex::doStep(int stepId)
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
 
+    logDebug("save");
     _scope.save(j, y, pubsOfY);
 
     if (_cancelled.load() == true)
@@ -190,6 +208,7 @@ void OpenAlex::doStep(int stepId)
     }
 
      // get references
+     logDebug("get references");
      std::map<uint64_t, Publication> refsOfY;
      std::vector<uint64_t> newRefIds;
      if (_scope.getMissingRefIds(j, y, newRefIds))

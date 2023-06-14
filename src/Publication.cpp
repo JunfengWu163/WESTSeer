@@ -2,6 +2,7 @@
 #include "StringProcessing.h"
 #include <sstream>
 #include <map>
+#include <cassert>
 
 uint64_t Publication::convertId(const std::string idString, const char chType)
 {
@@ -69,8 +70,14 @@ Publication::Publication(const Publication& another)
     _abstract = another._abstract;
     _source = another._source;
     _language = another._language;
-    _authors = another._authors;
-    _refIds = another._refIds;
+    for (auto author: another._authors)
+    {
+        _authors.push_back(author);
+    }
+    for (auto refId: another._refIds)
+    {
+        _refIds.push_back(refId);
+    }
 }
 
 Publication::~Publication()
@@ -119,18 +126,7 @@ void Publication::init(const json& jsonWork)
     if (jsonTitle != jsonWork.end()
             && jsonTitle.value().type() != json::value_t::null)
     {
-        _title = jsonTitle.value();
-        for (size_t i = 0; i < _title.size(); i++)
-        {
-            if (_title[i] == '\'')
-            {
-                _title[i] = '`';
-            }
-        }
-    }
-    else
-    {
-        _title = "";
+        _title = wxStr(jsonTitle.value());
     }
 
     // get abstract
@@ -152,18 +148,15 @@ void Publication::init(const json& jsonWork)
             }
         }
 
-        vector<string> abstractTokens(maxIndex + 1);
+        vector<string> abstractTokens;
+        abstractTokens.resize(maxIndex + 1);
         for (auto iter = index.begin(); iter != index.end(); iter++)
         {
             string s = iter->first;
             for (int i: iter->second)
             {
-                if (s == "\n")
-                    abstractTokens[i] = "$";
-                else if (s == "'")
-                    abstractTokens[i] = "`";
-                else
-                    abstractTokens[i] = s;
+                assert(i >= 0 && i <= maxIndex);
+                abstractTokens[i] = s;
             }
         }
 
@@ -174,11 +167,7 @@ void Publication::init(const json& jsonWork)
                 ss << " ";
             ss << abstractTokens[i];
         }
-        _abstract = ss.str();
-    }
-    else
-    {
-        _abstract = "";
+        _abstract = wxStr(ss.str());
     }
 
     // get source
@@ -194,7 +183,7 @@ void Publication::init(const json& jsonWork)
             if (jsonDN != jsonSo.value().end()
                     && jsonDN.value().type() == json::value_t::string)
             {
-                _source = jsonDN.value();
+                _source = wxStr(jsonDN.value());
             }
         }
     }
@@ -204,7 +193,7 @@ void Publication::init(const json& jsonWork)
     if (jsonLa != jsonWork.end()
             && jsonLa.value().type() != json::value_t::null)
     {
-        _language = jsonLa.value();
+        _language = wxStr(jsonLa.value());
     }
 
     // get authors
@@ -221,7 +210,7 @@ void Publication::init(const json& jsonWork)
             {
                 auto &author = au.value();
                 const auto dn = author.find("display_name");
-                if (dn != author.end())
+                if (dn != author.end() && dn.value().type() != json::value_t::null)
                 {
                     string authorName = dn.value();
                     if (authorName.find(",") != string::npos)
@@ -235,7 +224,7 @@ void Publication::init(const json& jsonWork)
                             authorName += fields[i];
                         }
                     }
-                    _authors.push_back(authorName);
+                    _authors.push_back(wxStr(authorName));
                 }
             }
         }
@@ -272,31 +261,31 @@ void Publication::init(const map<string,string>& work)
     auto keyToTitle = work.find("title");
     if (keyToTitle != work.end())
     {
-        _title = keyToTitle->second;
+        _title = allocateWStr(keyToTitle->second);
     }
 
     auto keyToAbstract = work.find("abstract");
     if (keyToAbstract != work.end())
     {
-        _abstract = keyToAbstract->second;
+        _abstract = allocateWStr(keyToAbstract->second);
     }
 
     auto keyToSource = work.find("source");
     if (keyToSource != work.end())
     {
-        _source = keyToSource->second;
+        _source = allocateWStr(keyToSource->second);
     }
 
     auto keyToLanguage = work.find("language");
     if (keyToLanguage != work.end())
     {
-        _language = keyToLanguage->second;
+        _language = allocateWStr(keyToLanguage->second);
     }
 
     auto keyToAuthors = work.find("authors");
     if (keyToAuthors != work.end())
     {
-        _authors = splitString(keyToAuthors->second, ",");
+        _authors = splitWString(keyToAuthors->second, ",");
     }
 
     auto keyToRefIds = work.find("ref_ids");
@@ -347,7 +336,7 @@ void Publication::writeWoS(std::ofstream &streamOut, const map<uint64_t, Publica
         streamOut << (iCR == 0 ? "CR ":"   ")
                   << (pubCR._authors.size() == 0 ? "no author":pubCR._authors[0])
                   << ", " << pubCR._year << ", "
-                  << (pubCR._title.size() == 0 ? "no title":pubCR._title);
+                  << pubCR._title;
     }
 
     streamOut << "PY " << _year << endl;

@@ -11,6 +11,7 @@
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
 #include <GeneralConfig.h>
+#include <AbstractTask.h>
 #include "SettingsDialog.h"
 #include <string>
 
@@ -117,15 +118,15 @@ bool WESTSeerApp::OnInit()
 
 int WESTSeerApp::OnExit()
 {
+    AbstractTask::finalize();
     if(_fileConfig) {
 		_fileConfig->Flush();
 		delete _fileConfig;
 		_fileConfig=NULL;
 	}
-	if (_log) {
+	if (_logChain) {
         wxLog::SetActiveTarget(NULL);
         delete _logChain;
-        delete _log;
         _log = NULL;
 	}
 	wxConfigBase::Set(NULL);

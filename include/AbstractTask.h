@@ -17,6 +17,7 @@ class AbstractTask
         void runAll();
         static void cancel();
         static void setProgressReporter(ProgressReporter *value);
+        static void finalize();
         inline void setPrev(AbstractTask *value)
         {
             _prev = value;

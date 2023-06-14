@@ -12,6 +12,33 @@ void removeCharsFromString(string &str, const char* charsToRemove)
     }
 }
 
+void replaceString(string& str, const string& oldStr, const string& newStr)
+{
+  string::size_type pos = 0u;
+  while((pos = str.find(oldStr, pos)) != string::npos){
+     str.replace(pos, oldStr.length(), newStr);
+     pos += newStr.length();
+  }
+}
+
+wchar_t *allocateWStr(const string& str)
+{
+    std::string t = str;
+    replaceString(t, "'", "`");
+    replaceString(t, "\n", " ");
+    std::wstring s(t.begin(), t.end());
+    return _wcsdup(s.c_str());
+}
+
+wxString wxStr(const string& str)
+{
+    std::string t = str;
+    replaceString(t, "'", "`");
+    replaceString(t, "\n", " ");
+    wxString s(t);
+    return s;
+}
+
 // trim from end of string (right)
 inline string& rtrim(string& s, const char* t)
 {
@@ -57,6 +84,17 @@ vector<string> splitString(string text, string delimiter, bool needTrimming)
     {
         return untrimmedElems;
     }
+}
+
+vector<wxString> splitWString(string text, string delimiter, bool needTrimming)
+{
+    vector<string> result1 = splitString(text, delimiter, needTrimming);
+    vector<wxString> result2;
+    for (auto r1: result1)
+    {
+        result2.push_back(wxStr(r1));
+    }
+    return result2;
 }
 
 size_t utf8_len(char src)

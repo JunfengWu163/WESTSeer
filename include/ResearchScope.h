@@ -12,6 +12,7 @@ class ResearchScope
         ResearchScope(const std::string path, const std::string kws1, const std::string kws2);
         ResearchScope(const std::string path, const std::string keywords);
         virtual ~ResearchScope();
+        std::string getKeywords() const;
         bool init();
         int numCombinations() const;
         std::string getCombination(int i) const;
@@ -26,7 +27,6 @@ class ResearchScope
 
     protected:
         bool storable();
-        std::string getKeywords();
         std::string getCombinations();
 
     private:

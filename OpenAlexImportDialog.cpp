@@ -23,8 +23,6 @@ const long OpenAlexImportDialog::ID_CHOICE1 = wxNewId();
 const long OpenAlexImportDialog::ID_LISTCTRL2 = wxNewId();
 const long OpenAlexImportDialog::ID_STATICTEXT1 = wxNewId();
 const long OpenAlexImportDialog::ID_TEXTCTRL1 = wxNewId();
-const long OpenAlexImportDialog::ID_BUTTON3 = wxNewId();
-const long OpenAlexImportDialog::ID_BUTTON4 = wxNewId();
 //*)
 
 BEGIN_EVENT_TABLE(OpenAlexImportDialog,wxDialog)
@@ -80,15 +78,17 @@ OpenAlexImportDialog::OpenAlexImportDialog(wxWindow* parent,wxWindowID id)
 	StaticText1 = new wxStaticText(this, ID_STATICTEXT1, _("Abstract:"), wxDefaultPosition, wxDefaultSize, 0, _T("ID_STATICTEXT1"));
 	FlexGridSizer3->Add(StaticText1, 1, wxALL|wxEXPAND, 5);
 	TextCtrlSampleAbstract = new wxTextCtrl(this, ID_TEXTCTRL1, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY|wxVSCROLL, wxDefaultValidator, _T("ID_TEXTCTRL1"));
+	TextCtrlSampleAbstract->Disable();
 	FlexGridSizer3->Add(TextCtrlSampleAbstract, 1, wxALL|wxEXPAND, 5);
 	BoxSizer2->Add(FlexGridSizer3, 1, wxALL|wxEXPAND, 5);
 	FlexGridSizer1->Add(BoxSizer2, 1, wxALL|wxEXPAND, 5);
 	BoxSizer1 = new wxBoxSizer(wxHORIZONTAL);
-	ButtonOK = new wxButton(this, ID_BUTTON3, _("&OK"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON3"));
+	ButtonOK = new wxButton(this, wxID_OK, _("&OK"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_OK"));
+	ButtonOK->Disable();
 	BoxSizer1->Add(ButtonOK, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	BoxSizer1->Add(-1,-1,1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
-	ButtonCancel = new wxButton(this, ID_BUTTON4, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("ID_BUTTON4"));
+	ButtonCancel = new wxButton(this, wxID_CANCEL, _("&Cancel"), wxDefaultPosition, wxDefaultSize, 0, wxDefaultValidator, _T("wxID_CANCEL"));
 	BoxSizer1->Add(ButtonCancel, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	FlexGridSizer1->Add(BoxSizer1, 1, wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL, 5);
 	SetSizer(FlexGridSizer1);
@@ -100,8 +100,8 @@ OpenAlexImportDialog::OpenAlexImportDialog(wxWindow* parent,wxWindowID id)
 	Connect(ID_BUTTON2,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&OpenAlexImportDialog::OnButtonGetSamplesClick);
 	Connect(ID_CHOICE1,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&OpenAlexImportDialog::OnChoiceKeywordPairSelect);
 	Connect(ID_LISTCTRL2,wxEVT_COMMAND_LIST_ITEM_SELECTED,(wxObjectEventFunction)&OpenAlexImportDialog::OnListCtrlSamplesItemSelect);
-	Connect(ID_BUTTON3,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&OpenAlexImportDialog::OnButtonOKClick);
-	Connect(ID_BUTTON4,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&OpenAlexImportDialog::OnButtonCancelClick);
+	Connect(wxID_OK,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&OpenAlexImportDialog::OnButtonOKClick);
+	Connect(wxID_CANCEL,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&OpenAlexImportDialog::OnButtonCancelClick);
 	//*)
 
 
@@ -154,13 +154,20 @@ void OpenAlexImportDialog::OnButtonGetSamplesClick(wxCommandEvent& event)
 
 void OpenAlexImportDialog::OnButtonOKClick(wxCommandEvent& event)
 {
+    AbstractTask::setProgressReporter(NULL);
     EndModal(wxID_OK);
     Close();
 }
 
 void OpenAlexImportDialog::OnButtonCancelClick(wxCommandEvent& event)
 {
+    AbstractTask::setProgressReporter(NULL);
     AbstractTask::cancel();
+    if (_openAlex != NULL)
+    {
+        delete _openAlex;
+        _openAlex = NULL;
+    }
     EndModal(wxID_CANCEL);
     Close();
 }
@@ -187,7 +194,7 @@ void OpenAlexImportDialog::showSamples(int idxKWPair)
         long idxItem = ListCtrlSamples->InsertItem(0, ssYear.str());
         ListCtrlSamples->SetItem(idxItem, 1, p.title());
         std::stringstream ssAuthors;
-        const std::vector<std::string> authors = p.authors();
+        const std::vector<wxString> &authors = p.authors();
         for (size_t i = 0; i < authors.size(); i++)
         {
             if (i > 0)
@@ -208,7 +215,7 @@ void OpenAlexImportDialog::showAbstract(int idxKWPair, int idxSample)
         return;
     if (idxSample < 0 || (size_t)idxSample >= _samples[idxKWPair].size())
         return;
-    std::string ab = _samples[idxKWPair][idxSample].abstract();
+    const wchar_t *ab = _samples[idxKWPair][idxSample].abstract();
     TextCtrlSampleAbstract->ChangeValue(ab);
 }
 
@@ -229,6 +236,7 @@ void OpenAlexImportDialog::OnTextCtrlEmailText(wxCommandEvent& event)
 
 void OpenAlexImportDialog::OnTextCtrlKeywords2Text(wxCommandEvent& event)
 {
+    ButtonOK->Disable();
     if (TextCtrlKeywords1->GetValue().size() > 0 && TextCtrlKeywords2->GetValue().size() > 0)
     {
         ButtonGetSamples->Enable();
@@ -241,6 +249,7 @@ void OpenAlexImportDialog::OnTextCtrlKeywords2Text(wxCommandEvent& event)
 
 void OpenAlexImportDialog::OnTextCtrlKeywords1Text(wxCommandEvent& event)
 {
+    ButtonOK->Disable();
     if (TextCtrlKeywords1->GetValue().size() > 0 && TextCtrlKeywords2->GetValue().size() > 0)
     {
         ButtonGetSamples->Enable();

@@ -61,8 +61,6 @@ class OpenAlexImportDialog: public wxDialog
 		static const long ID_LISTCTRL2;
 		static const long ID_STATICTEXT1;
 		static const long ID_TEXTCTRL1;
-		static const long ID_BUTTON3;
-		static const long ID_BUTTON4;
 		//*)
 
 	private:
@@ -105,12 +103,6 @@ class OpenAlexImportDialog: public wxDialog
                     int progress = (100 * taskId + taskProgress) / numTasks;
                     if (strcmp(taskName, "Done") == 0 || strcmp(taskName, "Cancelled") == 0)
                     {
-                        _dlg->TextCtrlKeywords1->Enable();
-                        _dlg->TextCtrlKeywords2->Enable();
-                        _dlg->ButtonGetSamples->Enable();
-                        _dlg->ButtonOK->Enable();
-                        _dlg->ChoiceKeywordPair->Enable();
-                        _dlg->ListCtrlSamples->Enable();
                         if (strcmp(taskName, "Done") == 0)
                         {
                             _dlg->_samples = _dlg->_openAlex->samples();
@@ -127,6 +119,12 @@ class OpenAlexImportDialog: public wxDialog
                                 _dlg->showSamples(0);
                             }
                         }
+                        _dlg->TextCtrlKeywords1->Enable();
+                        _dlg->TextCtrlKeywords2->Enable();
+                        _dlg->ButtonGetSamples->Enable();
+                        _dlg->ButtonOK->Enable();
+                        _dlg->ChoiceKeywordPair->Enable();
+                        _dlg->ListCtrlSamples->Enable();
                     }
                     _dlg->GaugeSamplingProgress->SetValue(progress);
                     _dlg->StaticTextSamplingPrompt->SetLabel(wxString::Format("%d\%", progress));

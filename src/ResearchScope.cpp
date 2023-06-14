@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <string>
+#include <sstream>
 #include <StringProcessing.h>
 #include <sqlite3.h>
 #include <time.h>
@@ -19,9 +20,10 @@ std::vector<std::string> ResearchScope::getResearchScopes(const std::string path
         return results;
     }
 
-    const char *sql = "SELECT keywords FROM researchScopes ORDERY BY update_time ASC;";
+    const char *sql = "SELECT keywords FROM research_scopes ORDER BY update_time ASC;";
     CallbackData data;
     char *errorMessage = NULL;
+    logDebug(sql);
     rc = sqlite3_exec(db, sql, sqliteCallback, &data, &errorMessage);
     if (rc == SQLITE_OK)
     {
@@ -128,6 +130,7 @@ bool ResearchScope::storable()
     };
     for (const char*sql: sqls)
     {
+        logDebug(sql);
         rc = sqlite3_exec(db, sql, NULL, NULL, &errorMessage);
         if (rc != SQLITE_OK)
         {
@@ -141,7 +144,7 @@ bool ResearchScope::storable()
     return true;
 }
 
-std::string ResearchScope::getKeywords()
+std::string ResearchScope::getKeywords() const
 {
     std::stringstream ss;
     for (size_t i = 0; i < _kws1.size(); i++)
@@ -225,6 +228,7 @@ bool ResearchScope::init()
        << keywords << "','" << combinations << "'," << (int)t
        << ");";
     std::string sql = ss.str();
+    logDebug(sql.c_str());
     rc = sqlite3_exec(db, sql.c_str(), NULL, NULL, &errorMessage);
     sqlite3_close(db);
     if (rc != SQLITE_OK)
@@ -244,32 +248,40 @@ bool ResearchScope::load(int idxComb, const int y, std::map<uint64_t, Publicatio
     CallbackData data;
     char *errorMessage = NULL;
 
-    std::stringstream ss;
-    ss << "SELECT combination, year, ids FROM openalex_queries"
-       " WHERE combination = '" << getCombination(idxComb) << "' AND year = " << y << ";";
-    rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
-    if (rc != SQLITE_OK)
     {
-        logError(errorMessage);
-    }
-    if (rc != SQLITE_OK || data.results.size() == 0)
-    {
-        sqlite3_close(db);
-        return false;
+        std::stringstream ss;
+        ss << "SELECT combination, year, ids FROM openalex_queries"
+           " WHERE combination = '" << getCombination(idxComb) << "' AND year = " << y << ";";
+        logDebug(ss.str().c_str());
+        rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
+        if (rc != SQLITE_OK)
+        {
+            logError(errorMessage);
+        }
+        if (rc != SQLITE_OK || data.results.size() == 0)
+        {
+            sqlite3_close(db);
+            return false;
+        }
     }
 
-    std::string strIds = data.results[0]["ids"];
-    data.results.clear();
-    ss.clear();
-    ss << "SELECT id, year, title, abstract, source, language, authors, ref_ids FROM publications WHERE id in ("
-       << strIds << ");";
-    rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
-    if (rc != SQLITE_OK)
+
     {
-        logError(errorMessage);
-        sqlite3_close(db);
-        return false;
+        std::stringstream ss;
+        std::string strIds = data.results[0]["ids"];
+        data.results.clear();
+        ss << "SELECT id, year, title, abstract, source, language, authors, ref_ids FROM publications WHERE id in ("
+           << strIds << ");";
+        logDebug(ss.str().c_str());
+        rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
+        if (rc != SQLITE_OK)
+        {
+            logError(errorMessage);
+            sqlite3_close(db);
+            return false;
+        }
     }
+
 
     for (auto &result: data.results)
     {
@@ -292,6 +304,7 @@ bool ResearchScope::load(int idxComb, const int y)
     std::stringstream ss;
     ss << "SELECT combination, year FROM openalex_tokens"
        " WHERE combination = '" << getCombination(idxComb) << "' AND year = " << y << ";";
+    logDebug(ss.str().c_str());
     rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
     if (rc != SQLITE_OK)
     {
@@ -320,22 +333,25 @@ bool ResearchScope::save(const std::map<uint64_t, Publication> &pubs)
 
     // ---------------------------------------------------------------------------
     // step 1: find old ids
-    std::stringstream ss;
-    ss << "SELECT id FROM publications where id in (";
-    int iPub = 0;
-    for (auto idToPub: pubs)
     {
-        if (iPub++ > 0)
-            ss << ",";
-        ss << idToPub.first;
-    }
-    ss << ");";
-    rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
-    if (rc != SQLITE_OK)
-    {
-        logError(errorMessage);
-        sqlite3_close(db);
-        return false;
+        std::stringstream ss;
+        ss << "SELECT id FROM publications where id in (";
+        int iPub = 0;
+        for (auto idToPub: pubs)
+        {
+            if (iPub++ > 0)
+                ss << ",";
+            ss << idToPub.first;
+        }
+        ss << ");";
+        logDebug(ss.str().c_str());
+        rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
+        if (rc != SQLITE_OK)
+        {
+            logError(errorMessage);
+            sqlite3_close(db);
+            return false;
+        }
     }
 
     if (data.results.size() == pubs.size())
@@ -352,48 +368,57 @@ bool ResearchScope::save(const std::map<uint64_t, Publication> &pubs)
 
     // ---------------------------------------------------------------------------
     // step 2: insert publications with new ids
-    ss.clear();
-    ss << "INSERT INTO publications(id, year, title, abstract, source, language, authors, ref_ids) VALUES ";
-    iPub = 0;
-    for (auto idToPub: pubs)
     {
-        if (oldIdSet.find(idToPub.first) != oldIdSet.end())
-            continue;
-        if (iPub++ > 0)
-            ss << ",";
-        ss << "("
-           << idToPub.second.id() << ","
-           << idToPub.second.year() << ",'"
-           << idToPub.second.title() << "','"
-           << idToPub.second.abstract() << "','"
-           << idToPub.second.source() << "','"
-           << idToPub.second.language() << "','";
-        std::vector<std::string> authors = idToPub.second.authors();
-        for (size_t i = 0; i < authors.size(); i++)
+        std::stringstream ss;
+        ss << "INSERT OR IGNORE INTO publications(id, year, title, abstract, source, language, authors, ref_ids) VALUES ";
+        int iPub = 0;
+        for (auto idToPub: pubs)
         {
-            if (i > 0)
-                ss << ",";
-            ss << authors[i];
-        }
-        ss << "','";
-        std::vector<uint64_t> refIds = idToPub.second.refIds();
-        for (size_t i = 0; i < refIds.size(); i++)
-        {
-            if (i > 0)
-                ss << ",";
-            ss << refIds[i];
-        }
-        ss << "')";
-    }
-    ss << ";";
+            if (oldIdSet.find(idToPub.first) != oldIdSet.end())
+                continue;
 
-    rc = sqlite3_exec(db, ss.str().c_str(), NULL, NULL, &errorMessage);
-    if (rc != SQLITE_OK)
-    {
-        logError(errorMessage);
+            if (iPub++ > 0)
+                ss << ",";
+
+            ss << "("
+               << idToPub.second.id() << ","
+               << idToPub.second.year() << ",'"
+               << idToPub.second.title() << "','"
+               << idToPub.second.abstract() << "','"
+               << idToPub.second.source() << "','"
+               << idToPub.second.language() << "','";
+
+            const std::vector<wxString> &authors = idToPub.second.authors();
+            for (size_t i = 0; i < authors.size(); i++)
+            {
+                if (i > 0)
+                    ss << ",";
+                ss << authors[i];
+            }
+            ss << "','";
+
+            std::vector<uint64_t> refIds = idToPub.second.refIds();
+            for (size_t i = 0; i < refIds.size(); i++)
+            {
+                if (i > 0)
+                    ss << ",";
+                ss << refIds[i];
+            }
+            ss << "')";
+        }
+        ss << ";";
+        rc = sqlite3_exec(db, ss.str().c_str(), NULL, NULL, &errorMessage);
+        if (rc != SQLITE_OK)
+        {
+            logError(errorMessage);
+            sqlite3_close(db);
+            return false;
+        }
     }
+
+
     sqlite3_close(db);
-    return rc == SQLITE_OK;
+    return true;
 }
 
 bool ResearchScope::save(int idxComb, const int y, const std::map<uint64_t, Publication> &pubsOfY)
@@ -425,7 +450,7 @@ bool ResearchScope::save(int idxComb, const int y, const std::map<uint64_t, Publ
     time_t t;
     time(&t);
     std::stringstream ss;
-    ss << "INSERT INTO openalex_queries(combination,year,update_time,ids,ref_ids) VALUES ('"
+    ss << "INSERT OR IGNORE INTO openalex_queries(combination,year,update_time,ids,ref_ids) VALUES ('"
        << combination << "'," << y << "," << (int) t << ",'";
     int iPub = 0;
     for (auto idToPub: pubsOfY)
@@ -443,6 +468,7 @@ bool ResearchScope::save(int idxComb, const int y, const std::map<uint64_t, Publ
         ss << refId;
     }
     ss << "');";
+    logDebug(ss.str().c_str());
     rc = sqlite3_exec(db, ss.str().c_str(), NULL, NULL, &errorMessage);
     if (rc != SQLITE_OK)
     {
@@ -468,8 +494,9 @@ bool ResearchScope::save(int idxComb, const int y)
     time_t t;
     time(&t);
     std::stringstream ss;
-    ss << "INSERT INTO openalex_tokens(combination,year,update_time) VALUES ('"
+    ss << "INSERT OR IGNORE INTO openalex_tokens(combination,year,update_time) VALUES ('"
        << combination << "'," << y << "," << (int) t << ");";
+    logDebug(ss.str().c_str());
     rc = sqlite3_exec(db, ss.str().c_str(), NULL, NULL, &errorMessage);
     if (rc != SQLITE_OK)
     {
@@ -493,18 +520,21 @@ bool ResearchScope::getMissingRefIds(int idxComb, const int y, std::vector<uint6
 
     // ---------------------------------------------------------------------------
     // step 1: get ref ids of combination and year
-    std::stringstream ss;
-    ss << "SELECT combination, year, ref_ids FROM openalex_queries"
-       " WHERE combination = '" << getCombination(idxComb) << "' AND year = " << y << ";";
-    rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
-    if (rc != SQLITE_OK)
     {
-        logError(errorMessage);
-    }
-    if (rc != SQLITE_OK || data.results.size() == 0)
-    {
-        sqlite3_close(db);
-        return false;
+        std::stringstream ss;
+        ss << "SELECT combination, year, ref_ids FROM openalex_queries"
+           " WHERE combination = '" << getCombination(idxComb) << "' AND year = " << y << ";";
+        logDebug(ss.str().c_str());
+        rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
+        if (rc != SQLITE_OK)
+        {
+            logError(errorMessage);
+        }
+        if (rc != SQLITE_OK || data.results.size() == 0)
+        {
+            sqlite3_close(db);
+            return false;
+        }
     }
     std::string refIdsStr = data.results[0]["ref_ids"];
     std::vector<std::string> refIDStrs = splitString(refIdsStr, ",");
@@ -516,18 +546,22 @@ bool ResearchScope::getMissingRefIds(int idxComb, const int y, std::vector<uint6
 
     // ---------------------------------------------------------------------------
     // step 2: find old ids
-    ss.clear();
-    data.results.clear();
-    ss << "SELECT id FROM publications WHERE id IN (" << refIdsStr << ");";
-    rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
-    if (rc != SQLITE_OK)
     {
-        logError(errorMessage);
-    }
-    if (rc != SQLITE_OK || data.results.size() == 0)
-    {
-        sqlite3_close(db);
-        return false;
+        std::stringstream ss;
+        data.results.clear();
+        ss << "SELECT id FROM publications WHERE id IN (" << refIdsStr << ");";
+        logDebug(ss.str().c_str());
+        rc = sqlite3_exec(db, ss.str().c_str(), sqliteCallback, &data, &errorMessage);
+        logDebug(ss.str().c_str());
+        if (rc != SQLITE_OK)
+        {
+            logError(errorMessage);
+        }
+        if (rc != SQLITE_OK || data.results.size() == 0)
+        {
+            sqlite3_close(db);
+            return false;
+        }
     }
     std::set<uint64_t> oldRefIds;
     for (auto result: data.results)

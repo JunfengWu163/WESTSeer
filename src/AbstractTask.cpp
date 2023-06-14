@@ -14,10 +14,23 @@ AbstractTask::AbstractTask()
 AbstractTask::~AbstractTask()
 {
     //dtor
+    finalize();
+}
+
+void AbstractTask::finalize()
+{
+    if (_taskThread != NULL)
+    {
+        _taskThread->join();
+        delete _taskThread;
+        _taskThread = NULL;
+        _cancelled.store(false);
+    }
 }
 
 void AbstractTask::runAll()
 {
+    finalize();
     if (numSteps() > 0 && !finished())
     {
         _taskThread = new std::thread([this]()
@@ -31,6 +44,7 @@ void AbstractTask::runAll()
                         {
                             _progressReporter->report("Cancelled", getTaskId(), getNumTasks(), 0);
                         }
+                        _cancelled.store(false);
                         return;
                     }
                     if (_progressReporter != NULL)
@@ -51,7 +65,10 @@ void AbstractTask::runAll()
                                 _progressReporter->report(name(), getTaskId(), getNumTasks(), taskProgress);
                         }
                         if (_cancelled.load() == true)
+                        {
+                            _cancelled.store(false);
                             return;
+                        }
                     }
                     task = task->_next;
                 }
@@ -74,10 +91,6 @@ void AbstractTask::cancel()
     if (_taskThread != NULL)
     {
         _cancelled.store(true);
-        _taskThread->join();
-        delete _taskThread;
-        _taskThread = NULL;
-        _cancelled.store(false);
     }
 }
 

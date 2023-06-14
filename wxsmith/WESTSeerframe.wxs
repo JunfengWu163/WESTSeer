@@ -3,6 +3,7 @@
 	<object class="wxFrame" name="WESTSeerFrame">
 		<title>Worldwide Emerging Scientific Topic Seer </title>
 		<icon>westseer-logo.ico</icon>
+		<size>800,600</size>
 		<id_arg>0</id_arg>
 		<object class="wxFlexGridSizer" variable="FlexGridSizer1" member="no">
 			<cols>1</cols>
@@ -23,7 +24,9 @@
 						<option>1</option>
 					</object>
 					<object class="sizeritem">
-						<object class="wxChoice" name="ID_CHOICE1" variable="ChoiceScope" member="yes" />
+						<object class="wxChoice" name="ID_CHOICE1" variable="ChoiceScope" member="yes">
+							<handler function="OnChoiceScopeSelect" entry="EVT_CHOICE" />
+						</object>
 						<flag>wxALL|wxEXPAND</flag>
 						<border>5</border>
 						<option>1</option>

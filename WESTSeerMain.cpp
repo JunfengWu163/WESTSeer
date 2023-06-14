@@ -12,6 +12,7 @@
 #include "SettingsDialog.h"
 #include "SQLDialog.h"
 #include "LogDialog.h"
+#include <GeneralConfig.h>
 #include <wx/msgdlg.h>
 
 //(*InternalHeaders(WESTSeerFrame)
@@ -99,6 +100,7 @@ WESTSeerFrame::WESTSeerFrame(wxWindow* parent,wxWindowID id)
     wxMenuItem* MenuItem2;
 
     Create(parent, wxID_ANY, _("Worldwide Emerging Scientific Topic Seer "), wxDefaultPosition, wxDefaultSize, wxDEFAULT_FRAME_STYLE, _T("wxID_ANY"));
+    SetClientSize(wxSize(800,600));
     {
     	wxIcon FrameIcon;
     	FrameIcon.CopyFromBitmap(wxBitmap(wxImage(_T("westseer-logo.ico"))));
@@ -190,9 +192,10 @@ WESTSeerFrame::WESTSeerFrame(wxWindow* parent,wxWindowID id)
     StatusBar1->SetFieldsCount(1,__wxStatusBarWidths_1);
     StatusBar1->SetStatusStyles(1,__wxStatusBarStyles_1);
     SetStatusBar(StatusBar1);
-    FlexGridSizer1->Fit(this);
-    FlexGridSizer1->SetSizeHints(this);
+    SetSizer(FlexGridSizer1);
+    Layout();
 
+    Connect(ID_CHOICE1,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnChoiceScopeSelect);
     Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&WESTSeerFrame::OnButtonNewClick);
     Connect(ID_MENUITEM3,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnMenuItemOptionsSelected);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnQuit);
@@ -200,6 +203,14 @@ WESTSeerFrame::WESTSeerFrame(wxWindow* parent,wxWindowID id)
     Connect(ID_MENUITEM7,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnMenuItemLogSelected);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnAbout);
     //*)
+
+    _openAlex = NULL;
+    GeneralConfig config;
+    std::vector<std::string> scopes = ResearchScope::getResearchScopes(config.getDatabase());
+    for (std::string scope: scopes)
+    {
+        ChoiceScope->Append(scope);
+    }
 }
 
 WESTSeerFrame::~WESTSeerFrame()
@@ -227,7 +238,30 @@ void WESTSeerFrame::OnButtonNewClick(wxCommandEvent& event)
     {
         if (dlg._openAlex != NULL)
         {
+            _openAlex = dlg._openAlex;
+            _openAlex->setSamplesOnly(false);
 
+            // find whether it is in the old choices
+            std::string keywords = dlg._openAlex->scope().getKeywords();
+            int idxKW = -1;
+            for (unsigned int i = 0; i < ChoiceScope->GetCount(); i++)
+            {
+                if (ChoiceScope->GetString(i).ToStdString() == keywords)
+                {
+                    idxKW = (int) i;
+                    break;
+                }
+            }
+            if (idxKW >= 0)
+            {
+                ChoiceScope->SetSelection(idxKW);
+            }
+            else
+            {
+                idxKW = ChoiceScope->Append(keywords);
+                ChoiceScope->SetSelection(idxKW);
+            }
+            OnChoiceScopeSelect(event);
         }
     }
 }
@@ -248,4 +282,16 @@ void WESTSeerFrame::OnMenuItemLogSelected(wxCommandEvent& event)
 {
     LogDialog dlg(this);
     dlg.ShowModal();
+}
+
+void WESTSeerFrame::OnChoiceScopeSelect(wxCommandEvent& event)
+{
+    AbstractTask::setProgressReporter(_progressReporter);
+    if (_openAlex == NULL)
+    {
+        GeneralConfig config;
+        std::string kws = ChoiceScope->GetString(ChoiceScope->GetSelection()).ToStdString();
+        _openAlex = new OpenAlex(config.getEmail(), config.getDatabase(), kws);
+    }
+    _openAlex->runAll();
 }

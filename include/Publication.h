@@ -6,6 +6,7 @@
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <sqlite3.h>
+#include <wx/string.h>
 using namespace std;
 using namespace nlohmann;
 class Publication
@@ -29,27 +30,28 @@ public:
     {
         return _year;
     }
-    inline string title()
+    inline const wxString& title()
     {
         return _title;
+
     }
-    inline string abstract()
+    inline const wxString& abstract()
     {
         return _abstract;
     }
-    inline string source()
+    inline const wxString& source()
     {
         return _source;
     }
-    inline string language()
+    inline const wxString& language()
     {
         return _language;
     }
-    inline const vector<string> authors()
+    inline const vector<wxString> &authors()
     {
         return _authors;
     }
-    inline const vector<uint64_t> refIds()
+    inline const vector<uint64_t> &refIds()
     {
         return _refIds;
     }
@@ -69,11 +71,11 @@ protected:
 private:
     uint64_t _id;
     int _year;
-    string _title;
-    string _abstract;
-    string _source;
-    string _language;
-    vector<string> _authors;
+    wxString _title;
+    wxString _abstract;
+    wxString _source;
+    wxString _language;
+    vector<wxString> _authors;
     vector<uint64_t> _refIds;
 };
 
