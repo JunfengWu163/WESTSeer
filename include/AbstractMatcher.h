@@ -14,6 +14,7 @@ public:
         STOP_WORD,
         TERM
     };
+    Type _type;
 
     AbstractMatcher();
     virtual ~AbstractMatcher();
@@ -21,10 +22,11 @@ public:
     virtual AbstractMatcher *matchToken(const std::string &token) = 0;
     std::vector<Type> match(const std::vector<std::string> &term, int i);
     void insertTerm(const std::vector<std::string> &term, int i);
+    std::string getTerms();
 
 protected:
     std::map<std::string, AbstractMatcher *> _subMatchers;
-    Type _type;
+    void getTerms(std::string prefix, std::vector<std::string> &terms);
 
 private:
 };

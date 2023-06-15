@@ -108,25 +108,6 @@ bool ResearchScope::storable()
         "keywords TEXT PRIMARY KEY,"
         "combinations TEXT,"
         "update_time INTEGER);",
-
-        "CREATE TABLE IF NOT EXISTS pub_terms("
-        "id INTEGER PRIMARY KEY ASC,"
-        "terms TEXT);",
-
-        "CREATE TABLE IF NOT EXISTS pub_scope_terms("
-        "id INTEGER,"
-        "scope_keywords TEXT,"
-        "year INTEGER,"
-        "update_time INTEGER,"
-        "terms TEXT,"
-        "PRIMARY KEY(id,scope_keywords))",
-
-        "CREATE TABLE IF NOT EXISTS scope_terms("
-        "keywords TEXT,"
-        "year INTEGER,"
-        "update_time INTEGER,"
-        "terms TEXT,"
-        "PRIMARY KEY(keywords,year));",
     };
     for (const char*sql: sqls)
     {

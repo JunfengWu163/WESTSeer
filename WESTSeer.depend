@@ -8,7 +8,7 @@
 
 1686708998 d:\c++\westseer\include\wx\msw\rcdefs.h
 
-1686708997 source:d:\c++\westseer\westseerapp.cpp
+1686827541 source:d:\c++\westseer\westseerapp.cpp
 	"WESTSeerApp.h"
 	<wx/stdpaths.h>
 	<wx/filefn.h>
@@ -2826,7 +2826,7 @@
 	"wx/compositewin.h"
 	"wx/textctrl.h"
 
-1686714323 d:\c++\westseer\westseermain.h
+1686824672 d:\c++\westseer\westseermain.h
 	<wx/button.h>
 	<wx/choice.h>
 	<wx/frame.h>
@@ -2839,6 +2839,7 @@
 	<wx/statusbr.h>
 	<ProgressReporter.h>
 	<OpenAlex.h>
+	<TermExtraction.h>
 	<sstream>
 
 1686708997 source:d:\c++\westseer\logdialog.cpp
@@ -2857,7 +2858,7 @@
 	<wx/stattext.h>
 	<wx/textctrl.h>
 
-1686708997 source:d:\c++\westseer\openaleximportdialog.cpp
+1686794571 source:d:\c++\westseer\openaleximportdialog.cpp
 	"OpenAlexImportDialog.h"
 	<EmailValidator.h>
 	<GeneralConfig.h>
@@ -3367,8 +3368,7 @@
 1686708998 source:d:\c++\westseer\src\emailvalidator.cpp
 	"EmailValidator.h"
 
-1686713874 source:d:\c++\westseer\src\openalex.cpp
-	<winsock.h>
+1686831755 source:d:\c++\westseer\src\openalex.cpp
 	<OpenAlex.h>
 	<StringProcessing.h>
 	<wxFFileLog.h>
@@ -3471,7 +3471,7 @@
 	<map>
 	<cassert>
 
-1686710581 source:d:\c++\westseer\src\researchscope.cpp
+1686790771 source:d:\c++\westseer\src\researchscope.cpp
 	"ResearchScope.h"
 	<algorithm>
 	<stdexcept>
@@ -3550,14 +3550,14 @@
 
 1686708997 d:\c++\westseer\include\stopwords.h
 
-1686708998 source:d:\c++\westseer\src\stringprocessing.cpp
+1686805696 source:d:\c++\westseer\src\stringprocessing.cpp
 	<StringProcessing.h>
 	<algorithm>
 	<cstring>
 	<regex>
 	<map>
 
-1686713600 source:d:\c++\westseer\westseermain.cpp
+1686832956 source:d:\c++\westseer\westseermain.cpp
 	"WESTSeerMain.h"
 	"OpenAlexImportDialog.h"
 	"SettingsDialog.h"
@@ -3603,7 +3603,7 @@
 1686710814 source:d:\c++\westseer\src\callbackdata.cpp
 	"CallbackData.h"
 
-1686714590 source:d:\c++\westseer\src\abstracttask.cpp
+1686824655 source:d:\c++\westseer\src\abstracttask.cpp
 	"AbstractTask.h"
 
 1686708997 d:\c++\westseer\include\abstracttask.h
@@ -3612,28 +3612,30 @@
 	<atomic>
 	<ProgressReporter.h>
 
-1686768236 source:d:\c++\westseer\src\stopwordmatcher.cpp
+1686777669 source:d:\c++\westseer\src\stopwordmatcher.cpp
 	"StopWordMatcher.h"
 	<StopWords.h>
 	<StringProcessing.h>
+	<ctype.h>
 
 1686766287 d:\c++\westseer\include\stopwordmatcher.h
 	<AbstractMatcher.h>
 
-1686767264 source:d:\c++\westseer\src\abstractmatcher.cpp
+1686798503 source:d:\c++\westseer\src\abstractmatcher.cpp
 	"AbstractMatcher.h"
+	<sstream>
 
-1686768388 d:\c++\westseer\include\abstractmatcher.h
+1686789604 d:\c++\westseer\include\abstractmatcher.h
 	<string>
 	<vector>
 	<map>
 
-1686768342 source:d:\c++\westseer\src\matcher.cpp
+1686790492 source:d:\c++\westseer\src\matcher.cpp
 	"Matcher.h"
 	<StringProcessing.h>
 	<porter2_stemmer.h>
 
-1686767635 d:\c++\westseer\include\matcher.h
+1686790332 d:\c++\westseer\include\matcher.h
 	<AbstractMatcher.h>
 
 1684841574 d:\c++\westseer\include\porter2_stemmer.h
@@ -3659,4 +3661,355 @@
 	<utility>
 	<unordered_map>
 	"porter2_stemmer.h"
+
+1686857479 source:d:\c++\westseer\src\termextraction.cpp
+	"TermExtraction.h"
+	<StringProcessing.h>
+	<GeneralConfig.h>
+	<CallbackData.h>
+	<wxFFileLog.h>
+	<porter2_stemmer.h>
+	<ctime>
+	<cstdlib>
+	<sstream>
+	<set>
+
+1686810923 d:\c++\westseer\include\termextraction.h
+	<AbstractTask.h>
+	<ResearchScope.h>
+	<map>
+	<vector>
+	<string>
+	<cstdint>
+	<StopWordMatcher.h>
+	<Matcher.h>
+
+1686806289 source:d:\c++\westseer\src\termtfirdf.cpp
+	"TermTfIrdf.h"
+
+1686806218 d:\c++\westseer\include\termtfirdf.h
+	<AbstractTask.h>
+
+1686829093 d:\c++\westseer\include\openssl\err.h
+	<openssl/e_os2.h>
+	<stdio.h>
+	<stdlib.h>
+	<openssl/ossl_typ.h>
+	<openssl/bio.h>
+	<openssl/lhash.h>
+	<errno.h>
+
+1686829093 d:\c++\westseer\include\openssl\e_os2.h
+	<openssl/opensslconf.h>
+	<inttypes.h>
+	<stdint.h>
+
+1686829379 d:\c++\westseer\include\openssl\opensslconf.h
+	<openssl/opensslv.h>
+
+1686829093 d:\c++\westseer\include\openssl\opensslv.h
+
+1686829093 d:\c++\westseer\include\openssl\ossl_typ.h
+	<limits.h>
+	<openssl/e_os2.h>
+
+1686829093 d:\c++\westseer\include\openssl\bio.h
+	<openssl/e_os2.h>
+	<stdio.h>
+	<stdarg.h>
+	<openssl/crypto.h>
+	<openssl/bioerr.h>
+
+1686829093 d:\c++\westseer\include\openssl\crypto.h
+	<stdlib.h>
+	<time.h>
+	<openssl/e_os2.h>
+	<stdio.h>
+	<openssl/safestack.h>
+	<openssl/opensslv.h>
+	<openssl/ossl_typ.h>
+	<openssl/opensslconf.h>
+	<openssl/cryptoerr.h>
+	<openssl/ebcdic.h>
+	<openssl/symhacks.h>
+	<openssl/opensslv.h>
+	<pthread.h>
+
+1686829093 d:\c++\westseer\include\openssl\safestack.h
+	<openssl/stack.h>
+	<openssl/e_os2.h>
+
+1686829093 d:\c++\westseer\include\openssl\stack.h
+
+1686829093 d:\c++\westseer\include\openssl\cryptoerr.h
+	<openssl/symhacks.h>
+
+1686829093 d:\c++\westseer\include\openssl\symhacks.h
+	<openssl/e_os2.h>
+
+1686829093 d:\c++\westseer\include\openssl\ebcdic.h
+	<stdlib.h>
+
+1686829093 d:\c++\westseer\include\openssl\bioerr.h
+	<openssl/symhacks.h>
+
+1686829093 d:\c++\westseer\include\openssl\lhash.h
+	<openssl/e_os2.h>
+	<openssl/bio.h>
+
+1686829093 d:\c++\westseer\include\openssl\evp.h
+	<openssl/opensslconf.h>
+	<openssl/ossl_typ.h>
+	<openssl/symhacks.h>
+	<openssl/bio.h>
+	<openssl/evperr.h>
+	<openssl/objects.h>
+
+1686829093 d:\c++\westseer\include\openssl\evperr.h
+	<openssl/symhacks.h>
+
+1686829093 d:\c++\westseer\include\openssl\objects.h
+	<openssl/obj_mac.h>
+	<openssl/bio.h>
+	<openssl/asn1.h>
+	<openssl/objectserr.h>
+
+1686829093 d:\c++\westseer\include\openssl\obj_mac.h
+
+1686829093 d:\c++\westseer\include\openssl\asn1.h
+	<time.h>
+	<openssl/e_os2.h>
+	<openssl/opensslconf.h>
+	<openssl/bio.h>
+	<openssl/safestack.h>
+	<openssl/asn1err.h>
+	<openssl/symhacks.h>
+	<openssl/ossl_typ.h>
+	<openssl/bn.h>
+
+1686829093 d:\c++\westseer\include\openssl\asn1err.h
+	<openssl/symhacks.h>
+
+1686829093 d:\c++\westseer\include\openssl\bn.h
+	<openssl/e_os2.h>
+	<stdio.h>
+	<openssl/opensslconf.h>
+	<openssl/ossl_typ.h>
+	<openssl/crypto.h>
+	<openssl/bnerr.h>
+
+1686829093 d:\c++\westseer\include\openssl\bnerr.h
+	<openssl/symhacks.h>
+
+1686829093 d:\c++\westseer\include\openssl\objectserr.h
+	<openssl/symhacks.h>
+
+1686829093 d:\c++\westseer\include\openssl\ssl.h
+	<openssl/e_os2.h>
+	<openssl/opensslconf.h>
+	<openssl/comp.h>
+	<openssl/bio.h>
+	<openssl/x509.h>
+	<openssl/crypto.h>
+	<openssl/buffer.h>
+	<openssl/lhash.h>
+	<openssl/pem.h>
+	<openssl/hmac.h>
+	<openssl/async.h>
+	<openssl/safestack.h>
+	<openssl/symhacks.h>
+	<openssl/ct.h>
+	<openssl/sslerr.h>
+	<openssl/ssl2.h>
+	<openssl/ssl3.h>
+	<openssl/tls1.h>
+	<openssl/dtls1.h>
+	<openssl/srtp.h>
+
+1686829093 d:\c++\westseer\include\openssl\comp.h
+	<openssl/opensslconf.h>
+	<openssl/crypto.h>
+	<openssl/comperr.h>
+
+1686829093 d:\c++\westseer\include\openssl\comperr.h
+	<openssl/symhacks.h>
+	<openssl/opensslconf.h>
+
+1686829093 d:\c++\westseer\include\openssl\x509.h
+	<openssl/e_os2.h>
+	<openssl/ossl_typ.h>
+	<openssl/symhacks.h>
+	<openssl/buffer.h>
+	<openssl/evp.h>
+	<openssl/bio.h>
+	<openssl/asn1.h>
+	<openssl/safestack.h>
+	<openssl/ec.h>
+	<openssl/rsa.h>
+	<openssl/dsa.h>
+	<openssl/dh.h>
+	<openssl/sha.h>
+	<openssl/x509err.h>
+	<openssl/x509_vfy.h>
+	<openssl/pkcs7.h>
+
+1686829093 d:\c++\westseer\include\openssl\buffer.h
+	<openssl/ossl_typ.h>
+	<openssl/crypto.h>
+	<openssl/buffererr.h>
+	<stddef.h>
+	<sys/types.h>
+
+1686829093 d:\c++\westseer\include\openssl\buffererr.h
+	<openssl/symhacks.h>
+
+1686829093 d:\c++\westseer\include\openssl\ec.h
+	<openssl/opensslconf.h>
+	<openssl/asn1.h>
+	<openssl/symhacks.h>
+	<openssl/bn.h>
+	<openssl/ecerr.h>
+
+1686829093 d:\c++\westseer\include\openssl\ecerr.h
+	<openssl/symhacks.h>
+	<openssl/opensslconf.h>
+
+1686829093 d:\c++\westseer\include\openssl\rsa.h
+	<openssl/opensslconf.h>
+	<openssl/asn1.h>
+	<openssl/bio.h>
+	<openssl/crypto.h>
+	<openssl/ossl_typ.h>
+	<openssl/bn.h>
+	<openssl/rsaerr.h>
+
+1686829093 d:\c++\westseer\include\openssl\rsaerr.h
+	<openssl/symhacks.h>
+
+1686829093 d:\c++\westseer\include\openssl\dsa.h
+	<openssl/opensslconf.h>
+	<openssl/e_os2.h>
+	<openssl/bio.h>
+	<openssl/crypto.h>
+	<openssl/ossl_typ.h>
+	<openssl/bn.h>
+	<openssl/dh.h>
+	<openssl/dsaerr.h>
+
+1686829093 d:\c++\westseer\include\openssl\dh.h
+	<openssl/opensslconf.h>
+	<openssl/e_os2.h>
+	<openssl/bio.h>
+	<openssl/asn1.h>
+	<openssl/ossl_typ.h>
+	<openssl/bn.h>
+	<openssl/dherr.h>
+
+1686829093 d:\c++\westseer\include\openssl\dherr.h
+	<openssl/symhacks.h>
+	<openssl/opensslconf.h>
+
+1686829093 d:\c++\westseer\include\openssl\dsaerr.h
+	<openssl/symhacks.h>
+	<openssl/opensslconf.h>
+
+1686829093 d:\c++\westseer\include\openssl\sha.h
+	<openssl/e_os2.h>
+	<stddef.h>
+
+1686829093 d:\c++\westseer\include\openssl\x509err.h
+	<openssl/symhacks.h>
+
+1686829093 d:\c++\westseer\include\openssl\x509_vfy.h
+	<openssl/x509.h>
+	<openssl/opensslconf.h>
+	<openssl/lhash.h>
+	<openssl/bio.h>
+	<openssl/crypto.h>
+	<openssl/symhacks.h>
+
+1686829093 d:\c++\westseer\include\openssl\pkcs7.h
+	<openssl/asn1.h>
+	<openssl/bio.h>
+	<openssl/e_os2.h>
+	<openssl/symhacks.h>
+	<openssl/ossl_typ.h>
+	<openssl/pkcs7err.h>
+
+1686829093 d:\c++\westseer\include\openssl\pkcs7err.h
+	<openssl/symhacks.h>
+
+1686829093 d:\c++\westseer\include\openssl\pem.h
+	<openssl/e_os2.h>
+	<openssl/bio.h>
+	<openssl/safestack.h>
+	<openssl/evp.h>
+	<openssl/x509.h>
+	<openssl/pemerr.h>
+	<openssl/symhacks.h>
+
+1686829093 d:\c++\westseer\include\openssl\pemerr.h
+	<openssl/symhacks.h>
+
+1686829093 d:\c++\westseer\include\openssl\hmac.h
+	<openssl/opensslconf.h>
+	<openssl/evp.h>
+
+1686829093 d:\c++\westseer\include\openssl\async.h
+	<stdlib.h>
+	<openssl/asyncerr.h>
+
+1686829093 d:\c++\westseer\include\openssl\asyncerr.h
+	<openssl/symhacks.h>
+
+1686829093 d:\c++\westseer\include\openssl\ct.h
+	<openssl/opensslconf.h>
+	<openssl/ossl_typ.h>
+	<openssl/safestack.h>
+	<openssl/x509.h>
+	<openssl/cterr.h>
+
+1686829093 d:\c++\westseer\include\openssl\cterr.h
+	<openssl/symhacks.h>
+	<openssl/opensslconf.h>
+
+1686829093 d:\c++\westseer\include\openssl\sslerr.h
+	<openssl/symhacks.h>
+
+1686829093 d:\c++\westseer\include\openssl\ssl2.h
+
+1686829093 d:\c++\westseer\include\openssl\ssl3.h
+	<openssl/comp.h>
+	<openssl/buffer.h>
+	<openssl/evp.h>
+	<openssl/ssl.h>
+
+1686829093 d:\c++\westseer\include\openssl\tls1.h
+	<openssl/buffer.h>
+	<openssl/x509.h>
+
+1686829093 d:\c++\westseer\include\openssl\dtls1.h
+
+1686829093 d:\c++\westseer\include\openssl\srtp.h
+	<openssl/ssl.h>
+
+1686829093 d:\c++\westseer\include\openssl\x509v3.h
+	<openssl/bio.h>
+	<openssl/x509.h>
+	<openssl/conf.h>
+	<openssl/x509v3err.h>
+
+1686829093 d:\c++\westseer\include\openssl\conf.h
+	<openssl/bio.h>
+	<openssl/lhash.h>
+	<openssl/safestack.h>
+	<openssl/e_os2.h>
+	<openssl/ossl_typ.h>
+	<openssl/conferr.h>
+
+1686829093 d:\c++\westseer\include\openssl\conferr.h
+	<openssl/symhacks.h>
+
+1686829093 d:\c++\westseer\include\openssl\x509v3err.h
+	<openssl/symhacks.h>
 

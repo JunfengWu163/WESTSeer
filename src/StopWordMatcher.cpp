@@ -1,6 +1,7 @@
 #include "StopWordMatcher.h"
 #include <StopWords.h>
 #include <StringProcessing.h>
+#include <ctype.h>
 
 StopWordMatcher::StopWordMatcher()
 {
@@ -36,7 +37,8 @@ StopWordMatcher::StopWordMatcher()
     {
         std::string s(stopword);
         std::vector<std::string> tokens = tokenize(s);
-        insertTerm(tokens, 0);
+        if (tokens.size() > 0)
+            insertTerm(tokens, 0);
     }
 }
 
@@ -56,7 +58,17 @@ AbstractMatcher *StopWordMatcher::insertToken(const std::string &token, bool las
     auto tokenToSub = _subMatchers.find(normalToken);
     if (tokenToSub != _subMatchers.end())
         return tokenToSub->second;
-    StopWordMatcher * sub = new StopWordMatcher(last ? STOP_WORD : PART);
+    Type type;
+    if (last)
+    {
+        if (isalpha(token[0]))
+            type = STOP_WORD;
+        else
+            type = PUNCT;
+    }
+    else
+        type = PART;
+    StopWordMatcher * sub = new StopWordMatcher(type);
     _subMatchers[normalToken] = sub;
     return sub;
 }

@@ -10,6 +10,7 @@ class Matcher: public AbstractMatcher
         virtual ~Matcher();
         virtual AbstractMatcher *insertToken(const std::string &token, bool last);
         virtual AbstractMatcher *matchToken(const std::string &token);
+        void load(std::string &strTerms);
 
     protected:
 

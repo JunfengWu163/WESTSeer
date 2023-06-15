@@ -197,6 +197,8 @@ WESTSeerFrame::WESTSeerFrame(wxWindow* parent,wxWindowID id)
 
     Connect(ID_CHOICE1,wxEVT_COMMAND_CHOICE_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnChoiceScopeSelect);
     Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&WESTSeerFrame::OnButtonNewClick);
+    Connect(ID_BUTTON2,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&WESTSeerFrame::OnButtonPauseClick);
+    Connect(ID_BUTTON3,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&WESTSeerFrame::OnButtonResumeClick);
     Connect(ID_MENUITEM3,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnMenuItemOptionsSelected);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnQuit);
     Connect(ID_MENUITEM6,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnMenuItemSQLSelected);
@@ -205,7 +207,8 @@ WESTSeerFrame::WESTSeerFrame(wxWindow* parent,wxWindowID id)
     //*)
 
     _openAlex = NULL;
-    _progressReporter = new MyProgressReporter(GaugeOverall, GaugeStep, StatusBar1);
+    _termExtraction = NULL;
+    _progressReporter = new MyProgressReporter(this);
     GeneralConfig config;
     std::vector<std::string> scopes = ResearchScope::getResearchScopes(config.getDatabase());
     for (std::string scope: scopes)
@@ -218,6 +221,47 @@ WESTSeerFrame::~WESTSeerFrame()
 {
     //(*Destroy(WESTSeerFrame)
     //*)
+}
+
+WESTSeerFrame::MyProgressReporter::MyProgressReporter(WESTSeerFrame *frame)
+{
+    _frame = frame;
+    _frame->StatusBar1->SetFieldsCount(3);
+    _frame->GaugeOverall->SetRange(100);
+    _frame->GaugeStep->SetRange(100);
+}
+
+void WESTSeerFrame::MyProgressReporter::report(
+    const char *taskName, int taskId, int numTasks, int taskProgress)
+{
+    std::stringstream ss1;
+    ss1 << "task " << taskId << " of " << numTasks;
+    _frame->StatusBar1->SetStatusText(ss1.str().c_str(), 0);
+    _frame->StatusBar1->SetStatusText(taskName, 1);
+    std::stringstream ss2;
+    ss2 << taskProgress << "%";
+    _frame->StatusBar1->SetStatusText(ss2.str().c_str(), 2);
+    _frame->GaugeStep->SetValue(taskProgress);
+    _frame->GaugeOverall->SetValue(100 * taskId / numTasks);
+
+    if (taskId < numTasks)
+    {
+        _frame->ButtonPause->Enable();
+        _frame->ButtonResume->Disable();
+        _frame->ChoiceScope->Disable();
+        _frame->ButtonNew->Disable();
+        _frame->ListCtrlPublications->Disable();
+        _frame->NotebookInfo->Disable();
+    }
+    else
+    {
+        _frame->ButtonPause->Disable();
+        _frame->ButtonResume->Disable();
+        _frame->ChoiceScope->Enable();
+        _frame->ButtonNew->Enable();
+        _frame->ListCtrlPublications->Enable();
+        _frame->NotebookInfo->Enable();
+    }
 }
 
 void WESTSeerFrame::OnQuit(wxCommandEvent& event)
@@ -239,9 +283,6 @@ void WESTSeerFrame::OnButtonNewClick(wxCommandEvent& event)
     {
         if (dlg._openAlex != NULL)
         {
-            _openAlex = dlg._openAlex;
-            _openAlex->setSamplesOnly(false);
-
             // find whether it is in the old choices
             std::string keywords = dlg._openAlex->scope().getKeywords();
             int idxKW = -1;
@@ -287,12 +328,39 @@ void WESTSeerFrame::OnMenuItemLogSelected(wxCommandEvent& event)
 
 void WESTSeerFrame::OnChoiceScopeSelect(wxCommandEvent& event)
 {
+    clearScope();
     AbstractTask::setProgressReporter(_progressReporter);
-    if (_openAlex == NULL)
-    {
-        GeneralConfig config;
-        std::string kws = ChoiceScope->GetString(ChoiceScope->GetSelection()).ToStdString();
-        _openAlex = new OpenAlex(config.getEmail(), config.getDatabase(), kws);
-    }
+    GeneralConfig config;
+    std::string kws = ChoiceScope->GetString(ChoiceScope->GetSelection()).ToStdString();
+    _openAlex = new OpenAlex(config.getEmail(), config.getDatabase(), kws);
+    _termExtraction = new TermExtraction(config.getDatabase(), kws);
+    _openAlex->setNext(_termExtraction);
     _openAlex->runAll();
+}
+
+void WESTSeerFrame::clearScope()
+{
+    if (_openAlex != NULL)
+    {
+        delete _openAlex;
+        _openAlex = NULL;
+    }
+    if (_termExtraction != NULL)
+    {
+        delete _termExtraction;
+        _termExtraction = NULL;
+    }
+}
+
+void WESTSeerFrame::OnButtonPauseClick(wxCommandEvent& event)
+{
+    AbstractTask::setProgressReporter(NULL);
+    AbstractTask::cancel();
+    AbstractTask::finalize();
+    ButtonResume->Enable();
+}
+
+void WESTSeerFrame::OnButtonResumeClick(wxCommandEvent& event)
+{
+    OnChoiceScopeSelect(event);
 }

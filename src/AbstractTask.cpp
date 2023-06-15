@@ -24,8 +24,8 @@ void AbstractTask::finalize()
         _taskThread->join();
         delete _taskThread;
         _taskThread = NULL;
-        _cancelled.store(false);
     }
+    _cancelled.store(false);
 }
 
 void AbstractTask::runAll()
@@ -80,7 +80,7 @@ void AbstractTask::runAll()
     {
         _next->runAll();
     }
-    else
+    else if (_progressReporter != NULL)
     {
         _progressReporter->report("Done", getNumTasks(), getNumTasks(), 100);
     }

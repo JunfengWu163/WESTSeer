@@ -1,4 +1,5 @@
 #include "AbstractMatcher.h"
+#include <sstream>
 
 AbstractMatcher::AbstractMatcher()
 {
@@ -49,4 +50,37 @@ void AbstractMatcher::insertTerm(const std::vector<std::string> &term, int i)
             sub = insertToken(term[i], false);
         sub->insertTerm(term, i+1);
     }
+}
+
+void AbstractMatcher::getTerms(std::string prefix, std::vector<std::string> &terms)
+{
+    if (_type == TERM && prefix.size() > 0)
+    {
+        terms.push_back(prefix);
+    }
+    for (auto partToSub: _subMatchers)
+    {
+        if (prefix.size() > 0)
+        {
+            partToSub.second->getTerms(prefix + " " + partToSub.first, terms);
+        }
+        else
+        {
+            partToSub.second->getTerms(partToSub.first, terms);
+        }
+    }
+}
+
+std::string AbstractMatcher::getTerms()
+{
+    std::stringstream ss;
+    std::vector<std::string> terms;
+    getTerms("", terms);
+    for (size_t i = 0; i < terms.size(); i++)
+    {
+        if (i > 0)
+            ss << ",";
+        ss << terms[i];
+    }
+    return ss.str();
 }
