@@ -25,6 +25,7 @@
 
 #include <ProgressReporter.h>
 #include <OpenAlex.h>
+#include <TermExtraction.h>
 #include <sstream>
 
 class WESTSeerFrame: public wxFrame
@@ -44,6 +45,8 @@ class WESTSeerFrame: public wxFrame
         void OnMenuItemSQLSelected(wxCommandEvent& event);
         void OnMenuItemLogSelected(wxCommandEvent& event);
         void OnChoiceScopeSelect(wxCommandEvent& event);
+        void OnButtonPauseClick(wxCommandEvent& event);
+        void OnButtonResumeClick(wxCommandEvent& event);
         //*)
 
         //(*Identifiers(WESTSeerFrame)
@@ -119,30 +122,15 @@ class WESTSeerFrame: public wxFrame
         class MyProgressReporter: public ProgressReporter
         {
             private:
-                wxGauge *_gaugeOverall;
-                wxGauge *_gaugeStep;
-                wxStatusBar *_statusBar;
+                WESTSeerFrame *_frame;
             public:
-                MyProgressReporter(wxGauge *gaugeOverall, wxGauge *gaugeStep, wxStatusBar *myStatusBar): _gaugeOverall(gaugeOverall), _gaugeStep(gaugeStep), _statusBar(myStatusBar)
-                {
-                    _statusBar->SetFieldsCount(3);
-                    _gaugeOverall->SetRange(100);
-                    _gaugeStep->SetRange(100);
-                }
-                virtual void report(const char *taskName, int taskId, int numTasks, int taskProgress)
-                {
-                    std::stringstream ss1;
-                    ss1 << "task " << taskId << " of " << numTasks;
-                    _statusBar->SetStatusText(ss1.str().c_str(), 0);
-                    _statusBar->SetStatusText(taskName, 1);
-                    std::stringstream ss2;
-                    ss2 << taskProgress << "%";
-                    _statusBar->SetStatusText(ss2.str().c_str(), 2);
-                    _gaugeStep->SetValue(taskProgress);
-                    _gaugeOverall->SetValue(100 * taskId / numTasks);
-                }
+                MyProgressReporter(WESTSeerFrame *frame);
+                virtual void report(const char *taskName, int taskId, int numTasks, int taskProgress);
         } *_progressReporter;
         OpenAlex *_openAlex;
+        TermExtraction *_termExtraction;
+
+        void clearScope();
 };
 
 #endif // WESTSEERMAIN_H

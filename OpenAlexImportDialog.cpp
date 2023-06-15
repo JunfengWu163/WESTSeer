@@ -125,6 +125,7 @@ OpenAlexImportDialog::~OpenAlexImportDialog()
 
 void OpenAlexImportDialog::OnTextCtrlSampleAbstractText(wxCommandEvent& event)
 {
+    delete _openAlex;
 }
 
 void OpenAlexImportDialog::OnButtonGetSamplesClick(wxCommandEvent& event)

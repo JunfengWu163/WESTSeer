@@ -162,7 +162,19 @@ vector<string> tokenize(const string &phrase)
 	{
 		for (string x : m)
 		{
-			tokens.push_back(x);
+		    bool isNumber = true;
+		    for (size_t i = 0; i <x.size(); i++)
+            {
+                if (!isdigit(x[i]))
+                {
+                    isNumber = false;
+                    break;
+                }
+            }
+		    if (isNumber)
+                tokens.push_back("#");
+            else
+                tokens.push_back(x);
 		}
 		str = m.suffix();
 	}

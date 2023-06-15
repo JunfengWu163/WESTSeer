@@ -1,6 +1,6 @@
-#ifdef _WIN32
-#include <winsock.h>
-#endif // _WIN32
+//#ifdef _WIN32
+//#include <winsock.h>
+//#endif // _WIN32
 #include <OpenAlex.h>
 #include <StringProcessing.h>
 #include <wxFFileLog.h>
@@ -9,6 +9,7 @@
 #include <regex>
 #include <fstream>
 #include <algorithm>
+#define CPPHTTPLIB_OPENSSL_SUPPORT
 #include <httplib.h>
 
 void OpenAlex::init()
@@ -137,14 +138,14 @@ void OpenAlex::doStep(int stepId)
     logDebug(url.c_str());
 
     // get first page of this download url
-    httplib::Client client("http://api.openalex.org");
+    httplib::Client client("https://api.openalex.org");
     auto res = client.Get(url + "&cursor=*");
     while (res->status != 200)
     {
         if (_cancelled.load() == true)
             return;
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
-        res = client.Get(url + "&cursor=*");
+            res = client.Get(url + "&cursor=*");
     }
     if (_cancelled.load() == true)
         return;

@@ -58,6 +58,7 @@
 						<object class="wxButton" name="ID_BUTTON2" variable="ButtonPause" member="yes">
 							<label>Pause</label>
 							<enabled>0</enabled>
+							<handler function="OnButtonPauseClick" entry="EVT_BUTTON" />
 						</object>
 						<flag>wxALL|wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL</flag>
 						<border>5</border>
@@ -81,6 +82,7 @@
 						<object class="wxButton" name="ID_BUTTON3" variable="ButtonResume" member="yes">
 							<label>Resume</label>
 							<enabled>0</enabled>
+							<handler function="OnButtonResumeClick" entry="EVT_BUTTON" />
 						</object>
 						<flag>wxALL|wxEXPAND</flag>
 						<border>5</border>
