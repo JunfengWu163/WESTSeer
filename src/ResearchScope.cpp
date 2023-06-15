@@ -34,7 +34,7 @@ std::vector<std::string> ResearchScope::getResearchScopes(const std::string path
     }
     else
     {
-        logError(errorMessage);
+        logDebug(errorMessage);
     }
     sqlite3_close(db);
     return results;
