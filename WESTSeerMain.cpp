@@ -208,6 +208,7 @@ WESTSeerFrame::WESTSeerFrame(wxWindow* parent,wxWindowID id)
 
     _openAlex = NULL;
     _termExtraction = NULL;
+    _termTfirdf = NULL;
     _progressReporter = new MyProgressReporter(this);
     GeneralConfig config;
     std::vector<std::string> scopes = ResearchScope::getResearchScopes(config.getDatabase());
@@ -334,7 +335,9 @@ void WESTSeerFrame::OnChoiceScopeSelect(wxCommandEvent& event)
     std::string kws = ChoiceScope->GetString(ChoiceScope->GetSelection()).ToStdString();
     _openAlex = new OpenAlex(config.getEmail(), config.getDatabase(), kws);
     _termExtraction = new TermExtraction(config.getDatabase(), kws);
+    _termTfirdf = new TermTfIrdf(config.getDatabase(), kws, _termExtraction);
     _openAlex->setNext(_termExtraction);
+    _termExtraction->setNext(_termTfirdf);
     _openAlex->runAll();
 }
 
@@ -349,6 +352,11 @@ void WESTSeerFrame::clearScope()
     {
         delete _termExtraction;
         _termExtraction = NULL;
+    }
+    if (_termTfirdf != NULL)
+    {
+        delete _termTfirdf;
+        _termTfirdf = NULL;
     }
 }
 

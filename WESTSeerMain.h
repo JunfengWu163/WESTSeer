@@ -26,7 +26,7 @@
 #include <ProgressReporter.h>
 #include <OpenAlex.h>
 #include <TermExtraction.h>
-#include <sstream>
+#include <TermTfIrdf.h>
 
 class WESTSeerFrame: public wxFrame
 {
@@ -129,6 +129,7 @@ class WESTSeerFrame: public wxFrame
         } *_progressReporter;
         OpenAlex *_openAlex;
         TermExtraction *_termExtraction;
+        TermTfIrdf *_termTfirdf;
 
         void clearScope();
 };

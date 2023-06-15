@@ -237,7 +237,7 @@ bool ResearchScope::load(int idxComb, const int y, std::map<uint64_t, Publicatio
         rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK)
         {
-            logError(errorMessage);
+            logDebug(errorMessage);
         }
         if (rc != SQLITE_OK || data.results.size() == 0)
         {
@@ -257,7 +257,7 @@ bool ResearchScope::load(int idxComb, const int y, std::map<uint64_t, Publicatio
         rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK)
         {
-            logError(errorMessage);
+            logDebug(errorMessage);
             sqlite3_close(db);
             return false;
         }
@@ -289,7 +289,7 @@ bool ResearchScope::load(int idxComb, const int y)
     rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
     if (rc != SQLITE_OK)
     {
-        logError(errorMessage);
+        logDebug(errorMessage);
     }
     if (rc != SQLITE_OK || data.results.size() == 0)
     {
@@ -329,7 +329,7 @@ bool ResearchScope::save(const std::map<uint64_t, Publication> &pubs)
         rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK)
         {
-            logError(errorMessage);
+            logDebug(errorMessage);
             sqlite3_close(db);
             return false;
         }
@@ -509,7 +509,7 @@ bool ResearchScope::getMissingRefIds(int idxComb, const int y, std::vector<uint6
         rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK)
         {
-            logError(errorMessage);
+            logDebug(errorMessage);
         }
         if (rc != SQLITE_OK || data.results.size() == 0)
         {
@@ -536,7 +536,7 @@ bool ResearchScope::getMissingRefIds(int idxComb, const int y, std::vector<uint6
         logDebug(ss.str().c_str());
         if (rc != SQLITE_OK)
         {
-            logError(errorMessage);
+            logDebug(errorMessage);
         }
         if (rc != SQLITE_OK || data.results.size() == 0)
         {

@@ -9,24 +9,6 @@
 #include <sstream>
 #include <set>
 
-// DABASE TABLES FOR THIS CLASS
-/*
-        "CREATE TABLE IF NOT EXISTS pub_scope_terms("
-        "id INTEGER,"
-        "scope_keywords TEXT,"
-        "year INTEGER,"
-        "update_time INTEGER,"
-        "terms TEXT,"
-        "PRIMARY KEY(id,scope_keywords))",
-
-        "CREATE TABLE IF NOT EXISTS scope_terms("
-        "keywords TEXT,"
-        "year INTEGER,"
-        "update_time INTEGER,"
-        "terms TEXT,"
-        "PRIMARY KEY(keywords,year));"
-*/
-
 TermExtraction::TermExtraction(const std::string path, const std::string kws) : _scope(path, kws)
 {
     //ctor
@@ -44,7 +26,12 @@ TermExtraction::~TermExtraction()
 
 bool TermExtraction::finished()
 {
-    return false;
+    for (int y = _y2 - 1; y >= _y0; y--)
+    {
+        if (!load(y, NULL, false))
+            return false;
+    }
+    return true;
 }
 
 const char *TermExtraction::name()
@@ -93,7 +80,7 @@ bool TermExtraction::load(int y, std::map<uint64_t, std::vector<std::string>> &t
         rc = sqlite3_exec(db, strSql.c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK)
         {
-            logError(errorMessage);
+            logDebug(errorMessage);
         }
         if (rc != SQLITE_OK || data.results.size() == 0)
         {
@@ -132,7 +119,7 @@ bool TermExtraction::load(int y, std::map<uint64_t, std::vector<std::string>> &t
         rc = sqlite3_exec(db, strSql.c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK)
         {
-            logError(errorMessage);
+            logDebug(errorMessage);
             sqlite3_close(db);
             return false;
         }
@@ -168,7 +155,7 @@ bool TermExtraction::load(int y, std::map<uint64_t, std::vector<std::string>> &t
         rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK)
         {
-            logError(errorMessage);
+            logDebug(errorMessage);
             sqlite3_close(db);
             return false;
         }
@@ -342,7 +329,7 @@ bool TermExtraction::load(int y, std::map<uint64_t, std::map<std::string, int>> 
             rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
             if (rc != SQLITE_OK)
             {
-                logError(errorMessage);
+                logDebug(errorMessage);
                 sqlite3_close(db);
                 return false;
             }
@@ -374,7 +361,7 @@ bool TermExtraction::load(int y, std::map<uint64_t, std::map<std::string, int>> 
         rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK)
         {
-            logError(errorMessage);
+            logDebug(errorMessage);
             sqlite3_close(db);
             return false;
         }
@@ -393,7 +380,7 @@ bool TermExtraction::load(int y, std::map<uint64_t, std::map<std::string, int>> 
         rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK)
         {
-            logError(errorMessage);
+            logDebug(errorMessage);
             sqlite3_close(db);
             return false;
         }
@@ -447,8 +434,8 @@ std::vector<std::vector<std::string>> TermExtraction::split(const std::string te
 bool TermExtraction::process(int y)
 {
     if (load(y + 1, NULL, false))
-            return true;
-    if (load(y, NULL))
+        return true;
+    if (load(y, NULL, true))
         return true;
 
     // step 1:load texts
