@@ -57,6 +57,7 @@
 			<Add option="-Wall" />
 			<Add option="-pipe" />
 			<Add option="-mthreads" />
+			<Add option="-fopenmp" />
 			<Add option="-D__GNUWIN32__" />
 			<Add option="-D__WXMSW__" />
 			<Add option="-DWXUSINGDLL" />
@@ -64,12 +65,15 @@
 			<Add option="-DSQLITE_THREADSAFE=1" />
 			<Add option="-DTHREADSAFE=1" />
 			<Add directory="include" />
+			<Add directory="include/opennn" />
 		</Compiler>
 		<ResourceCompiler>
 			<Add directory="include" />
 		</ResourceCompiler>
 		<Linker>
 			<Add option="-mthreads" />
+			<Add option="-fopenmp" />
+			<Add library="tensorflow" />
 			<Add library="llama" />
 			<Add library="ssl" />
 			<Add library="crypto" />
