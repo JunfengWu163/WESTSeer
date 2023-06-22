@@ -1,10 +1,8 @@
-//#ifdef _WIN32
-//#include <winsock.h>
-//#endif // _WIN32
 #include <OpenAlex.h>
+#include <../WESTSeerApp.h>
 #include <StringProcessing.h>
 #include <wxFFileLog.h>
-#include <ctime>
+#include <GeneralConfig.h>
 #include <sstream>
 #include <regex>
 #include <fstream>
@@ -14,11 +12,10 @@
 
 void OpenAlex::init()
 {
-    std::time_t t = std::time(0);   // get time now
-    std::tm* now = std::localtime(&t);
-    _y2 = now->tm_year + 1900;
+    GeneralConfig config;
+    _y2 = WESTSeerApp::year();
     _y1 = _y2 - 5;
-    _y0 = _y1 - 25;
+    _y0 = _y2 - config.getObYears();
 
     int numCombs = _scope.numCombinations();
     for (int y = _y2 - 1; y >= _y0; y--)

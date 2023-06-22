@@ -65,7 +65,6 @@
 			<Add option="-DSQLITE_THREADSAFE=1" />
 			<Add option="-DTHREADSAFE=1" />
 			<Add directory="include" />
-			<Add directory="include/opennn" />
 		</Compiler>
 		<ResourceCompiler>
 			<Add directory="include" />
@@ -96,21 +95,30 @@
 		<Unit filename="WESTSeerMain.h" />
 		<Unit filename="include/AbstractMatcher.h" />
 		<Unit filename="include/AbstractTask.h" />
+		<Unit filename="include/BitermDf.h" />
+		<Unit filename="include/BitermWeight.h" />
 		<Unit filename="include/CallbackData.h" />
+		<Unit filename="include/CandidateIdentification.h" />
 		<Unit filename="include/EmailValidator.h" />
 		<Unit filename="include/GeneralConfig.h" />
 		<Unit filename="include/LLMConfig.h" />
 		<Unit filename="include/Matcher.h" />
+		<Unit filename="include/MetricModel.h" />
 		<Unit filename="include/NeuralNetworkConfig.h" />
 		<Unit filename="include/OpenAlex.h" />
+		<Unit filename="include/PredictionModel.h" />
 		<Unit filename="include/ProgressReporter.h" />
 		<Unit filename="include/Publication.h" />
 		<Unit filename="include/ResearchScope.h" />
 		<Unit filename="include/StopWordMatcher.h" />
 		<Unit filename="include/StopWords.h" />
 		<Unit filename="include/StringProcessing.h" />
+		<Unit filename="include/TFModel.h" />
 		<Unit filename="include/TermExtraction.h" />
 		<Unit filename="include/TermTfIrdf.h" />
+		<Unit filename="include/TimeSeriesExtraction.h" />
+		<Unit filename="include/TimeSeriesRegression.h" />
+		<Unit filename="include/TopicIndentification.h" />
 		<Unit filename="include/httplib.h" />
 		<Unit filename="include/porter2_stemmer.h" />
 		<Unit filename="include/sqlite3.h" />
@@ -121,21 +129,30 @@
 		</Unit>
 		<Unit filename="src/AbstractMatcher.cpp" />
 		<Unit filename="src/AbstractTask.cpp" />
+		<Unit filename="src/BitermDf.cpp" />
+		<Unit filename="src/BitermWeight.cpp" />
 		<Unit filename="src/CallbackData.cpp" />
+		<Unit filename="src/CandidateIdentification.cpp" />
 		<Unit filename="src/EmailValidator.cpp" />
 		<Unit filename="src/GeneralConfig.cpp" />
 		<Unit filename="src/LLMConfig.cpp" />
 		<Unit filename="src/Matcher.cpp" />
+		<Unit filename="src/MetricModel.cpp" />
 		<Unit filename="src/NeuralNetworkConfig.cpp" />
 		<Unit filename="src/OpenAlex.cpp" />
+		<Unit filename="src/PredictionModel.cpp" />
 		<Unit filename="src/ProgressReporter.cpp" />
 		<Unit filename="src/Publication.cpp" />
 		<Unit filename="src/ResearchScope.cpp" />
 		<Unit filename="src/StopWordMatcher.cpp" />
 		<Unit filename="src/StopWords.cpp" />
 		<Unit filename="src/StringProcessing.cpp" />
+		<Unit filename="src/TFModel.cpp" />
 		<Unit filename="src/TermExtraction.cpp" />
 		<Unit filename="src/TermTfIrdf.cpp" />
+		<Unit filename="src/TimeSeriesExtraction.cpp" />
+		<Unit filename="src/TimeSeriesRegression.cpp" />
+		<Unit filename="src/TopicIndentification.cpp" />
 		<Unit filename="src/porter2_stemmer.cpp" />
 		<Unit filename="src/sqlite3.c">
 			<Option compilerVar="CC" />

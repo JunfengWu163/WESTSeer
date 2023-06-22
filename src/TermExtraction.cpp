@@ -1,4 +1,5 @@
 #include "TermExtraction.h"
+#include <../WESTSeerApp.h>
 #include <StringProcessing.h>
 #include <GeneralConfig.h>
 #include <CallbackData.h>
@@ -12,11 +13,10 @@
 TermExtraction::TermExtraction(const std::string path, const std::string kws) : _scope(path, kws)
 {
     //ctor
-    std::time_t t = std::time(0);
-    std::tm* now = std::localtime(&t);
-    _y2 = now->tm_year + 1900;
+    GeneralConfig config;
+    _y2 = WESTSeerApp::year();
     _y1 = _y2 - 5;
-    _y0 = _y1 - 25;
+    _y0 = _y2 - config.getObYears();
 }
 
 TermExtraction::~TermExtraction()
@@ -204,7 +204,7 @@ bool TermExtraction::load(int y, std::map<uint64_t, std::vector<std::string>> &t
     return true;
 }
 
-bool TermExtraction::save(int y, const std::map<uint64_t, std::map<std::string, int>> &termFreqs)
+bool TermExtraction::save(int y, const std::map<uint64_t, std::map<std::string, std::pair<std::string, int>>> &termFreqs)
 {
     GeneralConfig config;
     std::string path = config.getDatabase();
@@ -265,7 +265,7 @@ bool TermExtraction::save(int y, const std::map<uint64_t, std::map<std::string, 
             {
                 if (termToFreq != iter->second.begin())
                     ss << ",";
-                ss << termToFreq->first << ":" << termToFreq->second;
+                ss << termToFreq->first << ":" << termToFreq->second.first << ":" << termToFreq->second.second;
             }
             ss << "')";
         }
@@ -301,7 +301,7 @@ bool TermExtraction::save(int y, const std::map<uint64_t, std::map<std::string, 
     return true;
 }
 
-bool TermExtraction::load(int y, std::map<uint64_t, std::map<std::string, int>> *termFreqs, bool loadTerms)
+bool TermExtraction::load(int y, std::map<uint64_t, std::map<std::string, std::pair<std::string, int>>> *termFreqs, bool loadTerms)
 {
     GeneralConfig config;
     std::string path = config.getDatabase();
@@ -335,14 +335,15 @@ bool TermExtraction::load(int y, std::map<uint64_t, std::map<std::string, int>> 
             }
             for (auto &result: data.results)
             {
-                std::map<std::string, int> myTermFreqs;
+                std::map<std::string, std::pair<std::string,int>> myTermFreqs;
                 uint64_t id = std::stoull(result["id"]);
                 std::string strTermFreqs = result["terms"];
                 std::vector<std::string> fields = splitString(strTermFreqs, ",");
                 for (std::string field: fields)
                 {
                     std::vector<std::string> kv = splitString(field, ":");
-                    myTermFreqs[kv[0]] = atoi(kv[1].c_str());
+                    std::pair<std::string,int> tf(kv[1],atoi(kv[2].c_str()));
+                    myTermFreqs[kv[0]] = tf;
                 }
                 (*termFreqs)[id] = myTermFreqs;
             }
@@ -466,14 +467,14 @@ bool TermExtraction::process(int y)
         }
     }
 
-    // step 3: flexible extraction of terms in titles and abstracts
-    std::map<uint64_t, std::map<std::string, int>> termFreqs;
+    // step 3: flexible extraction of terms in titles, abstracts and reference titles
+    std::map<uint64_t, std::map<std::string, std::pair<std::string, int>>> termFreqs;
     for (auto iter = texts.begin(); iter != texts.end(); iter++)
     {
         uint64_t id = iter->first;
         std::vector<std::string> &texts = iter->second;
-        std::map<std::string, int> termFreqsOfWork;
-        for (size_t idxText = 0; idxText < 2 && idxText < texts.size(); idxText++)
+        std::map<std::string, std::map<std::string,int>> termFreqsOfWork;
+        for (size_t idxText = 0; idxText < texts.size(); idxText++)
         {
             std::vector<std::vector<std::string>> terms = split(texts[idxText]);
             for (size_t idxTerm = 0; idxTerm < terms.size(); idxTerm++)
@@ -483,30 +484,63 @@ bool TermExtraction::process(int y)
                 {
                     std::vector<AbstractMatcher::Type> m = _matcher.match(term, i);
                     std::string s;
+                    std::string t;
                     for (size_t j = 0; j < m.size(); j++)
                     {
                         if (j > 0)
+                        {
                             s += " ";
+                            t += " ";
+                        }
                         std::string token = term[i + j];
+                        t += token;
                         Porter2Stemmer::stem(token);
                         s += token;
                         if (m[j] == AbstractMatcher::TERM)
                         {
-                            auto sToFreq = termFreqsOfWork.find(s);
-                            if (sToFreq != termFreqsOfWork.end())
+                            auto sToTFreq = termFreqsOfWork.find(s);
+                            if (sToTFreq != termFreqsOfWork.end())
                             {
-                                termFreqsOfWork[s] = sToFreq->second + 1;
+                                auto tToFreq = sToTFreq->second.find(t);
+                                if (tToFreq != sToTFreq->second.end())
+                                {
+                                    termFreqsOfWork[s][t] = tToFreq->second + 1;
+                                }
+                                else
+                                {
+                                    termFreqsOfWork[s][t] = 1;
+                                }
                             }
                             else
                             {
-                                termFreqsOfWork[s] = 1;
+                                std::map<std::string,int> temp;
+                                temp[t] = 1;
+                                termFreqsOfWork[s] = temp;
                             }
                         }
                     }
                 }
             }
         }
-        termFreqs[id] = termFreqsOfWork;
+        std::map<std::string, std::pair<std::string, int>> stf;
+        for (auto &sToTf: termFreqsOfWork)
+        {
+            int sumF = 0;
+            int maxF = 0;
+            std::string tMaxF = "";
+            for (auto &tToF: sToTf.second)
+            {
+                sumF += tToF.second;
+                if (tToF.second > maxF)
+                {
+                    maxF = tToF.second;
+                    tMaxF = tToF.first;
+                }
+            }
+            std::pair<std::string,int> tf(tMaxF,sumF);
+            stf[sToTf.first] = tf;
+        }
+        termFreqs[id] = stf;
         if (_cancelled.load() == true)
         {
             return false;
@@ -515,5 +549,10 @@ bool TermExtraction::process(int y)
 
     // step 4: save extraction results
     save(y, termFreqs);
+    if (y == _y2 - 1)
+    {
+        _matcher.clear();
+        _stopWordMatcher.clear();
+    }
     return true;
 }

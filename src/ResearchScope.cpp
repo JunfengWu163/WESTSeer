@@ -185,6 +185,39 @@ std::string ResearchScope::getCombination(int i) const
         return _kws2[i2] + "&" + _kws1[i1];
 }
 
+int ResearchScope::numPublications(const int y) const
+{
+    sqlite3 *db = NULL;
+    int rc = sqlite3_open(_path.c_str(), &db);
+    if (rc != SQLITE_OK)
+        return false;
+
+    std::set<uint64_t> ids;
+    int numCombs = numCombinations();
+    for (int idxComb = 0; idxComb < numCombs; idxComb++)
+    {
+        CallbackData data;
+        char *errorMessage = NULL;
+        std::stringstream ss;
+        ss << "SELECT combination, year, ids FROM openalex_queries"
+           " WHERE combination = '" << getCombination(idxComb) << "' AND year = " << y << ";";
+        logDebug(ss.str().c_str());
+        rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
+        if (rc != SQLITE_OK)
+        {
+            logDebug(errorMessage);
+        }
+        std::vector<std::string> idStrs = splitString(data.results[0]["ids"], ",");
+        for (std::string idStr: idStrs)
+        {
+            ids.insert(std::stoull(idStr));
+        }
+    }
+
+    sqlite3_close(db);
+    return (int)ids.size();
+}
+
 bool ResearchScope::init()
 {
     if (!storable())
@@ -533,7 +566,6 @@ bool ResearchScope::getMissingRefIds(int idxComb, const int y, std::vector<uint6
         ss << "SELECT id FROM publications WHERE id IN (" << refIdsStr << ");";
         logDebug(ss.str().c_str());
         rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
-        logDebug(ss.str().c_str());
         if (rc != SQLITE_OK)
         {
             logDebug(errorMessage);
@@ -560,5 +592,130 @@ bool ResearchScope::getMissingRefIds(int idxComb, const int y, std::vector<uint6
             newRefIds.push_back(id);
         }
     }
+    sqlite3_close(db);
+    return true;
+}
+
+bool ResearchScope::getExistingRefIds(const int y, std::map<uint64_t, std::vector<uint64_t>> &refIdsOfId)
+{
+    sqlite3 *db = NULL;
+    int rc = sqlite3_open(_path.c_str(), &db);
+    if (rc != SQLITE_OK)
+    {
+        logError(wxT("Cannot open database at" + _path));
+        return false;
+    }
+    char *errorMessage = NULL;
+
+    int numCombs = numCombinations();
+    std::set<uint64_t> ids;
+    std::set<uint64_t> refIds;
+
+    // ---------------------------------------------------------------------------
+    // step 1: get ids and ref ids of combination and year
+    for (int idxComb = 0; idxComb <numCombs; idxComb++)
+    {
+        std::stringstream ss;
+        ss << "SELECT combination, year, ids, ref_ids FROM openalex_queries"
+           " WHERE combination = '" << getCombination(idxComb) << "' AND year = " << y << ";";
+        logDebug(ss.str().c_str());
+        CallbackData data;
+        rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
+        if (rc != SQLITE_OK)
+        {
+            logDebug(errorMessage);
+        }
+        if (rc != SQLITE_OK || data.results.size() == 0)
+        {
+            sqlite3_close(db);
+            return false;
+        }
+
+        std::string idsStr = data.results[0]["ids"];
+        std::vector<std::string> idStrs = splitString(idsStr, ",");
+        for (std::string s : idStrs)
+        {
+            ids.insert(std::stoull(s));
+        }
+
+        std::string refIdsStr = data.results[0]["ref_ids"];
+        std::vector<std::string> refIDStrs = splitString(refIdsStr, ",");
+        for (std::string s : refIDStrs)
+        {
+            refIds.insert(std::stoull(s));
+        }
+    }
+
+    // ---------------------------------------------------------------------------
+    // step 2: find existing ref ids
+    std::set<uint64_t> existingRefIds;
+    {
+        std::stringstream ss;
+        ss << "SELECT id FROM publications WHERE id IN (";
+        for (auto iter = refIds.begin(); iter != refIds.end(); iter++)
+        {
+            if (iter != refIds.begin())
+                ss << ",";
+            ss << *iter;
+        }
+        ss << ");";
+        logDebug(ss.str().c_str());
+        CallbackData data;
+        rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
+        if (rc != SQLITE_OK)
+        {
+            logDebug(errorMessage);
+            sqlite3_close(db);
+            return false;
+        }
+
+        for (auto result: data.results)
+        {
+            existingRefIds.insert(std::stoull(result["id"]));
+        }
+    }
+
+    // ---------------------------------------------------------------------------
+    // step 3: get ref_ids for each id
+    refIdsOfId.clear();
+    {
+        std::stringstream ss;
+        ss << "SELECT id, ref_ids FROM publications WHERE id IN (";
+        for (auto iter = ids.begin(); iter != ids.end(); iter++)
+        {
+            if (iter != ids.begin())
+                ss << ",";
+            ss << *iter;
+        }
+        ss << ");";
+        logDebug(ss.str().c_str());
+        CallbackData data;
+        rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
+        if (rc != SQLITE_OK)
+        {
+            logDebug(errorMessage);
+            sqlite3_close(db);
+            return false;
+        }
+
+        for (auto result: data.results)
+        {
+            uint64_t id = std::stoull(result["id"]);
+            std::vector<uint64_t> myRefIds;
+            std::string refIdsStr = result["ref_ids"];
+            std::vector<std::string> refIDStrs = splitString(refIdsStr, ",");
+            for (std::string s : refIDStrs)
+            {
+                uint64_t refId = std::stoull(s);
+                if (existingRefIds.find(refId) != existingRefIds.end())
+                {
+                    myRefIds.push_back(refId);
+                }
+            }
+            refIdsOfId[id] = myRefIds;
+        }
+    }
+
+    sqlite3_close(db);
     return true;
 }

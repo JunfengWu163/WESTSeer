@@ -14,6 +14,7 @@
 #include <AbstractTask.h>
 #include "SettingsDialog.h"
 #include <string>
+#include <ctime>
 
 //(*AppHeaders
 #include "WESTSeerMain.h"
@@ -24,6 +25,7 @@ IMPLEMENT_APP(WESTSeerApp);
 
 wxFileConfig *WESTSeerApp::_fileConfig = NULL;
 wxFFileLog *WESTSeerApp::_log = NULL;
+int WESTSeerApp::_year;
 
 wxFileConfig *WESTSeerApp::getFileConfig()
 {
@@ -35,8 +37,18 @@ void WESTSeerApp::FlushLog()
     _log->Flush();
 }
 
+int WESTSeerApp::year()
+{
+    return _year;
+}
+
 bool WESTSeerApp::OnInit()
 {
+    // get current year
+    std::time_t t = std::time(0);
+    std::tm* now = std::localtime(&t);
+    _year = now->tm_year + 1900;
+
     // create app directory if not exists
     wxString appDir = wxStandardPaths::Get().GetUserLocalDataDir();
 	if (!wxDirExists(appDir))

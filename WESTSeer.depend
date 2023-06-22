@@ -8,7 +8,7 @@
 
 1686872045 d:\c++\westseer\include\wx\msw\rcdefs.h
 
-1686951200 source:d:\c++\westseer\westseerapp.cpp
+1687207988 source:d:\c++\westseer\westseerapp.cpp
 	"WESTSeerApp.h"
 	<wx/stdpaths.h>
 	<wx/filefn.h>
@@ -16,11 +16,11 @@
 	<AbstractTask.h>
 	"SettingsDialog.h"
 	<string>
-	<tensorflow/c/c_api.h>
+	<ctime>
 	"WESTSeerMain.h"
 	<wx/image.h>
 
-1686872045 d:\c++\westseer\westseerapp.h
+1687207880 d:\c++\westseer\westseerapp.h
 	<wx/app.h>
 	<wx/fileconf.h>
 	<wxFFileLog.h>
@@ -3369,11 +3369,12 @@
 1686872046 source:d:\c++\westseer\src\emailvalidator.cpp
 	"EmailValidator.h"
 
-1686872046 source:d:\c++\westseer\src\openalex.cpp
+1687208152 source:d:\c++\westseer\src\openalex.cpp
 	<OpenAlex.h>
+	<../WESTSeerApp.h>
 	<StringProcessing.h>
 	<wxFFileLog.h>
-	<ctime>
+	<GeneralConfig.h>
 	<sstream>
 	<regex>
 	<fstream>
@@ -3391,7 +3392,7 @@
 	<ResearchScope.h>
 	<ProgressReporter.h>
 
-1686872045 d:\c++\westseer\include\researchscope.h
+1687241880 d:\c++\westseer\include\researchscope.h
 	<cstdint>
 	<string>
 	<vector>
@@ -3472,7 +3473,7 @@
 	<map>
 	<cassert>
 
-1686872519 source:d:\c++\westseer\src\researchscope.cpp
+1687252203 source:d:\c++\westseer\src\researchscope.cpp
 	"ResearchScope.h"
 	<algorithm>
 	<stdexcept>
@@ -3644,14 +3645,14 @@
 	<string>
 	"util/string_view.h"
 
-1686872045 d:\c++\westseer\include\util\string_view.h
+1687080508 d:\c++\westseer\include\util\string_view.h
 	"util/hash.h"
 	<experimental/string_view>
 	<algorithm>
 	<stdexcept>
 	<string>
 
-1686872045 d:\c++\westseer\include\util\hash.h
+1687080507 d:\c++\westseer\include\util\hash.h
 	<array>
 	<cassert>
 	<cstdint>
@@ -3663,8 +3664,9 @@
 	<unordered_map>
 	"porter2_stemmer.h"
 
-1686872046 source:d:\c++\westseer\src\termextraction.cpp
+1687208207 source:d:\c++\westseer\src\termextraction.cpp
 	"TermExtraction.h"
+	<../WESTSeerApp.h>
 	<StringProcessing.h>
 	<GeneralConfig.h>
 	<CallbackData.h>
@@ -3685,8 +3687,9 @@
 	<StopWordMatcher.h>
 	<Matcher.h>
 
-1686872046 source:d:\c++\westseer\src\termtfirdf.cpp
+1687208250 source:d:\c++\westseer\src\termtfirdf.cpp
 	"TermTfIrdf.h"
+	<../WESTSeerApp.h>
 	<GeneralConfig.h>
 	<CallbackData.h>
 	<wxFFileLog.h>
@@ -7305,7 +7308,7 @@
 	<sys/types.h>
 	<unistd.h>
 
-1628539972 d:\c++\westseer\include\tensorflow\c\c_api.h
+1662164372 d:\c++\westseer\include\tensorflow\c\c_api.h
 	<stddef.h>
 	<stdint.h>
 	"tensorflow/c/tf_attrtype.h"
@@ -7314,34 +7317,4401 @@
 	"tensorflow/c/tf_tensor.h"
 	"tensorflow/c/tf_tstring.h"
 
-1628539972 d:\c++\westseer\include\tensorflow\c\tf_attrtype.h
+1662164372 d:\c++\westseer\include\tensorflow\c\tf_attrtype.h
 
-1628539972 d:\c++\westseer\include\tensorflow\c\tf_datatype.h
+1662164372 d:\c++\westseer\include\tensorflow\c\tf_datatype.h
 	<stddef.h>
 
-1628539972 d:\c++\westseer\include\tensorflow\c\tf_status.h
+1662164372 d:\c++\westseer\include\tensorflow\c\tf_status.h
 
-1628539972 d:\c++\westseer\include\tensorflow\c\tf_tensor.h
+1662164372 d:\c++\westseer\include\tensorflow\c\tf_tensor.h
 	<stdbool.h>
 	<stdint.h>
 	"tensorflow/c/c_api_macros.h"
 	"tensorflow/c/tf_datatype.h"
 	"tensorflow/c/tf_status.h"
 
-1628539972 d:\c++\westseer\include\tensorflow\c\c_api_macros.h
+1662164372 d:\c++\westseer\include\tensorflow\c\c_api_macros.h
 
-1628539972 d:\c++\westseer\include\tensorflow\c\tf_tstring.h
+1662164372 d:\c++\westseer\include\tensorflow\c\tf_tstring.h
 	"tensorflow/c/tf_tensor.h"
 	"tensorflow/core/platform/ctstring.h"
 
-1628539972 d:\c++\westseer\include\tensorflow\core\platform\ctstring.h
+1662164373 d:\c++\westseer\include\tensorflow\core\platform\ctstring.h
 	<stdint.h>
 	<stdlib.h>
 	"tensorflow/core/platform/ctstring_internal.h"
 
-1628539972 d:\c++\westseer\include\tensorflow\core\platform\ctstring_internal.h
+1662164373 d:\c++\westseer\include\tensorflow\core\platform\ctstring_internal.h
 	<limits.h>
 	<stdint.h>
 	<stdlib.h>
 	<string.h>
+
+1687042624 source:d:\c++\westseer\src\candidateidentification.cpp
+	"CandidateIdentification.h"
+	<GeneralConfig.h>
+	<CallbackData.h>
+	<wxFFileLog.h>
+	<StringProcessing.h>
+	<ctime>
+	<cstdlib>
+	<sstream>
+
+1687044211 d:\c++\westseer\include\candidateidentification.h
+	<AbstractTask.h>
+	<ResearchScope.h>
+	<vector>
+
+1687074146 source:d:\c++\westseer\src\metricmodel.cpp
+	"MetricModel.h"
+
+1687072614 d:\c++\westseer\include\metricmodel.h
+	<AbstractTask.h>
+	<ResearchScope.h>
+	<vector>
+
+1687208311 source:d:\c++\westseer\src\bitermdf.cpp
+	"BitermDf.h"
+	<../WESTSeerApp.h>
+	<GeneralConfig.h>
+	<CallbackData.h>
+	<wxFFileLog.h>
+	<StringProcessing.h>
+	<cstdlib>
+	<sstream>
+	<set>
+
+1687039554 d:\c++\westseer\include\bitermdf.h
+	<AbstractTask.h>
+	<ResearchScope.h>
+	<TermTfIrdf.h>
+	<string>
+	<map>
+
+1687253251 source:d:\c++\westseer\src\bitermweight.cpp
+	"BitermWeight.h"
+	<../WESTSeerApp.h>
+	<GeneralConfig.h>
+	<CallbackData.h>
+	<StringProcessing.h>
+	<TimeSeriesRegression.h>
+
+1687218926 d:\c++\westseer\include\bitermweight.h
+	<AbstractTask.h>
+	<ResearchScope.h>
+	<TermTfIrdf.h>
+	<BitermDf.h>
+	<string>
+	<map>
+
+1687208715 source:d:\c++\westseer\src\inferencedataextraction.cpp
+	"InferenceDataExtraction.h"
+	<../WESTSeerApp.h>
+	<GeneralConfig.h>
+
+1687056233 d:\c++\westseer\include\inferencedataextraction.h
+	<AbstractTask.h>
+	<ResearchScope.h>
+	<BitermWeight.h>
+	<Eigen/Dense>
+	<map>
+
+1687080508 d:\c++\westseer\include\eigen\dense
+	"Core"
+	"LU"
+	"Cholesky"
+	"QR"
+	"SVD"
+	"Geometry"
+	"Eigenvalues"
+
+1687080508 d:\c++\westseer\include\eigen\core
+	"src/Core/util/DisableStupidWarnings.h"
+	"src/Core/util/Macros.h"
+	"src/Core/util/ConfigureVectorization.h"
+	<cuda_runtime.h>
+	<hip/hip_runtime.h>
+	<new>
+	<complex>
+	"src/Core/util/MKL_support.h"
+	<omp.h>
+	<cerrno>
+	<cstddef>
+	<cstdlib>
+	<cmath>
+	<cassert>
+	<functional>
+	<sstream>
+	<iosfwd>
+	<cstring>
+	<string>
+	<limits>
+	<climits>
+	<algorithm>
+	<array>
+	<type_traits>
+	<iostream>
+	<intrin.h>
+	<CL/sycl.hpp>
+	<map>
+	<memory>
+	<utility>
+	<thread>
+	"src/Core/util/Constants.h"
+	"src/Core/util/Meta.h"
+	"src/Core/util/ForwardDeclarations.h"
+	"src/Core/util/StaticAssert.h"
+	"src/Core/util/XprHelper.h"
+	"src/Core/util/Memory.h"
+	"src/Core/util/IntegralConstant.h"
+	"src/Core/util/SymbolicIndex.h"
+	"src/Core/NumTraits.h"
+	"src/Core/MathFunctions.h"
+	"src/Core/GenericPacketMath.h"
+	"src/Core/MathFunctionsImpl.h"
+	"src/Core/arch/Default/ConjHelper.h"
+	"src/Core/arch/Default/Half.h"
+	"src/Core/arch/Default/BFloat16.h"
+	"src/Core/arch/Default/TypeCasting.h"
+	"src/Core/arch/Default/GenericPacketMathFunctionsFwd.h"
+	"src/Core/arch/SSE/PacketMath.h"
+	"src/Core/arch/SSE/TypeCasting.h"
+	"src/Core/arch/SSE/Complex.h"
+	"src/Core/arch/AVX/PacketMath.h"
+	"src/Core/arch/AVX/TypeCasting.h"
+	"src/Core/arch/AVX/Complex.h"
+	"src/Core/arch/AVX512/PacketMath.h"
+	"src/Core/arch/AVX512/TypeCasting.h"
+	"src/Core/arch/AVX512/Complex.h"
+	"src/Core/arch/SSE/MathFunctions.h"
+	"src/Core/arch/AVX/MathFunctions.h"
+	"src/Core/arch/AVX512/MathFunctions.h"
+	"src/Core/arch/SSE/PacketMath.h"
+	"src/Core/arch/SSE/TypeCasting.h"
+	"src/Core/arch/SSE/Complex.h"
+	"src/Core/arch/AVX/PacketMath.h"
+	"src/Core/arch/AVX/TypeCasting.h"
+	"src/Core/arch/AVX/Complex.h"
+	"src/Core/arch/SSE/MathFunctions.h"
+	"src/Core/arch/AVX/MathFunctions.h"
+	"src/Core/arch/SSE/PacketMath.h"
+	"src/Core/arch/SSE/TypeCasting.h"
+	"src/Core/arch/SSE/MathFunctions.h"
+	"src/Core/arch/SSE/Complex.h"
+	"src/Core/arch/AltiVec/PacketMath.h"
+	"src/Core/arch/AltiVec/MathFunctions.h"
+	"src/Core/arch/AltiVec/Complex.h"
+	"src/Core/arch/NEON/PacketMath.h"
+	"src/Core/arch/NEON/TypeCasting.h"
+	"src/Core/arch/NEON/MathFunctions.h"
+	"src/Core/arch/NEON/Complex.h"
+	"src/Core/arch/SVE/PacketMath.h"
+	"src/Core/arch/SVE/TypeCasting.h"
+	"src/Core/arch/SVE/MathFunctions.h"
+	"src/Core/arch/ZVector/PacketMath.h"
+	"src/Core/arch/ZVector/MathFunctions.h"
+	"src/Core/arch/ZVector/Complex.h"
+	"src/Core/arch/MSA/PacketMath.h"
+	"src/Core/arch/MSA/MathFunctions.h"
+	"src/Core/arch/MSA/Complex.h"
+	"src/Core/arch/GPU/PacketMath.h"
+	"src/Core/arch/GPU/MathFunctions.h"
+	"src/Core/arch/GPU/TypeCasting.h"
+	"src/Core/arch/SYCL/SyclMemoryModel.h"
+	"src/Core/arch/SYCL/InteropHeaders.h"
+	"src/Core/arch/SYCL/PacketMath.h"
+	"src/Core/arch/SYCL/MathFunctions.h"
+	"src/Core/arch/SYCL/TypeCasting.h"
+	"src/Core/arch/Default/Settings.h"
+	"src/Core/arch/Default/GenericPacketMathFunctions.h"
+	"src/Core/functors/TernaryFunctors.h"
+	"src/Core/functors/BinaryFunctors.h"
+	"src/Core/functors/UnaryFunctors.h"
+	"src/Core/functors/NullaryFunctors.h"
+	"src/Core/functors/StlFunctors.h"
+	"src/Core/functors/AssignmentFunctors.h"
+	"src/Core/arch/CUDA/Complex.h"
+	"src/Core/util/IndexedViewHelper.h"
+	"src/Core/util/ReshapedHelper.h"
+	"src/Core/ArithmeticSequence.h"
+	"src/Core/IO.h"
+	"src/Core/DenseCoeffsBase.h"
+	"src/Core/DenseBase.h"
+	"src/Core/MatrixBase.h"
+	"src/Core/EigenBase.h"
+	"src/Core/Product.h"
+	"src/Core/CoreEvaluators.h"
+	"src/Core/AssignEvaluator.h"
+	"src/Core/Assign.h"
+	"src/Core/ArrayBase.h"
+	"src/Core/util/BlasUtil.h"
+	"src/Core/DenseStorage.h"
+	"src/Core/NestByValue.h"
+	"src/Core/ReturnByValue.h"
+	"src/Core/NoAlias.h"
+	"src/Core/PlainObjectBase.h"
+	"src/Core/Matrix.h"
+	"src/Core/Array.h"
+	"src/Core/CwiseTernaryOp.h"
+	"src/Core/CwiseBinaryOp.h"
+	"src/Core/CwiseUnaryOp.h"
+	"src/Core/CwiseNullaryOp.h"
+	"src/Core/CwiseUnaryView.h"
+	"src/Core/SelfCwiseBinaryOp.h"
+	"src/Core/Dot.h"
+	"src/Core/StableNorm.h"
+	"src/Core/Stride.h"
+	"src/Core/MapBase.h"
+	"src/Core/Map.h"
+	"src/Core/Ref.h"
+	"src/Core/Block.h"
+	"src/Core/VectorBlock.h"
+	"src/Core/IndexedView.h"
+	"src/Core/Reshaped.h"
+	"src/Core/Transpose.h"
+	"src/Core/DiagonalMatrix.h"
+	"src/Core/Diagonal.h"
+	"src/Core/DiagonalProduct.h"
+	"src/Core/Redux.h"
+	"src/Core/Visitor.h"
+	"src/Core/Fuzzy.h"
+	"src/Core/Swap.h"
+	"src/Core/CommaInitializer.h"
+	"src/Core/GeneralProduct.h"
+	"src/Core/Solve.h"
+	"src/Core/Inverse.h"
+	"src/Core/SolverBase.h"
+	"src/Core/PermutationMatrix.h"
+	"src/Core/Transpositions.h"
+	"src/Core/TriangularMatrix.h"
+	"src/Core/SelfAdjointView.h"
+	"src/Core/products/GeneralBlockPanelKernel.h"
+	"src/Core/products/Parallelizer.h"
+	"src/Core/ProductEvaluators.h"
+	"src/Core/products/GeneralMatrixVector.h"
+	"src/Core/products/GeneralMatrixMatrix.h"
+	"src/Core/SolveTriangular.h"
+	"src/Core/products/GeneralMatrixMatrixTriangular.h"
+	"src/Core/products/SelfadjointMatrixVector.h"
+	"src/Core/products/SelfadjointMatrixMatrix.h"
+	"src/Core/products/SelfadjointProduct.h"
+	"src/Core/products/SelfadjointRank2Update.h"
+	"src/Core/products/TriangularMatrixVector.h"
+	"src/Core/products/TriangularMatrixMatrix.h"
+	"src/Core/products/TriangularSolverMatrix.h"
+	"src/Core/products/TriangularSolverVector.h"
+	"src/Core/BandMatrix.h"
+	"src/Core/CoreIterators.h"
+	"src/Core/ConditionEstimator.h"
+	"src/Core/arch/AltiVec/MatrixProduct.h"
+	"src/Core/arch/NEON/GeneralBlockPanelKernel.h"
+	"src/Core/BooleanRedux.h"
+	"src/Core/Select.h"
+	"src/Core/VectorwiseOp.h"
+	"src/Core/PartialReduxEvaluator.h"
+	"src/Core/Random.h"
+	"src/Core/Replicate.h"
+	"src/Core/Reverse.h"
+	"src/Core/ArrayWrapper.h"
+	"src/Core/StlIterators.h"
+	"src/Core/products/GeneralMatrixMatrix_BLAS.h"
+	"src/Core/products/GeneralMatrixVector_BLAS.h"
+	"src/Core/products/GeneralMatrixMatrixTriangular_BLAS.h"
+	"src/Core/products/SelfadjointMatrixMatrix_BLAS.h"
+	"src/Core/products/SelfadjointMatrixVector_BLAS.h"
+	"src/Core/products/TriangularMatrixMatrix_BLAS.h"
+	"src/Core/products/TriangularMatrixVector_BLAS.h"
+	"src/Core/products/TriangularSolverMatrix_BLAS.h"
+	"src/Core/Assign_MKL.h"
+	"src/Core/GlobalFunctions.h"
+	"src/Core/util/ReenableStupidWarnings.h"
+
+1687080512 d:\c++\westseer\include\eigen\src\core\util\disablestupidwarnings.h
+
+1687080512 d:\c++\westseer\include\eigen\src\core\util\macros.h
+	<cuda.h>
+	<hip/hip_runtime.h>
+	<cmath>
+	<cstdlib>
+	<iostream>
+
+1687080512 d:\c++\westseer\include\eigen\src\core\util\configurevectorization.h
+	<malloc.h>
+	<immintrin.h>
+	<mmintrin.h>
+	<emmintrin.h>
+	<xmmintrin.h>
+	<pmmintrin.h>
+	<tmmintrin.h>
+	<smmintrin.h>
+	<nmmintrin.h>
+	<immintrin.h>
+	<altivec.h>
+	<altivec.h>
+	<arm_neon.h>
+	<arm_sve.h>
+	<vecintrin.h>
+	<msa.h>
+	<arm_fp16.h>
+	<immintrin.h>
+	<vector_types.h>
+	<cuda_runtime_api.h>
+	<cuda_fp16.h>
+	<hip/hip_vector_types.h>
+	<hip/hip_fp16.h>
+
+1687080512 d:\c++\westseer\include\eigen\src\core\util\mkl_support.h
+	<mkl.h>
+	"../../misc/blas.h"
+
+1687080515 d:\c++\westseer\include\eigen\src\misc\blas.h
+
+1687080512 d:\c++\westseer\include\eigen\src\core\util\constants.h
+
+1687080512 d:\c++\westseer\include\eigen\src\core\util\meta.h
+	<cfloat>
+	<math_constants.h>
+	"Eigen/src/Core/arch/HIP/hcc/math_constants.h"
+	<cstdint>
+	<stdint.h>
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\hip\hcc\math_constants.h
+
+1687080512 d:\c++\westseer\include\eigen\src\core\util\forwarddeclarations.h
+
+1687080512 d:\c++\westseer\include\eigen\src\core\util\staticassert.h
+
+1687080512 d:\c++\westseer\include\eigen\src\core\util\xprhelper.h
+
+1687080512 d:\c++\westseer\include\eigen\src\core\util\memory.h
+
+1687080512 d:\c++\westseer\include\eigen\src\core\util\integralconstant.h
+
+1687080512 d:\c++\westseer\include\eigen\src\core\util\symbolicindex.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\numtraits.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\mathfunctions.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\genericpacketmath.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\mathfunctionsimpl.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\default\conjhelper.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\default\half.h
+	<sstream>
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\default\bfloat16.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\default\typecasting.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\default\genericpacketmathfunctionsfwd.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\sse\packetmath.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\sse\typecasting.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\sse\complex.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\avx\packetmath.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\avx\typecasting.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\avx\complex.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\avx512\packetmath.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\avx512\typecasting.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\avx512\complex.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\sse\mathfunctions.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\avx\mathfunctions.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\avx512\mathfunctions.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\altivec\packetmath.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\altivec\mathfunctions.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\altivec\complex.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\neon\packetmath.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\neon\typecasting.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\neon\mathfunctions.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\neon\complex.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\sve\packetmath.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\sve\typecasting.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\sve\mathfunctions.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\zvector\packetmath.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\zvector\mathfunctions.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\zvector\complex.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\msa\packetmath.h
+	<iostream>
+	<string>
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\msa\mathfunctions.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\msa\complex.h
+	<iostream>
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\gpu\packetmath.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\gpu\mathfunctions.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\gpu\typecasting.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\sycl\syclmemorymodel.h
+	<CL/sycl.hpp>
+	<stdexcept>
+	<cstddef>
+	<queue>
+	<set>
+	<unordered_map>
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\sycl\interopheaders.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\sycl\packetmath.h
+	<type_traits>
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\sycl\mathfunctions.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\sycl\typecasting.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\default\settings.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\default\genericpacketmathfunctions.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\functors\ternaryfunctors.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\functors\binaryfunctors.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\functors\unaryfunctors.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\functors\nullaryfunctors.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\functors\stlfunctors.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\functors\assignmentfunctors.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\cuda\complex.h
+
+1687080512 d:\c++\westseer\include\eigen\src\core\util\indexedviewhelper.h
+
+1687080512 d:\c++\westseer\include\eigen\src\core\util\reshapedhelper.h
+
+1687080508 d:\c++\westseer\include\eigen\src\core\arithmeticsequence.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\io.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\densecoeffsbase.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\densebase.h
+	"../plugins/CommonCwiseUnaryOps.h"
+	"../plugins/BlockMethods.h"
+	"../plugins/IndexedViewMethods.h"
+	"../plugins/ReshapedMethods.h"
+
+1687080515 d:\c++\westseer\include\eigen\src\plugins\commoncwiseunaryops.h
+
+1687080515 d:\c++\westseer\include\eigen\src\plugins\blockmethods.h
+
+1687080515 d:\c++\westseer\include\eigen\src\plugins\indexedviewmethods.h
+	"IndexedViewMethods.h"
+
+1687080515 d:\c++\westseer\include\eigen\src\plugins\reshapedmethods.h
+	"ReshapedMethods.h"
+
+1687080509 d:\c++\westseer\include\eigen\src\core\matrixbase.h
+	"../plugins/CommonCwiseBinaryOps.h"
+	"../plugins/MatrixCwiseUnaryOps.h"
+	"../plugins/MatrixCwiseBinaryOps.h"
+
+1687080515 d:\c++\westseer\include\eigen\src\plugins\commoncwisebinaryops.h
+
+1687080515 d:\c++\westseer\include\eigen\src\plugins\matrixcwiseunaryops.h
+
+1687080515 d:\c++\westseer\include\eigen\src\plugins\matrixcwisebinaryops.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\eigenbase.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\product.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\coreevaluators.h
+
+1687080508 d:\c++\westseer\include\eigen\src\core\assignevaluator.h
+
+1687080508 d:\c++\westseer\include\eigen\src\core\assign.h
+
+1687080508 d:\c++\westseer\include\eigen\src\core\arraybase.h
+	"../plugins/MatrixCwiseUnaryOps.h"
+	"../plugins/ArrayCwiseUnaryOps.h"
+	"../plugins/CommonCwiseBinaryOps.h"
+	"../plugins/MatrixCwiseBinaryOps.h"
+	"../plugins/ArrayCwiseBinaryOps.h"
+
+1687080515 d:\c++\westseer\include\eigen\src\plugins\arraycwiseunaryops.h
+
+1687080515 d:\c++\westseer\include\eigen\src\plugins\arraycwisebinaryops.h
+
+1687080512 d:\c++\westseer\include\eigen\src\core\util\blasutil.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\densestorage.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\nestbyvalue.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\returnbyvalue.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\noalias.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\plainobjectbase.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\matrix.h
+
+1687080508 d:\c++\westseer\include\eigen\src\core\array.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\cwiseternaryop.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\cwisebinaryop.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\cwiseunaryop.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\cwisenullaryop.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\cwiseunaryview.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\selfcwisebinaryop.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\dot.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\stablenorm.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\stride.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\mapbase.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\map.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\ref.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\block.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\vectorblock.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\indexedview.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\reshaped.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\transpose.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\diagonalmatrix.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\diagonal.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\diagonalproduct.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\redux.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\visitor.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\fuzzy.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\swap.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\commainitializer.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\generalproduct.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\solve.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\inverse.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\solverbase.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\permutationmatrix.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\transpositions.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\triangularmatrix.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\selfadjointview.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\generalblockpanelkernel.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\parallelizer.h
+	<atomic>
+
+1687080509 d:\c++\westseer\include\eigen\src\core\productevaluators.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\generalmatrixvector.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\generalmatrixmatrix.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\solvetriangular.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\generalmatrixmatrixtriangular.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\selfadjointmatrixvector.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\selfadjointmatrixmatrix.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\selfadjointproduct.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\selfadjointrank2update.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\triangularmatrixvector.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\triangularmatrixmatrix.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\triangularsolvermatrix.h
+
+1687080512 d:\c++\westseer\include\eigen\src\core\products\triangularsolvervector.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\bandmatrix.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\coreiterators.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\conditionestimator.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\altivec\matrixproduct.h
+	"MatrixProductCommon.h"
+	"MatrixProductMMA.h"
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\altivec\matrixproductcommon.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\arch\altivec\matrixproductmma.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\arch\neon\generalblockpanelkernel.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\booleanredux.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\select.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\vectorwiseop.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\partialreduxevaluator.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\random.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\replicate.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\reverse.h
+
+1687080508 d:\c++\westseer\include\eigen\src\core\arraywrapper.h
+
+1687080510 d:\c++\westseer\include\eigen\src\core\stliterators.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\generalmatrixmatrix_blas.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\generalmatrixvector_blas.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\generalmatrixmatrixtriangular_blas.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\selfadjointmatrixmatrix_blas.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\selfadjointmatrixvector_blas.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\triangularmatrixmatrix_blas.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\triangularmatrixvector_blas.h
+
+1687080511 d:\c++\westseer\include\eigen\src\core\products\triangularsolvermatrix_blas.h
+
+1687080508 d:\c++\westseer\include\eigen\src\core\assign_mkl.h
+
+1687080509 d:\c++\westseer\include\eigen\src\core\globalfunctions.h
+
+1687080512 d:\c++\westseer\include\eigen\src\core\util\reenablestupidwarnings.h
+
+1687080508 d:\c++\westseer\include\eigen\lu
+	"Core"
+	"src/Core/util/DisableStupidWarnings.h"
+	"src/misc/Kernel.h"
+	"src/misc/Image.h"
+	"src/LU/FullPivLU.h"
+	"src/LU/PartialPivLU.h"
+	"mkl_lapacke.h"
+	"src/misc/lapacke.h"
+	"src/LU/PartialPivLU_LAPACKE.h"
+	"src/LU/Determinant.h"
+	"src/LU/InverseImpl.h"
+	"src/LU/arch/InverseSize4.h"
+	"src/Core/util/ReenableStupidWarnings.h"
+
+1687080514 d:\c++\westseer\include\eigen\src\misc\kernel.h
+
+1687080514 d:\c++\westseer\include\eigen\src\misc\image.h
+
+1687080513 d:\c++\westseer\include\eigen\src\lu\fullpivlu.h
+
+1687080513 d:\c++\westseer\include\eigen\src\lu\partialpivlu.h
+
+1687080515 d:\c++\westseer\include\eigen\src\misc\lapacke.h
+	"lapacke_config.h"
+	<stdlib.h>
+	<complex.h>
+	<complex.h>
+	"lapacke_mangling.h"
+
+1687080515 d:\c++\westseer\include\eigen\src\misc\lapacke_mangling.h
+
+1687080513 d:\c++\westseer\include\eigen\src\lu\partialpivlu_lapacke.h
+
+1687080513 d:\c++\westseer\include\eigen\src\lu\determinant.h
+
+1687080513 d:\c++\westseer\include\eigen\src\lu\inverseimpl.h
+
+1687080513 d:\c++\westseer\include\eigen\src\lu\arch\inversesize4.h
+
+1687080508 d:\c++\westseer\include\eigen\cholesky
+	"Core"
+	"Jacobi"
+	"src/Core/util/DisableStupidWarnings.h"
+	"src/Cholesky/LLT.h"
+	"src/Cholesky/LDLT.h"
+	"mkl_lapacke.h"
+	"src/misc/lapacke.h"
+	"src/Cholesky/LLT_LAPACKE.h"
+	"src/Core/util/ReenableStupidWarnings.h"
+
+1687080508 d:\c++\westseer\include\eigen\jacobi
+	"Core"
+	"src/Core/util/DisableStupidWarnings.h"
+	"src/Jacobi/Jacobi.h"
+	"src/Core/util/ReenableStupidWarnings.h"
+
+1687080513 d:\c++\westseer\include\eigen\src\jacobi\jacobi.h
+
+1687080508 d:\c++\westseer\include\eigen\src\cholesky\llt.h
+
+1687080508 d:\c++\westseer\include\eigen\src\cholesky\ldlt.h
+
+1687080508 d:\c++\westseer\include\eigen\src\cholesky\llt_lapacke.h
+
+1687080508 d:\c++\westseer\include\eigen\qr
+	"Core"
+	"Cholesky"
+	"Jacobi"
+	"Householder"
+	"src/Core/util/DisableStupidWarnings.h"
+	"src/QR/HouseholderQR.h"
+	"src/QR/FullPivHouseholderQR.h"
+	"src/QR/ColPivHouseholderQR.h"
+	"src/QR/CompleteOrthogonalDecomposition.h"
+	"mkl_lapacke.h"
+	"src/misc/lapacke.h"
+	"src/QR/HouseholderQR_LAPACKE.h"
+	"src/QR/ColPivHouseholderQR_LAPACKE.h"
+	"src/Core/util/ReenableStupidWarnings.h"
+
+1687080508 d:\c++\westseer\include\eigen\householder
+	"Core"
+	"src/Core/util/DisableStupidWarnings.h"
+	"src/Householder/Householder.h"
+	"src/Householder/HouseholderSequence.h"
+	"src/Householder/BlockHouseholder.h"
+	"src/Core/util/ReenableStupidWarnings.h"
+
+1687080513 d:\c++\westseer\include\eigen\src\householder\householder.h
+
+1687080513 d:\c++\westseer\include\eigen\src\householder\householdersequence.h
+
+1687080512 d:\c++\westseer\include\eigen\src\householder\blockhouseholder.h
+
+1687080513 d:\c++\westseer\include\eigen\src\qr\householderqr.h
+
+1687080513 d:\c++\westseer\include\eigen\src\qr\fullpivhouseholderqr.h
+
+1687080513 d:\c++\westseer\include\eigen\src\qr\colpivhouseholderqr.h
+
+1687080513 d:\c++\westseer\include\eigen\src\qr\completeorthogonaldecomposition.h
+
+1687080513 d:\c++\westseer\include\eigen\src\qr\householderqr_lapacke.h
+
+1687080513 d:\c++\westseer\include\eigen\src\qr\colpivhouseholderqr_lapacke.h
+
+1687080508 d:\c++\westseer\include\eigen\svd
+	"QR"
+	"Householder"
+	"Jacobi"
+	"src/Core/util/DisableStupidWarnings.h"
+	"src/misc/RealSvd2x2.h"
+	"src/SVD/UpperBidiagonalization.h"
+	"src/SVD/SVDBase.h"
+	"src/SVD/JacobiSVD.h"
+	"src/SVD/BDCSVD.h"
+	"mkl_lapacke.h"
+	"src/misc/lapacke.h"
+	"src/SVD/JacobiSVD_LAPACKE.h"
+	"src/Core/util/ReenableStupidWarnings.h"
+
+1687080514 d:\c++\westseer\include\eigen\src\misc\realsvd2x2.h
+
+1687080513 d:\c++\westseer\include\eigen\src\svd\upperbidiagonalization.h
+
+1687080513 d:\c++\westseer\include\eigen\src\svd\svdbase.h
+
+1687080513 d:\c++\westseer\include\eigen\src\svd\jacobisvd.h
+
+1687080513 d:\c++\westseer\include\eigen\src\svd\bdcsvd.h
+
+1687080513 d:\c++\westseer\include\eigen\src\svd\jacobisvd_lapacke.h
+
+1687080508 d:\c++\westseer\include\eigen\geometry
+	"Core"
+	"SVD"
+	"LU"
+	<limits>
+	"src/Core/util/DisableStupidWarnings.h"
+	"src/Geometry/OrthoMethods.h"
+	"src/Geometry/EulerAngles.h"
+	"src/Geometry/Homogeneous.h"
+	"src/Geometry/RotationBase.h"
+	"src/Geometry/Rotation2D.h"
+	"src/Geometry/Quaternion.h"
+	"src/Geometry/AngleAxis.h"
+	"src/Geometry/Transform.h"
+	"src/Geometry/Translation.h"
+	"src/Geometry/Scaling.h"
+	"src/Geometry/Hyperplane.h"
+	"src/Geometry/ParametrizedLine.h"
+	"src/Geometry/AlignedBox.h"
+	"src/Geometry/Umeyama.h"
+	"src/Geometry/arch/Geometry_SIMD.h"
+	"src/Core/util/ReenableStupidWarnings.h"
+
+1687080512 d:\c++\westseer\include\eigen\src\geometry\orthomethods.h
+
+1687080512 d:\c++\westseer\include\eigen\src\geometry\eulerangles.h
+
+1687080512 d:\c++\westseer\include\eigen\src\geometry\homogeneous.h
+
+1687080512 d:\c++\westseer\include\eigen\src\geometry\rotationbase.h
+
+1687080512 d:\c++\westseer\include\eigen\src\geometry\rotation2d.h
+
+1687080512 d:\c++\westseer\include\eigen\src\geometry\quaternion.h
+
+1687080512 d:\c++\westseer\include\eigen\src\geometry\angleaxis.h
+
+1687080512 d:\c++\westseer\include\eigen\src\geometry\transform.h
+
+1687080512 d:\c++\westseer\include\eigen\src\geometry\translation.h
+
+1687080512 d:\c++\westseer\include\eigen\src\geometry\scaling.h
+
+1687080512 d:\c++\westseer\include\eigen\src\geometry\hyperplane.h
+
+1687080512 d:\c++\westseer\include\eigen\src\geometry\parametrizedline.h
+
+1687080512 d:\c++\westseer\include\eigen\src\geometry\alignedbox.h
+
+1687080512 d:\c++\westseer\include\eigen\src\geometry\umeyama.h
+
+1687080512 d:\c++\westseer\include\eigen\src\geometry\arch\geometry_simd.h
+
+1687080508 d:\c++\westseer\include\eigen\eigenvalues
+	"Core"
+	"Cholesky"
+	"Jacobi"
+	"Householder"
+	"LU"
+	"Geometry"
+	"src/Core/util/DisableStupidWarnings.h"
+	"src/misc/RealSvd2x2.h"
+	"src/Eigenvalues/Tridiagonalization.h"
+	"src/Eigenvalues/RealSchur.h"
+	"src/Eigenvalues/EigenSolver.h"
+	"src/Eigenvalues/SelfAdjointEigenSolver.h"
+	"src/Eigenvalues/GeneralizedSelfAdjointEigenSolver.h"
+	"src/Eigenvalues/HessenbergDecomposition.h"
+	"src/Eigenvalues/ComplexSchur.h"
+	"src/Eigenvalues/ComplexEigenSolver.h"
+	"src/Eigenvalues/RealQZ.h"
+	"src/Eigenvalues/GeneralizedEigenSolver.h"
+	"src/Eigenvalues/MatrixBaseEigenvalues.h"
+	"mkl_lapacke.h"
+	"src/misc/lapacke.h"
+	"src/Eigenvalues/RealSchur_LAPACKE.h"
+	"src/Eigenvalues/ComplexSchur_LAPACKE.h"
+	"src/Eigenvalues/SelfAdjointEigenSolver_LAPACKE.h"
+	"src/Core/util/ReenableStupidWarnings.h"
+
+1687080512 d:\c++\westseer\include\eigen\src\eigenvalues\tridiagonalization.h
+
+1687080512 d:\c++\westseer\include\eigen\src\eigenvalues\realschur.h
+	"./HessenbergDecomposition.h"
+
+1687080512 d:\c++\westseer\include\eigen\src\eigenvalues\hessenbergdecomposition.h
+
+1687080512 d:\c++\westseer\include\eigen\src\eigenvalues\eigensolver.h
+	"./RealSchur.h"
+
+1687080512 d:\c++\westseer\include\eigen\src\eigenvalues\selfadjointeigensolver.h
+	"./Tridiagonalization.h"
+
+1687080512 d:\c++\westseer\include\eigen\src\eigenvalues\generalizedselfadjointeigensolver.h
+	"./Tridiagonalization.h"
+
+1687080512 d:\c++\westseer\include\eigen\src\eigenvalues\complexschur.h
+	"./HessenbergDecomposition.h"
+
+1687080512 d:\c++\westseer\include\eigen\src\eigenvalues\complexeigensolver.h
+	"./ComplexSchur.h"
+
+1687080512 d:\c++\westseer\include\eigen\src\eigenvalues\realqz.h
+
+1687080512 d:\c++\westseer\include\eigen\src\eigenvalues\generalizedeigensolver.h
+	"./RealQZ.h"
+
+1687080512 d:\c++\westseer\include\eigen\src\eigenvalues\matrixbaseeigenvalues.h
+
+1687080512 d:\c++\westseer\include\eigen\src\eigenvalues\realschur_lapacke.h
+
+1687080512 d:\c++\westseer\include\eigen\src\eigenvalues\complexschur_lapacke.h
+
+1687080512 d:\c++\westseer\include\eigen\src\eigenvalues\selfadjointeigensolver_lapacke.h
+
+1687072540 source:d:\c++\westseer\src\predictionmodel.cpp
+	"PredictionModel.h"
+
+1687072461 d:\c++\westseer\include\predictionmodel.h
+	<AbstractTask.h>
+	<ResearchScope.h>
+	<TrainingDataExtraction.h>
+	<TestingDataExtraction.h>
+	<InferenceDataExtraction.h>
+
+1687056255 d:\c++\westseer\include\trainingdataextraction.h
+	<AbstractTask.h>
+	<ResearchScope.h>
+	<BitermWeight.h>
+	<Eigen/Dense>
+	<map>
+
+1687056245 d:\c++\westseer\include\testingdataextraction.h
+	<AbstractTask.h>
+	<ResearchScope.h>
+	<BitermWeight.h>
+	<Eigen/Dense>
+	<map>
+
+1687208662 source:d:\c++\westseer\src\testingdataextraction.cpp
+	"TestingDataExtraction.h"
+	<../WESTSeerApp.h>
+	<GeneralConfig.h>
+
+1687208636 source:d:\c++\westseer\src\trainingdataextraction.cpp
+	"TrainingDataExtraction.h"
+	<../WESTSeerApp.h>
+	<GeneralConfig.h>
+
+1621325408 d:\c++\westseer\include\tensorflow\cc\client\client_session.h
+	<memory>
+	<string>
+	<unordered_map>
+	<vector>
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/public/session_options.h"
+
+1621325405 d:\c++\westseer\include\tensorflow\cc\framework\ops.h
+	<type_traits>
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor.pb.h"
+	"tensorflow/core/graph/graph.h"
+	"tensorflow/core/lib/hash/hash.h"
+	"tensorflow/core/lib/strings/strcat.h"
+
+1621325310 d:\c++\westseer\include\tensorflow\core\framework\tensor.h
+	<cstdint>
+	<type_traits>
+	"third_party/eigen3/unsupported/Eigen/CXX11/Tensor"
+	"tensorflow/core/framework/allocator.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/tensor_types.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/framework/types.pb.h"
+	"tensorflow/core/lib/core/refcount.h"
+	"tensorflow/core/lib/core/status.h"
+	"tensorflow/core/lib/core/stringpiece.h"
+	"tensorflow/core/lib/gtl/inlined_vector.h"
+	"tensorflow/core/platform/logging.h"
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/mem.h"
+	"tensorflow/core/platform/types.h"
+
+1621325255 d:\c++\westseer\include\third_party\eigen3\unsupported\eigen\cxx11\tensor
+	"unsupported/Eigen/CXX11/Tensor"
+
+1621325245 d:\c++\westseer\include\unsupported\eigen\cxx11\tensor
+	"../../../Eigen/Core"
+	"../SpecialFunctions"
+	"../../../Eigen/src/Core/util/DisableStupidWarnings.h"
+	"src/util/CXX11Meta.h"
+	"src/util/MaxSizeVector.h"
+	<atomic>
+	<chrono>
+	<cmath>
+	<cstddef>
+	<cstring>
+	<random>
+	<thread>
+	<windows.h>
+	<mach/mach_time.h>
+	<time.h>
+	"ThreadPool"
+	<iostream>
+	<hip/hip_runtime.h>
+	<cuda_runtime.h>
+	"src/Tensor/TensorMacros.h"
+	"src/Tensor/TensorForwardDeclarations.h"
+	"src/Tensor/TensorMeta.h"
+	"src/Tensor/TensorFunctors.h"
+	"src/Tensor/TensorCostModel.h"
+	"src/Tensor/TensorDeviceDefault.h"
+	"src/Tensor/TensorDeviceThreadPool.h"
+	"src/Tensor/TensorDeviceGpu.h"
+	"src/Tensor/TensorDeviceSycl.h"
+	"src/Tensor/TensorIndexList.h"
+	"src/Tensor/TensorDimensionList.h"
+	"src/Tensor/TensorDimensions.h"
+	"src/Tensor/TensorInitializer.h"
+	"src/Tensor/TensorTraits.h"
+	"src/Tensor/TensorRandom.h"
+	"src/Tensor/TensorUInt128.h"
+	"src/Tensor/TensorIntDiv.h"
+	"src/Tensor/TensorGlobalFunctions.h"
+	"src/Tensor/TensorBase.h"
+	"src/Tensor/TensorBlock.h"
+	"src/Tensor/TensorEvaluator.h"
+	"src/Tensor/TensorExpr.h"
+	"src/Tensor/TensorReduction.h"
+	"src/Tensor/TensorReductionGpu.h"
+	"src/Tensor/TensorArgMax.h"
+	"src/Tensor/TensorConcatenation.h"
+	"src/Tensor/TensorContractionMapper.h"
+	"src/Tensor/TensorContractionBlocking.h"
+	"src/Tensor/TensorContraction.h"
+	"src/Tensor/TensorContractionThreadPool.h"
+	"src/Tensor/TensorContractionGpu.h"
+	"src/Tensor/TensorConversion.h"
+	"src/Tensor/TensorConvolution.h"
+	"src/Tensor/TensorFFT.h"
+	"src/Tensor/TensorPatch.h"
+	"src/Tensor/TensorImagePatch.h"
+	"src/Tensor/TensorVolumePatch.h"
+	"src/Tensor/TensorBroadcasting.h"
+	"src/Tensor/TensorChipping.h"
+	"src/Tensor/TensorInflation.h"
+	"src/Tensor/TensorLayoutSwap.h"
+	"src/Tensor/TensorMorphing.h"
+	"src/Tensor/TensorPadding.h"
+	"src/Tensor/TensorReverse.h"
+	"src/Tensor/TensorShuffling.h"
+	"src/Tensor/TensorStriding.h"
+	"src/Tensor/TensorCustomOp.h"
+	"src/Tensor/TensorEvalTo.h"
+	"src/Tensor/TensorForcedEval.h"
+	"src/Tensor/TensorGenerator.h"
+	"src/Tensor/TensorAssign.h"
+	"src/Tensor/TensorScan.h"
+	"src/Tensor/TensorTrace.h"
+	"src/Tensor/TensorReductionSycl.h"
+	"src/Tensor/TensorConvolutionSycl.h"
+	"src/Tensor/TensorContractionSycl.h"
+	"src/Tensor/TensorScanSycl.h"
+	"src/Tensor/TensorExecutor.h"
+	"src/Tensor/TensorDevice.h"
+	"src/Tensor/TensorStorage.h"
+	"src/Tensor/Tensor.h"
+	"src/Tensor/TensorFixedSize.h"
+	"src/Tensor/TensorMap.h"
+	"src/Tensor/TensorRef.h"
+	"src/Tensor/TensorIO.h"
+	"../../../Eigen/src/Core/util/ReenableStupidWarnings.h"
+
+1621325252 d:\c++\westseer\include\unsupported\eigen\specialfunctions
+	<math.h>
+	"../../Eigen/Core"
+	"../../Eigen/src/Core/util/DisableStupidWarnings.h"
+	"src/SpecialFunctions/BesselFunctionsImpl.h"
+	"src/SpecialFunctions/BesselFunctionsBFloat16.h"
+	"src/SpecialFunctions/BesselFunctionsHalf.h"
+	"src/SpecialFunctions/BesselFunctionsPacketMath.h"
+	"src/SpecialFunctions/BesselFunctionsFunctors.h"
+	"src/SpecialFunctions/BesselFunctionsArrayAPI.h"
+	"src/SpecialFunctions/SpecialFunctionsImpl.h"
+	"src/SpecialFunctions/HipVectorCompatibility.h"
+	"src/SpecialFunctions/SpecialFunctionsBFloat16.h"
+	"src/SpecialFunctions/SpecialFunctionsHalf.h"
+	"src/SpecialFunctions/SpecialFunctionsPacketMath.h"
+	"src/SpecialFunctions/SpecialFunctionsFunctors.h"
+	"src/SpecialFunctions/SpecialFunctionsArrayAPI.h"
+	"src/SpecialFunctions/arch/AVX/BesselFunctions.h"
+	"src/SpecialFunctions/arch/AVX/SpecialFunctions.h"
+	"src/SpecialFunctions/arch/AVX512/BesselFunctions.h"
+	"src/SpecialFunctions/arch/AVX512/SpecialFunctions.h"
+	"src/SpecialFunctions/arch/AVX/BesselFunctions.h"
+	"src/SpecialFunctions/arch/AVX/SpecialFunctions.h"
+	"src/SpecialFunctions/arch/NEON/BesselFunctions.h"
+	"src/SpecialFunctions/arch/NEON/SpecialFunctions.h"
+	"src/SpecialFunctions/arch/GPU/SpecialFunctions.h"
+	"../../Eigen/src/Core/util/ReenableStupidWarnings.h"
+
+1621325253 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\besselfunctionsimpl.h
+
+1621325253 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\besselfunctionsbfloat16.h
+
+1621325253 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\besselfunctionshalf.h
+
+1621325253 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\besselfunctionspacketmath.h
+
+1621325253 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\besselfunctionsfunctors.h
+
+1621325253 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\besselfunctionsarrayapi.h
+
+1621325254 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\specialfunctionsimpl.h
+
+1621325253 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\hipvectorcompatibility.h
+
+1621325253 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\specialfunctionsbfloat16.h
+
+1621325254 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\specialfunctionshalf.h
+
+1621325254 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\specialfunctionspacketmath.h
+
+1621325253 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\specialfunctionsfunctors.h
+
+1621325253 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\specialfunctionsarrayapi.h
+
+1621325254 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\arch\avx\besselfunctions.h
+
+1621325254 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\arch\avx\specialfunctions.h
+
+1621325254 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\arch\avx512\besselfunctions.h
+
+1621325254 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\arch\avx512\specialfunctions.h
+
+1621325254 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\arch\neon\besselfunctions.h
+
+1621325254 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\arch\neon\specialfunctions.h
+
+1621325254 d:\c++\westseer\include\unsupported\eigen\src\specialfunctions\arch\gpu\specialfunctions.h
+
+1621325251 d:\c++\westseer\include\unsupported\eigen\cxx11\src\util\cxx11meta.h
+	<vector>
+	"EmulateArray.h"
+	"CXX11Workarounds.h"
+
+1621325252 d:\c++\westseer\include\unsupported\eigen\cxx11\src\util\emulatearray.h
+	<array>
+
+1621325251 d:\c++\westseer\include\unsupported\eigen\cxx11\src\util\cxx11workarounds.h
+
+1621325252 d:\c++\westseer\include\unsupported\eigen\cxx11\src\util\maxsizevector.h
+
+1621325245 d:\c++\westseer\include\unsupported\eigen\cxx11\threadpool
+	"../../../Eigen/Core"
+	"../../../Eigen/src/Core/util/DisableStupidWarnings.h"
+	<cstddef>
+	<cstring>
+	<time.h>
+	<vector>
+	<atomic>
+	<condition_variable>
+	<deque>
+	<mutex>
+	<thread>
+	<functional>
+	<memory>
+	<utility>
+	<unordered_map>
+	"src/util/CXX11Meta.h"
+	"src/util/MaxSizeVector.h"
+	"src/ThreadPool/ThreadLocal.h"
+	"src/ThreadPool/ThreadYield.h"
+	"src/ThreadPool/ThreadCancel.h"
+	"src/ThreadPool/EventCount.h"
+	"src/ThreadPool/RunQueue.h"
+	"src/ThreadPool/ThreadPoolInterface.h"
+	"src/ThreadPool/ThreadEnvironment.h"
+	"src/ThreadPool/Barrier.h"
+	"src/ThreadPool/NonBlockingThreadPool.h"
+	"../../../Eigen/src/Core/util/ReenableStupidWarnings.h"
+
+1621325251 d:\c++\westseer\include\unsupported\eigen\cxx11\src\threadpool\threadlocal.h
+	<Availability.h>
+	<TargetConditionals.h>
+	<android/ndk-version.h>
+
+1621325251 d:\c++\westseer\include\unsupported\eigen\cxx11\src\threadpool\threadyield.h
+
+1621325251 d:\c++\westseer\include\unsupported\eigen\cxx11\src\threadpool\threadcancel.h
+
+1621325251 d:\c++\westseer\include\unsupported\eigen\cxx11\src\threadpool\eventcount.h
+
+1621325251 d:\c++\westseer\include\unsupported\eigen\cxx11\src\threadpool\runqueue.h
+
+1621325251 d:\c++\westseer\include\unsupported\eigen\cxx11\src\threadpool\threadpoolinterface.h
+
+1621325251 d:\c++\westseer\include\unsupported\eigen\cxx11\src\threadpool\threadenvironment.h
+
+1621325251 d:\c++\westseer\include\unsupported\eigen\cxx11\src\threadpool\barrier.h
+
+1621325251 d:\c++\westseer\include\unsupported\eigen\cxx11\src\threadpool\nonblockingthreadpool.h
+
+1621325249 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensormacros.h
+
+1621325248 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorforwarddeclarations.h
+
+1621325249 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensormeta.h
+
+1621325248 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorfunctors.h
+
+1621325247 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorcostmodel.h
+
+1621325247 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensordevicedefault.h
+
+1621325247 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensordevicethreadpool.h
+
+1621325247 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensordevicegpu.h
+	"TensorGpuHipCudaDefines.h"
+	"TensorGpuHipCudaUndefines.h"
+
+1621325248 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorgpuhipcudadefines.h
+
+1621325248 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorgpuhipcudaundefines.h
+
+1621325247 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensordevicesycl.h
+	<unordered_set>
+
+1621325249 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorindexlist.h
+
+1621325247 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensordimensionlist.h
+
+1621325247 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensordimensions.h
+
+1621325249 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorinitializer.h
+	<initializer_list>
+
+1621325250 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensortraits.h
+
+1621325249 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorrandom.h
+
+1621325250 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensoruint128.h
+
+1621325249 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorintdiv.h
+
+1621325248 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorglobalfunctions.h
+
+1621325246 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorbase.h
+
+1621325246 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorblock.h
+
+1621325248 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorevaluator.h
+
+1621325248 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorexpr.h
+
+1621325249 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorreduction.h
+
+1621325250 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorreductiongpu.h
+
+1621325246 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorargmax.h
+
+1621325246 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorconcatenation.h
+
+1621325246 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorcontractionmapper.h
+
+1621325246 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorcontractionblocking.h
+
+1621325246 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorcontraction.h
+
+1621325247 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorcontractionthreadpool.h
+
+1621325246 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorcontractiongpu.h
+
+1621325247 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorconversion.h
+
+1621325247 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorconvolution.h
+
+1621325248 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorfft.h
+
+1621325249 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorpatch.h
+
+1621325249 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorimagepatch.h
+
+1621325250 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorvolumepatch.h
+
+1621325246 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorbroadcasting.h
+
+1621325246 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorchipping.h
+
+1621325249 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorinflation.h
+
+1621325249 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorlayoutswap.h
+
+1621325249 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensormorphing.h
+
+1621325249 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorpadding.h
+
+1621325250 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorreverse.h
+
+1621325250 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorshuffling.h
+
+1621325250 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorstriding.h
+
+1621325247 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorcustomop.h
+
+1621325248 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorevalto.h
+
+1621325248 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorforcedeval.h
+
+1621325248 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorgenerator.h
+
+1621325246 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorassign.h
+
+1621325250 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorscan.h
+
+1621325250 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensortrace.h
+
+1621325250 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorreductionsycl.h
+
+1621325247 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorconvolutionsycl.h
+
+1621325247 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorcontractionsycl.h
+
+1621325250 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorscansycl.h
+
+1621325248 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorexecutor.h
+
+1621325247 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensordevice.h
+
+1621325250 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorstorage.h
+
+1621325246 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensor.h
+
+1621325248 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorfixedsize.h
+
+1621325249 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensormap.h
+
+1621325250 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorref.h
+
+1621325248 d:\c++\westseer\include\unsupported\eigen\cxx11\src\tensor\tensorio.h
+
+1621325302 d:\c++\westseer\include\tensorflow\core\framework\allocator.h
+	<stdlib.h>
+	<functional>
+	<limits>
+	"absl/strings/string_view.h"
+	"absl/types/optional.h"
+	"tensorflow/core/framework/numeric_types.h"
+	"tensorflow/core/framework/type_traits.h"
+	"tensorflow/core/platform/logging.h"
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/numa.h"
+	"tensorflow/core/platform/types.h"
+
+1621325216 d:\c++\westseer\include\absl\strings\string_view.h
+	<algorithm>
+	<cassert>
+	<cstddef>
+	<cstring>
+	<iosfwd>
+	<iterator>
+	<limits>
+	<string>
+	"absl/base/config.h"
+	"absl/base/internal/throw_delegate.h"
+	"absl/base/macros.h"
+	"absl/base/optimization.h"
+	"absl/base/port.h"
+	<string_view>
+
+1621325211 d:\c++\westseer\include\absl\base\config.h
+	<limits.h>
+	<cstddef>
+	<Availability.h>
+	<TargetConditionals.h>
+	"absl/base/options.h"
+	"absl/base/policy_checks.h"
+	<android/ndk-version.h>
+
+1621325212 d:\c++\westseer\include\absl\base\options.h
+	<ciso646>
+
+1621325212 d:\c++\westseer\include\absl\base\policy_checks.h
+	<limits.h>
+	<cstddef>
+
+1621325215 d:\c++\westseer\include\absl\base\internal\throw_delegate.h
+	<string>
+	"absl/base/config.h"
+
+1621325212 d:\c++\westseer\include\absl\base\macros.h
+	<cassert>
+	<cstddef>
+	"absl/base/attributes.h"
+	"absl/base/config.h"
+	"absl/base/optimization.h"
+	"absl/base/port.h"
+
+1621325212 d:\c++\westseer\include\absl\base\attributes.h
+	"absl/base/config.h"
+
+1621325212 d:\c++\westseer\include\absl\base\optimization.h
+	"absl/base/config.h"
+	<intrin.h>
+
+1621325212 d:\c++\westseer\include\absl\base\port.h
+	"absl/base/attributes.h"
+	"absl/base/config.h"
+	"absl/base/optimization.h"
+
+1621325217 d:\c++\westseer\include\absl\types\optional.h
+	"absl/base/config.h"
+	"absl/utility/utility.h"
+	<optional>
+	<cassert>
+	<functional>
+	<initializer_list>
+	<type_traits>
+	<utility>
+	"absl/base/attributes.h"
+	"absl/base/internal/inline_variable.h"
+	"absl/meta/type_traits.h"
+	"absl/types/bad_optional_access.h"
+	"absl/types/internal/optional.h"
+
+1621325217 d:\c++\westseer\include\absl\utility\utility.h
+	<cstddef>
+	<cstdlib>
+	<tuple>
+	<utility>
+	"absl/base/config.h"
+	"absl/base/internal/inline_variable.h"
+	"absl/base/internal/invoke.h"
+	"absl/meta/type_traits.h"
+
+1621325213 d:\c++\westseer\include\absl\base\internal\inline_variable.h
+	<type_traits>
+	"absl/base/internal/identity.h"
+
+1621325213 d:\c++\westseer\include\absl\base\internal\identity.h
+	"absl/base/config.h"
+
+1621325213 d:\c++\westseer\include\absl\base\internal\invoke.h
+	<algorithm>
+	<type_traits>
+	<utility>
+	"absl/meta/type_traits.h"
+
+1621325213 d:\c++\westseer\include\absl\meta\type_traits.h
+	<stddef.h>
+	<functional>
+	<type_traits>
+	"absl/base/config.h"
+
+1621325217 d:\c++\westseer\include\absl\types\bad_optional_access.h
+	<stdexcept>
+	"absl/base/config.h"
+	<optional>
+
+1621325217 d:\c++\westseer\include\absl\types\internal\optional.h
+	<functional>
+	<new>
+	<type_traits>
+	<utility>
+	"absl/base/internal/inline_variable.h"
+	"absl/memory/memory.h"
+	"absl/meta/type_traits.h"
+	"absl/utility/utility.h"
+
+1621325215 d:\c++\westseer\include\absl\memory\memory.h
+	<cstddef>
+	<limits>
+	<memory>
+	<new>
+	<type_traits>
+	<utility>
+	"absl/base/macros.h"
+	"absl/meta/type_traits.h"
+
+1621325302 d:\c++\westseer\include\tensorflow\core\framework\numeric_types.h
+	<complex>
+	"third_party/eigen3/unsupported/Eigen/CXX11/Tensor"
+	"third_party/eigen3/unsupported/Eigen/CXX11/FixedPoint"
+	"tensorflow/core/platform/types.h"
+
+1621325255 d:\c++\westseer\include\third_party\eigen3\unsupported\eigen\cxx11\fixedpoint
+	<Eigen/Core>
+	<stdint.h>
+	"src/FixedPoint/FixedPointTypes.h"
+	"src/FixedPoint/PacketMathAVX512.h"
+	"src/FixedPoint/TypeCastingAVX512.h"
+	"src/FixedPoint/PacketMathAVX2.h"
+	"src/FixedPoint/MatMatProductAVX2.h"
+	"src/FixedPoint/TypeCastingAVX2.h"
+	"src/FixedPoint/PacketMathAVX.h"
+	"src/FixedPoint/MatMatProductNEON.h"
+	"src/FixedPoint/MatMatProduct.h"
+	"src/FixedPoint/MatVecProduct.h"
+
+1621325255 d:\c++\westseer\include\third_party\eigen3\unsupported\eigen\cxx11\src\fixedpoint\fixedpointtypes.h
+	<cmath>
+	<iostream>
+
+1621325255 d:\c++\westseer\include\third_party\eigen3\unsupported\eigen\cxx11\src\fixedpoint\packetmathavx512.h
+	"PacketMathAVX2.h"
+
+1621325255 d:\c++\westseer\include\third_party\eigen3\unsupported\eigen\cxx11\src\fixedpoint\packetmathavx2.h
+	<emmintrin.h>
+	<immintrin.h>
+	<smmintrin.h>
+
+1621325255 d:\c++\westseer\include\third_party\eigen3\unsupported\eigen\cxx11\src\fixedpoint\typecastingavx512.h
+
+1621325255 d:\c++\westseer\include\third_party\eigen3\unsupported\eigen\cxx11\src\fixedpoint\matmatproductavx2.h
+
+1621325255 d:\c++\westseer\include\third_party\eigen3\unsupported\eigen\cxx11\src\fixedpoint\typecastingavx2.h
+
+1621325255 d:\c++\westseer\include\third_party\eigen3\unsupported\eigen\cxx11\src\fixedpoint\packetmathavx.h
+	<emmintrin.h>
+	<immintrin.h>
+	<smmintrin.h>
+
+1621325255 d:\c++\westseer\include\third_party\eigen3\unsupported\eigen\cxx11\src\fixedpoint\matmatproductneon.h
+
+1621325255 d:\c++\westseer\include\third_party\eigen3\unsupported\eigen\cxx11\src\fixedpoint\matmatproduct.h
+
+1621325255 d:\c++\westseer\include\third_party\eigen3\unsupported\eigen\cxx11\src\fixedpoint\matvecproduct.h
+
+1621325288 d:\c++\westseer\include\tensorflow\core\platform\types.h
+	<string>
+	"tensorflow/core/platform/bfloat16.h"
+	"tensorflow/core/platform/platform.h"
+	"tensorflow/core/platform/tstring.h"
+	"tensorflow/core/platform/google/integral_types.h"
+	"tensorflow/core/platform/default/integral_types.h"
+	<cstddef>
+
+1621325288 d:\c++\westseer\include\tensorflow\core\platform\bfloat16.h
+	"tensorflow/core/platform/byte_order.h"
+	"third_party/eigen3/Eigen/Core"
+
+1621325288 d:\c++\westseer\include\tensorflow\core\platform\byte_order.h
+
+1621325254 d:\c++\westseer\include\third_party\eigen3\eigen\core
+	"Eigen/Core"
+
+1621325288 d:\c++\westseer\include\tensorflow\core\platform\platform.h
+	"TargetConditionals.h"
+
+1621325288 d:\c++\westseer\include\tensorflow\core\platform\tstring.h
+	<assert.h>
+	<ostream>
+	<string>
+	"tensorflow/core/platform/cord.h"
+	"tensorflow/core/platform/ctstring.h"
+	"absl/strings/string_view.h"
+
+1621325288 d:\c++\westseer\include\tensorflow\core\platform\cord.h
+	"tensorflow/core/platform/platform.h"
+	"tensorflow/core/platform/google/cord.h"
+	"tensorflow/core/platform/default/cord.h"
+
+1621325288 d:\c++\westseer\include\tensorflow\core\platform\default\cord.h
+	"absl/strings/cord.h"
+
+1621325280 d:\c++\westseer\include\absl\strings\cord.h
+	<algorithm>
+	<cstddef>
+	<cstdint>
+	<cstring>
+	<iosfwd>
+	<iterator>
+	<string>
+	<type_traits>
+	"absl/base/internal/endian.h"
+	"absl/base/internal/per_thread_tls.h"
+	"absl/base/macros.h"
+	"absl/base/port.h"
+	"absl/container/inlined_vector.h"
+	"absl/functional/function_ref.h"
+	"absl/meta/type_traits.h"
+	"absl/strings/internal/cord_internal.h"
+	"absl/strings/internal/resize_uninitialized.h"
+	"absl/strings/string_view.h"
+	"absl/types/optional.h"
+
+1621325212 d:\c++\westseer\include\absl\base\internal\endian.h
+	<stdlib.h>
+	<sys/endian.h>
+	<byteswap.h>
+	<cstdint>
+	"absl/base/config.h"
+	"absl/base/internal/unaligned_access.h"
+	"absl/base/port.h"
+
+1621325212 d:\c++\westseer\include\absl\base\internal\unaligned_access.h
+	<string.h>
+	<cstdint>
+	"absl/base/attributes.h"
+	"absl/base/config.h"
+	<stdint.h>
+
+1621325214 d:\c++\westseer\include\absl\base\internal\per_thread_tls.h
+	"absl/base/port.h"
+
+1621325217 d:\c++\westseer\include\absl\container\inlined_vector.h
+	<algorithm>
+	<cassert>
+	<cstddef>
+	<cstdlib>
+	<cstring>
+	<initializer_list>
+	<iterator>
+	<memory>
+	<type_traits>
+	<utility>
+	"absl/algorithm/algorithm.h"
+	"absl/base/internal/throw_delegate.h"
+	"absl/base/macros.h"
+	"absl/base/optimization.h"
+	"absl/base/port.h"
+	"absl/container/internal/inlined_vector.h"
+	"absl/memory/memory.h"
+
+1621325216 d:\c++\westseer\include\absl\algorithm\algorithm.h
+	<algorithm>
+	<iterator>
+	<type_traits>
+	"absl/base/config.h"
+
+1621325217 d:\c++\westseer\include\absl\container\internal\inlined_vector.h
+	<algorithm>
+	<cstddef>
+	<cstring>
+	<iterator>
+	<limits>
+	<memory>
+	<utility>
+	"absl/base/macros.h"
+	"absl/container/internal/compressed_tuple.h"
+	"absl/memory/memory.h"
+	"absl/meta/type_traits.h"
+	"absl/types/span.h"
+
+1621325217 d:\c++\westseer\include\absl\container\internal\compressed_tuple.h
+	<tuple>
+	<type_traits>
+	<utility>
+	"absl/utility/utility.h"
+
+1621325217 d:\c++\westseer\include\absl\types\span.h
+	<algorithm>
+	<cassert>
+	<cstddef>
+	<initializer_list>
+	<iterator>
+	<type_traits>
+	<utility>
+	"absl/base/internal/throw_delegate.h"
+	"absl/base/macros.h"
+	"absl/base/optimization.h"
+	"absl/base/port.h"
+	"absl/meta/type_traits.h"
+	"absl/types/internal/span.h"
+
+1621325217 d:\c++\westseer\include\absl\types\internal\span.h
+	<algorithm>
+	<cstddef>
+	<string>
+	<type_traits>
+	"absl/algorithm/algorithm.h"
+	"absl/base/internal/throw_delegate.h"
+	"absl/meta/type_traits.h"
+
+1621325279 d:\c++\westseer\include\absl\functional\function_ref.h
+	<cassert>
+	<functional>
+	<type_traits>
+	"absl/functional/internal/function_ref.h"
+	"absl/meta/type_traits.h"
+
+1621325279 d:\c++\westseer\include\absl\functional\internal\function_ref.h
+	<cassert>
+	<functional>
+	<type_traits>
+	"absl/base/internal/invoke.h"
+	"absl/meta/type_traits.h"
+
+1621325279 d:\c++\westseer\include\absl\strings\internal\cord_internal.h
+	<atomic>
+	<cassert>
+	<cstddef>
+	<cstdint>
+	<type_traits>
+	"absl/base/internal/invoke.h"
+	"absl/container/internal/compressed_tuple.h"
+	"absl/meta/type_traits.h"
+	"absl/strings/string_view.h"
+
+1621325213 d:\c++\westseer\include\absl\strings\internal\resize_uninitialized.h
+	<string>
+	<type_traits>
+	<utility>
+	"absl/base/port.h"
+	"absl/meta/type_traits.h"
+
+1621325288 d:\c++\westseer\include\tensorflow\core\platform\default\integral_types.h
+	<cstdint>
+
+1621325302 d:\c++\westseer\include\tensorflow\core\framework\type_traits.h
+	<limits>
+	<utility>
+	"tensorflow/core/framework/numeric_types.h"
+	"tensorflow/core/platform/types.h"
+
+1621325288 d:\c++\westseer\include\tensorflow\core\platform\logging.h
+	"tensorflow/core/platform/platform.h"
+	"tensorflow/core/platform/types.h"
+	"tensorflow/core/platform/google/logging.h"
+	"tensorflow/core/platform/default/logging.h"
+
+1621325288 d:\c++\westseer\include\tensorflow\core\platform\default\logging.h
+	<atomic>
+	<limits>
+	<memory>
+	<sstream>
+	<vector>
+	"absl/base/log_severity.h"
+	"absl/strings/string_view.h"
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/types.h"
+
+1621325212 d:\c++\westseer\include\absl\base\log_severity.h
+	<array>
+	<ostream>
+	"absl/base/attributes.h"
+	"absl/base/config.h"
+
+1621325288 d:\c++\westseer\include\tensorflow\core\platform\macros.h
+
+1621325291 d:\c++\westseer\include\tensorflow\core\platform\numa.h
+	"tensorflow/core/platform/platform.h"
+	"tensorflow/core/platform/types.h"
+
+1621325303 d:\c++\westseer\include\tensorflow\core\framework\tensor_shape.h
+	<string>
+	"third_party/eigen3/unsupported/Eigen/CXX11/Tensor"
+	"tensorflow/core/framework/types.pb.h"
+	"tensorflow/core/lib/core/errors.h"
+	"tensorflow/core/lib/core/status.h"
+	"tensorflow/core/lib/core/stringpiece.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+	"tensorflow/core/lib/gtl/inlined_vector.h"
+	"tensorflow/core/lib/strings/str_util.h"
+	"tensorflow/core/platform/errors.h"
+	"tensorflow/core/platform/logging.h"
+	"tensorflow/core/platform/macros.h"
+
+1621325274 d:\c++\westseer\include\tensorflow\core\framework\types.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/generated_enum_reflection.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325268 d:\c++\westseer\include\src\google\protobuf\port_def.inc
+
+1621325268 d:\c++\westseer\include\src\google\protobuf\port_undef.inc
+
+1621325266 d:\c++\westseer\include\src\google\protobuf\io\coded_stream.h
+	<assert.h>
+	<atomic>
+	<climits>
+	<string>
+	<utility>
+	<sys/param.h>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/port.h>
+	<google/protobuf/stubs/port.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325269 d:\c++\westseer\include\src\google\protobuf\stubs\common.h
+	<algorithm>
+	<iostream>
+	<map>
+	<memory>
+	<set>
+	<string>
+	<vector>
+	<google/protobuf/stubs/port.h>
+	<google/protobuf/stubs/macros.h>
+	<google/protobuf/stubs/platform_macros.h>
+	<exception>
+	<TargetConditionals.h>
+	<pthread.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325270 d:\c++\westseer\include\src\google\protobuf\stubs\port.h
+	<assert.h>
+	<stdlib.h>
+	<cstddef>
+	<string>
+	<string.h>
+	<inttypes.h>
+	<stdint.h>
+	<google/protobuf/stubs/platform_macros.h>
+	<google/protobuf/port_def.inc>
+	<sys/param.h>
+	<endian.h>
+	<stdlib.h>
+	<intrin.h>
+	<libkern/OSByteOrder.h>
+	<byteswap.h>
+	<google/protobuf/port_undef.inc>
+
+1621325270 d:\c++\westseer\include\src\google\protobuf\stubs\platform_macros.h
+	<Availability.h>
+	<TargetConditionals.h>
+
+1621325269 d:\c++\westseer\include\src\google\protobuf\stubs\macros.h
+	<google/protobuf/stubs/port.h>
+
+1621325268 d:\c++\westseer\include\src\google\protobuf\port.h
+	<google/protobuf/stubs/port.h>
+
+1621325258 d:\c++\westseer\include\src\google\protobuf\arena.h
+	<limits>
+	<type_traits>
+	<utility>
+	<exception>
+	<typeinfo>
+	<typeinfo>
+	<google/protobuf/arena_impl.h>
+	<google/protobuf/port.h>
+	<type_traits>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325258 d:\c++\westseer\include\src\google\protobuf\arena_impl.h
+	<atomic>
+	<limits>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/stubs/logging.h>
+	<sanitizer/asan_interface.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325269 d:\c++\westseer\include\src\google\protobuf\stubs\logging.h
+	<google/protobuf/stubs/macros.h>
+	<google/protobuf/stubs/port.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325258 d:\c++\westseer\include\src\google\protobuf\arenastring.h
+	<string>
+	<google/protobuf/arena.h>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/stubs/fastmem.h>
+	<google/protobuf/stubs/logging.h>
+	<google/protobuf/stubs/port.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325269 d:\c++\westseer\include\src\google\protobuf\stubs\fastmem.h
+	<stddef.h>
+	<stdio.h>
+	<string.h>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325266 d:\c++\westseer\include\src\google\protobuf\generated_message_table_driven.h
+	<google/protobuf/map.h>
+	<google/protobuf/map_entry_lite.h>
+	<google/protobuf/map_field_lite.h>
+	<google/protobuf/message_lite.h>
+	<google/protobuf/wire_format_lite.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325267 d:\c++\westseer\include\src\google\protobuf\map.h
+	<initializer_list>
+	<iterator>
+	<limits>
+	<set>
+	<utility>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/generated_enum_util.h>
+	<google/protobuf/map_type_handler.h>
+	<google/protobuf/stubs/hash.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325266 d:\c++\westseer\include\src\google\protobuf\generated_enum_util.h
+	<type_traits>
+	<google/protobuf/message_lite.h>
+	<google/protobuf/stubs/strutil.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325268 d:\c++\westseer\include\src\google\protobuf\message_lite.h
+	<climits>
+	<string>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/stubs/logging.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/stubs/once.h>
+	<google/protobuf/port.h>
+	<google/protobuf/stubs/strutil.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325270 d:\c++\westseer\include\src\google\protobuf\stubs\once.h
+	<mutex>
+	<utility>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325270 d:\c++\westseer\include\src\google\protobuf\stubs\strutil.h
+	<stdlib.h>
+	<vector>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/stubs/stringpiece.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325270 d:\c++\westseer\include\src\google\protobuf\stubs\stringpiece.h
+	<assert.h>
+	<stddef.h>
+	<string.h>
+	<iosfwd>
+	<limits>
+	<string>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/stubs/hash.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325269 d:\c++\westseer\include\src\google\protobuf\stubs\hash.h
+	<string.h>
+	<google/protobuf/stubs/common.h>
+	<unordered_map>
+	<unordered_set>
+
+1621325268 d:\c++\westseer\include\src\google\protobuf\map_type_handler.h
+	<google/protobuf/parse_context.h>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/wire_format_lite.h>
+
+1621325268 d:\c++\westseer\include\src\google\protobuf\parse_context.h
+	<cstdint>
+	<cstring>
+	<string>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/io/zero_copy_stream.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/implicit_weak_message.h>
+	<google/protobuf/metadata_lite.h>
+	<google/protobuf/port.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/wire_format_lite.h>
+	<google/protobuf/stubs/strutil.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325267 d:\c++\westseer\include\src\google\protobuf\io\zero_copy_stream.h
+	<string>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325266 d:\c++\westseer\include\src\google\protobuf\implicit_weak_message.h
+	<string>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/message_lite.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325268 d:\c++\westseer\include\src\google\protobuf\metadata_lite.h
+	<string>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/message_lite.h>
+	<google/protobuf/port.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325266 d:\c++\westseer\include\src\google\protobuf\generated_message_util.h
+	<assert.h>
+	<atomic>
+	<climits>
+	<string>
+	<vector>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/has_bits.h>
+	<google/protobuf/implicit_weak_message.h>
+	<google/protobuf/message_lite.h>
+	<google/protobuf/stubs/once.h>
+	<google/protobuf/port.h>
+	<google/protobuf/wire_format_lite.h>
+	<google/protobuf/stubs/strutil.h>
+	<google/protobuf/stubs/casts.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325266 d:\c++\westseer\include\src\google\protobuf\has_bits.h
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/port.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325273 d:\c++\westseer\include\src\google\protobuf\wire_format_lite.h
+	<string>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/stubs/logging.h>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/message_lite.h>
+	<google/protobuf/port.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325269 d:\c++\westseer\include\src\google\protobuf\repeated_field.h
+	<utility>
+	<algorithm>
+	<iterator>
+	<limits>
+	<string>
+	<type_traits>
+	<google/protobuf/stubs/logging.h>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/implicit_weak_message.h>
+	<google/protobuf/message_lite.h>
+	<google/protobuf/port.h>
+	<google/protobuf/stubs/casts.h>
+	<type_traits>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325269 d:\c++\westseer\include\src\google\protobuf\stubs\casts.h
+	<type_traits>
+	<google/protobuf/stubs/common.h>
+
+1621325267 d:\c++\westseer\include\src\google\protobuf\map_entry_lite.h
+	<assert.h>
+	<string>
+	<google/protobuf/stubs/casts.h>
+	<google/protobuf/parse_context.h>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/map.h>
+	<google/protobuf/map_type_handler.h>
+	<google/protobuf/port.h>
+	<google/protobuf/wire_format_lite.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325267 d:\c++\westseer\include\src\google\protobuf\map_field_lite.h
+	<type_traits>
+	<google/protobuf/parse_context.h>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/map.h>
+	<google/protobuf/map_entry_lite.h>
+	<google/protobuf/port.h>
+	<google/protobuf/wire_format_lite.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325266 d:\c++\westseer\include\src\google\protobuf\inlined_string_field.h
+	<string>
+	<utility>
+	<google/protobuf/port.h>
+	<google/protobuf/stubs/stringpiece.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325268 d:\c++\westseer\include\src\google\protobuf\metadata.h
+	<google/protobuf/metadata_lite.h>
+	<google/protobuf/unknown_field_set.h>
+
+1621325271 d:\c++\westseer\include\src\google\protobuf\unknown_field_set.h
+	<assert.h>
+	<string>
+	<vector>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/stubs/logging.h>
+	<google/protobuf/parse_context.h>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/message_lite.h>
+	<google/protobuf/port.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325266 d:\c++\westseer\include\src\google\protobuf\generated_message_reflection.h
+	<string>
+	<vector>
+	<google/protobuf/stubs/casts.h>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/descriptor.h>
+	<google/protobuf/generated_enum_reflection.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/stubs/once.h>
+	<google/protobuf/port.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325265 d:\c++\westseer\include\src\google\protobuf\descriptor.h
+	<memory>
+	<set>
+	<string>
+	<vector>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/stubs/mutex.h>
+	<google/protobuf/stubs/once.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325270 d:\c++\westseer\include\src\google\protobuf\stubs\mutex.h
+	<mutex>
+	<windows.h>
+	<google/protobuf/stubs/macros.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325266 d:\c++\westseer\include\src\google\protobuf\generated_enum_reflection.h
+	<string>
+	<google/protobuf/generated_enum_util.h>
+	<google/protobuf/port.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325265 d:\c++\westseer\include\src\google\protobuf\extension_set.h
+	<algorithm>
+	<cassert>
+	<map>
+	<string>
+	<utility>
+	<vector>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/stubs/logging.h>
+	<google/protobuf/parse_context.h>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/port.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/wire_format_lite.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325290 d:\c++\westseer\include\tensorflow\core\lib\core\errors.h
+	"tensorflow/core/platform/errors.h"
+
+1621325290 d:\c++\westseer\include\tensorflow\core\platform\errors.h
+	<sstream>
+	"absl/strings/str_join.h"
+	"tensorflow/core/platform/status.h"
+	"tensorflow/core/platform/logging.h"
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/str_util.h"
+	"tensorflow/core/platform/strcat.h"
+
+1621325215 d:\c++\westseer\include\absl\strings\str_join.h
+	<cstdio>
+	<cstring>
+	<initializer_list>
+	<iterator>
+	<string>
+	<tuple>
+	<type_traits>
+	<utility>
+	"absl/base/macros.h"
+	"absl/strings/internal/str_join_internal.h"
+	"absl/strings/string_view.h"
+
+1621325216 d:\c++\westseer\include\absl\strings\internal\str_join_internal.h
+	<cstring>
+	<iterator>
+	<memory>
+	<string>
+	<type_traits>
+	<utility>
+	"absl/strings/internal/ostringstream.h"
+	"absl/strings/internal/resize_uninitialized.h"
+	"absl/strings/str_cat.h"
+
+1621325213 d:\c++\westseer\include\absl\strings\internal\ostringstream.h
+	<cassert>
+	<ostream>
+	<streambuf>
+	<string>
+	"absl/base/port.h"
+
+1621325215 d:\c++\westseer\include\absl\strings\str_cat.h
+	<array>
+	<cstdint>
+	<string>
+	<type_traits>
+	<vector>
+	"absl/base/port.h"
+	"absl/strings/numbers.h"
+	"absl/strings/string_view.h"
+
+1621325215 d:\c++\westseer\include\absl\strings\numbers.h
+	<x86intrin.h>
+	<cstddef>
+	<cstdlib>
+	<cstring>
+	<ctime>
+	<limits>
+	<string>
+	<type_traits>
+	"absl/base/config.h"
+	"absl/base/internal/bits.h"
+	"absl/base/internal/endian.h"
+	"absl/base/macros.h"
+	"absl/base/port.h"
+	"absl/numeric/int128.h"
+	"absl/strings/string_view.h"
+
+1621325215 d:\c++\westseer\include\absl\base\internal\bits.h
+	<cstdint>
+	"absl/base/config.h"
+	<intrin.h>
+	"absl/base/attributes.h"
+
+1621325215 d:\c++\westseer\include\absl\numeric\int128.h
+	<cassert>
+	<cmath>
+	<cstdint>
+	<cstring>
+	<iosfwd>
+	<limits>
+	<utility>
+	"absl/base/config.h"
+	"absl/base/macros.h"
+	"absl/base/port.h"
+	<intrin.h>
+	"absl/numeric/int128_have_intrinsic.inc"
+	"absl/numeric/int128_no_intrinsic.inc"
+
+1621325215 d:\c++\westseer\include\absl\numeric\int128_have_intrinsic.inc
+
+1621325215 d:\c++\westseer\include\absl\numeric\int128_no_intrinsic.inc
+
+1621325290 d:\c++\westseer\include\tensorflow\core\platform\status.h
+	<functional>
+	<iosfwd>
+	<memory>
+	<string>
+	<unordered_map>
+	"tensorflow/core/platform/logging.h"
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/stack_frame.h"
+	"tensorflow/core/platform/stringpiece.h"
+	"tensorflow/core/platform/types.h"
+	"tensorflow/core/protobuf/error_codes.pb.h"
+
+1621325289 d:\c++\westseer\include\tensorflow\core\platform\stack_frame.h
+	<string>
+
+1621325287 d:\c++\westseer\include\tensorflow\core\platform\stringpiece.h
+	"absl/strings/string_view.h"
+
+1621325276 d:\c++\westseer\include\tensorflow\core\protobuf\error_codes.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/generated_enum_reflection.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325290 d:\c++\westseer\include\tensorflow\core\platform\str_util.h
+	<string>
+	<vector>
+	"absl/strings/str_join.h"
+	"absl/strings/str_split.h"
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/stringpiece.h"
+	"tensorflow/core/platform/types.h"
+
+1621325216 d:\c++\westseer\include\absl\strings\str_split.h
+	<algorithm>
+	<cstddef>
+	<map>
+	<set>
+	<string>
+	<utility>
+	<vector>
+	"absl/base/internal/raw_logging.h"
+	"absl/base/macros.h"
+	"absl/strings/internal/str_split_internal.h"
+	"absl/strings/string_view.h"
+	"absl/strings/strip.h"
+
+1621325213 d:\c++\westseer\include\absl\base\internal\raw_logging.h
+	<string>
+	"absl/base/attributes.h"
+	"absl/base/config.h"
+	"absl/base/internal/atomic_hook.h"
+	"absl/base/log_severity.h"
+	"absl/base/macros.h"
+	"absl/base/optimization.h"
+	"absl/base/port.h"
+
+1621325212 d:\c++\westseer\include\absl\base\internal\atomic_hook.h
+	<atomic>
+	<cassert>
+	<cstdint>
+	<utility>
+	"absl/base/attributes.h"
+	"absl/base/config.h"
+
+1621325216 d:\c++\westseer\include\absl\strings\internal\str_split_internal.h
+	<array>
+	<initializer_list>
+	<iterator>
+	<map>
+	<type_traits>
+	<utility>
+	<vector>
+	"absl/base/macros.h"
+	"absl/base/port.h"
+	"absl/meta/type_traits.h"
+	"absl/strings/string_view.h"
+	"absl/strings/internal/stl_type_traits.h"
+
+1621325216 d:\c++\westseer\include\absl\strings\internal\stl_type_traits.h
+	<array>
+	<bitset>
+	<deque>
+	<forward_list>
+	<list>
+	<map>
+	<set>
+	<type_traits>
+	<unordered_map>
+	<unordered_set>
+	<vector>
+	"absl/meta/type_traits.h"
+
+1621325216 d:\c++\westseer\include\absl\strings\strip.h
+	<cstddef>
+	<string>
+	"absl/base/macros.h"
+	"absl/strings/ascii.h"
+	"absl/strings/match.h"
+	"absl/strings/string_view.h"
+
+1621325215 d:\c++\westseer\include\absl\strings\ascii.h
+	<algorithm>
+	<string>
+	"absl/base/attributes.h"
+	"absl/base/config.h"
+	"absl/strings/string_view.h"
+
+1621325215 d:\c++\westseer\include\absl\strings\match.h
+	<cstring>
+	"absl/strings/string_view.h"
+
+1621325290 d:\c++\westseer\include\tensorflow\core\platform\strcat.h
+	<string>
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/numbers.h"
+	"tensorflow/core/platform/stringpiece.h"
+	"tensorflow/core/platform/types.h"
+
+1621325290 d:\c++\westseer\include\tensorflow\core\platform\numbers.h
+	<string>
+	"tensorflow/core/platform/stringpiece.h"
+	"tensorflow/core/platform/types.h"
+
+1621325290 d:\c++\westseer\include\tensorflow\core\lib\core\status.h
+	"tensorflow/core/platform/status.h"
+
+1621325287 d:\c++\westseer\include\tensorflow\core\lib\core\stringpiece.h
+	"tensorflow/core/platform/stringpiece.h"
+
+1621325294 d:\c++\westseer\include\tensorflow\core\lib\gtl\array_slice.h
+	"absl/types/span.h"
+	"tensorflow/core/lib/gtl/inlined_vector.h"
+
+1621325294 d:\c++\westseer\include\tensorflow\core\lib\gtl\inlined_vector.h
+	"absl/container/inlined_vector.h"
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/types.h"
+
+1621325298 d:\c++\westseer\include\tensorflow\core\lib\strings\str_util.h
+	"tensorflow/core/platform/str_util.h"
+
+1621325303 d:\c++\westseer\include\tensorflow\core\framework\tensor_types.h
+	"third_party/eigen3/unsupported/Eigen/CXX11/Tensor"
+
+1621325310 d:\c++\westseer\include\tensorflow\core\framework\types.h
+	<map>
+	<set>
+	<string>
+	"third_party/eigen3/unsupported/Eigen/CXX11/Tensor"
+	"third_party/eigen3/unsupported/Eigen/CXX11/FixedPoint"
+	"tensorflow/core/framework/bfloat16.h"
+	"tensorflow/core/framework/numeric_types.h"
+	"tensorflow/core/framework/resource_handle.h"
+	"tensorflow/core/framework/types.pb.h"
+	"tensorflow/core/lib/core/stringpiece.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+	"tensorflow/core/lib/gtl/inlined_vector.h"
+	"tensorflow/core/platform/logging.h"
+	"tensorflow/core/platform/types.h"
+
+1621325303 d:\c++\westseer\include\tensorflow\core\framework\bfloat16.h
+	"tensorflow/core/framework/numeric_types.h"
+	"tensorflow/core/platform/types.h"
+
+1621325300 d:\c++\westseer\include\tensorflow\core\framework\resource_handle.h
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.pb.h"
+	"tensorflow/core/platform/tensor_coding.h"
+	"tensorflow/core/platform/types.h"
+	"tensorflow/core/util/managed_stack_trace.h"
+
+1621325299 d:\c++\westseer\include\tensorflow\core\platform\tensor_coding.h
+	<string>
+	"tensorflow/core/platform/platform.h"
+	"tensorflow/core/platform/protobuf.h"
+	"tensorflow/core/platform/refcount.h"
+	"tensorflow/core/platform/stringpiece.h"
+	"tensorflow/core/platform/types.h"
+
+1621325291 d:\c++\westseer\include\tensorflow\core\platform\protobuf.h
+	"tensorflow/core/platform/platform.h"
+	"tensorflow/core/platform/types.h"
+	"google/protobuf/io/coded_stream.h"
+	"google/protobuf/io/tokenizer.h"
+	"google/protobuf/io/zero_copy_stream.h"
+	"google/protobuf/io/zero_copy_stream_impl_lite.h"
+	"google/protobuf/descriptor.pb.h"
+	"google/protobuf/arena.h"
+	"google/protobuf/descriptor.h"
+	"google/protobuf/dynamic_message.h"
+	"google/protobuf/map.h"
+	"google/protobuf/message.h"
+	"google/protobuf/repeated_field.h"
+	"google/protobuf/text_format.h"
+	"google/protobuf/util/field_comparator.h"
+	"google/protobuf/util/json_util.h"
+	"google/protobuf/util/message_differencer.h"
+	"google/protobuf/util/type_resolver_util.h"
+
+1621325267 d:\c++\westseer\include\src\google\protobuf\io\tokenizer.h
+	<string>
+	<vector>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/stubs/logging.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325267 d:\c++\westseer\include\src\google\protobuf\io\zero_copy_stream_impl_lite.h
+	<iosfwd>
+	<memory>
+	<string>
+	<google/protobuf/stubs/callback.h>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/io/zero_copy_stream.h>
+	<google/protobuf/stubs/stl_util.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325269 d:\c++\westseer\include\src\google\protobuf\stubs\callback.h
+	<type_traits>
+	<google/protobuf/stubs/macros.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325270 d:\c++\westseer\include\src\google\protobuf\stubs\stl_util.h
+	<google/protobuf/stubs/common.h>
+
+1621325265 d:\c++\westseer\include\src\google\protobuf\descriptor.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/generated_enum_reflection.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325268 d:\c++\westseer\include\src\google\protobuf\message.h
+	<iosfwd>
+	<string>
+	<type_traits>
+	<vector>
+	<google/protobuf/stubs/casts.h>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/descriptor.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message_lite.h>
+	<google/protobuf/port.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325265 d:\c++\westseer\include\src\google\protobuf\dynamic_message.h
+	<algorithm>
+	<memory>
+	<vector>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/message.h>
+	<google/protobuf/stubs/mutex.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325271 d:\c++\westseer\include\src\google\protobuf\text_format.h
+	<map>
+	<memory>
+	<string>
+	<vector>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/descriptor.h>
+	<google/protobuf/message.h>
+	<google/protobuf/message_lite.h>
+	<google/protobuf/port.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325271 d:\c++\westseer\include\src\google\protobuf\util\field_comparator.h
+	<map>
+	<string>
+	<vector>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325273 d:\c++\westseer\include\src\google\protobuf\util\json_util.h
+	<google/protobuf/message.h>
+	<google/protobuf/util/type_resolver.h>
+	<google/protobuf/stubs/bytestream.h>
+	<google/protobuf/stubs/strutil.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325273 d:\c++\westseer\include\src\google\protobuf\util\type_resolver.h
+	<string>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/type.pb.h>
+	<google/protobuf/stubs/status.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325271 d:\c++\westseer\include\src\google\protobuf\type.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/generated_enum_reflection.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/any.pb.h>
+	<google/protobuf/source_context.pb.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325258 d:\c++\westseer\include\src\google\protobuf\any.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/any.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325258 d:\c++\westseer\include\src\google\protobuf\any.h
+	<string>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/message_lite.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325269 d:\c++\westseer\include\src\google\protobuf\source_context.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325270 d:\c++\westseer\include\src\google\protobuf\stubs\status.h
+	<iosfwd>
+	<string>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/stubs/stringpiece.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325269 d:\c++\westseer\include\src\google\protobuf\stubs\bytestream.h
+	<stddef.h>
+	<string>
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/stubs/stringpiece.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325273 d:\c++\westseer\include\src\google\protobuf\util\message_differencer.h
+	<functional>
+	<map>
+	<set>
+	<string>
+	<vector>
+	<google/protobuf/descriptor.h>
+	<google/protobuf/message.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/util/field_comparator.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325273 d:\c++\westseer\include\src\google\protobuf\util\type_resolver_util.h
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325292 d:\c++\westseer\include\tensorflow\core\platform\refcount.h
+	<atomic>
+	<memory>
+	"tensorflow/core/platform/logging.h"
+
+1621325303 d:\c++\westseer\include\tensorflow\core\util\managed_stack_trace.h
+	<string>
+	<vector>
+	"absl/strings/match.h"
+	"absl/types/optional.h"
+	"tensorflow/core/platform/stack_frame.h"
+
+1621325292 d:\c++\westseer\include\tensorflow\core\lib\core\refcount.h
+	"tensorflow/core/platform/refcount.h"
+
+1621325291 d:\c++\westseer\include\tensorflow\core\platform\mem.h
+	"tensorflow/core/platform/dynamic_annotations.h"
+	"tensorflow/core/platform/platform.h"
+	"tensorflow/core/platform/types.h"
+
+1621325290 d:\c++\westseer\include\tensorflow\core\platform\dynamic_annotations.h
+	"tensorflow/core/platform/platform.h"
+	"tensorflow/core/platform/google/dynamic_annotations.h"
+	"tensorflow/core/platform/default/dynamic_annotations.h"
+
+1621325290 d:\c++\westseer\include\tensorflow\core\platform\default\dynamic_annotations.h
+
+1621325274 d:\c++\westseer\include\tensorflow\core\framework\tensor.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	"tensorflow/core/framework/resource_handle.pb.h"
+	"tensorflow/core/framework/tensor_shape.pb.h"
+	"tensorflow/core/framework/types.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325274 d:\c++\westseer\include\tensorflow\core\framework\resource_handle.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	"tensorflow/core/framework/tensor_shape.pb.h"
+	"tensorflow/core/framework/types.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325274 d:\c++\westseer\include\tensorflow\core\framework\tensor_shape.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325316 d:\c++\westseer\include\tensorflow\core\graph\graph.h
+	<functional>
+	<string>
+	<vector>
+	"absl/types/optional.h"
+	"tensorflow/core/framework/function.h"
+	"tensorflow/core/framework/node_def.pb.h"
+	"tensorflow/core/framework/node_def_util.h"
+	"tensorflow/core/framework/op.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/graph/edgeset.h"
+	"tensorflow/core/lib/core/arena.h"
+	"tensorflow/core/lib/core/refcount.h"
+	"tensorflow/core/lib/core/status.h"
+	"tensorflow/core/lib/gtl/iterator_range.h"
+	"tensorflow/core/platform/logging.h"
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/types.h"
+
+1621325314 d:\c++\westseer\include\tensorflow\core\framework\function.h
+	<vector>
+	"tensorflow/core/platform/platform.h"
+	"absl/container/flat_hash_map.h"
+	"absl/types/optional.h"
+	"absl/types/variant.h"
+	"tensorflow/core/framework/attr_value.pb.h"
+	"tensorflow/core/framework/attr_value_util.h"
+	"tensorflow/core/framework/function.pb.h"
+	"tensorflow/core/framework/node_def_util.h"
+	"tensorflow/core/framework/op.h"
+	"tensorflow/core/framework/op_kernel.h"
+	"tensorflow/core/framework/selective_registration.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/flatmap.h"
+	"tensorflow/core/lib/hash/hash.h"
+	"tensorflow/core/lib/random/random.h"
+	"tensorflow/core/platform/env.h"
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/mutex.h"
+	"tensorflow/core/platform/protobuf.h"
+	"tensorflow/core/protobuf/config.pb.h"
+	"tensorflow/core/protobuf/remote_tensor_handle.pb.h"
+
+1621325285 d:\c++\westseer\include\absl\container\flat_hash_map.h
+	<cstddef>
+	<new>
+	<type_traits>
+	<utility>
+	"absl/algorithm/container.h"
+	"absl/container/internal/container_memory.h"
+	"absl/container/internal/hash_function_defaults.h"
+	"absl/container/internal/raw_hash_map.h"
+	"absl/memory/memory.h"
+
+1621325284 d:\c++\westseer\include\absl\algorithm\container.h
+	<algorithm>
+	<cassert>
+	<iterator>
+	<numeric>
+	<type_traits>
+	<unordered_map>
+	<unordered_set>
+	<utility>
+	<vector>
+	"absl/algorithm/algorithm.h"
+	"absl/base/macros.h"
+	"absl/meta/type_traits.h"
+
+1621325279 d:\c++\westseer\include\absl\container\internal\container_memory.h
+	<cassert>
+	<cstddef>
+	<memory>
+	<new>
+	<tuple>
+	<type_traits>
+	<utility>
+	"absl/base/config.h"
+	"absl/memory/memory.h"
+	"absl/meta/type_traits.h"
+	"absl/utility/utility.h"
+	<sanitizer/asan_interface.h>
+	<sanitizer/msan_interface.h>
+
+1621325280 d:\c++\westseer\include\absl\container\internal\hash_function_defaults.h
+	<stdint.h>
+	<cstddef>
+	<memory>
+	<string>
+	<type_traits>
+	"absl/base/config.h"
+	"absl/hash/hash.h"
+	"absl/strings/cord.h"
+	"absl/strings/string_view.h"
+
+1621325279 d:\c++\westseer\include\absl\hash\hash.h
+	"absl/hash/internal/hash.h"
+
+1621325279 d:\c++\westseer\include\absl\hash\internal\hash.h
+	<algorithm>
+	<array>
+	<cmath>
+	<cstring>
+	<deque>
+	<forward_list>
+	<functional>
+	<iterator>
+	<limits>
+	<list>
+	<map>
+	<memory>
+	<set>
+	<string>
+	<tuple>
+	<type_traits>
+	<utility>
+	<vector>
+	"absl/base/internal/endian.h"
+	"absl/base/port.h"
+	"absl/container/fixed_array.h"
+	"absl/meta/type_traits.h"
+	"absl/numeric/int128.h"
+	"absl/strings/string_view.h"
+	"absl/types/optional.h"
+	"absl/types/variant.h"
+	"absl/utility/utility.h"
+	"absl/hash/internal/city.h"
+
+1621325278 d:\c++\westseer\include\absl\container\fixed_array.h
+	<algorithm>
+	<cassert>
+	<cstddef>
+	<initializer_list>
+	<iterator>
+	<limits>
+	<memory>
+	<new>
+	<type_traits>
+	"absl/algorithm/algorithm.h"
+	"absl/base/config.h"
+	"absl/base/dynamic_annotations.h"
+	"absl/base/internal/throw_delegate.h"
+	"absl/base/macros.h"
+	"absl/base/optimization.h"
+	"absl/base/port.h"
+	"absl/container/internal/compressed_tuple.h"
+	"absl/memory/memory.h"
+
+1621325213 d:\c++\westseer\include\absl\base\dynamic_annotations.h
+	<stddef.h>
+	"absl/base/attributes.h"
+	"absl/base/config.h"
+	"absl/base/macros.h"
+	"absl/base/internal/dynamic_annotations.h"
+	<sanitizer/msan_interface.h>
+	<sanitizer/common_interface_defs.h>
+
+1621325213 d:\c++\westseer\include\absl\base\internal\dynamic_annotations.h
+	<stddef.h>
+	"absl/base/config.h"
+	<sanitizer/msan_interface.h>
+	<sanitizer/common_interface_defs.h>
+
+1621325279 d:\c++\westseer\include\absl\types\variant.h
+	"absl/base/config.h"
+	"absl/utility/utility.h"
+	<variant>
+	<functional>
+	<new>
+	<type_traits>
+	<utility>
+	"absl/base/macros.h"
+	"absl/base/port.h"
+	"absl/meta/type_traits.h"
+	"absl/types/internal/variant.h"
+
+1621325279 d:\c++\westseer\include\absl\types\internal\variant.h
+	<cassert>
+	<cstddef>
+	<cstdlib>
+	<memory>
+	<stdexcept>
+	<tuple>
+	<type_traits>
+	"absl/base/config.h"
+	"absl/base/internal/identity.h"
+	"absl/base/internal/inline_variable.h"
+	"absl/base/internal/invoke.h"
+	"absl/base/macros.h"
+	"absl/base/optimization.h"
+	"absl/meta/type_traits.h"
+	"absl/types/bad_variant_access.h"
+	"absl/utility/utility.h"
+
+1621325279 d:\c++\westseer\include\absl\types\bad_variant_access.h
+	<stdexcept>
+	"absl/base/config.h"
+	<variant>
+
+1621325279 d:\c++\westseer\include\absl\hash\internal\city.h
+	<stdint.h>
+	<stdlib.h>
+	<utility>
+	"absl/base/config.h"
+
+1621325284 d:\c++\westseer\include\absl\container\internal\raw_hash_map.h
+	<tuple>
+	<type_traits>
+	<utility>
+	"absl/base/internal/throw_delegate.h"
+	"absl/container/internal/container_memory.h"
+	"absl/container/internal/raw_hash_set.h"
+
+1621325284 d:\c++\westseer\include\absl\container\internal\raw_hash_set.h
+	<algorithm>
+	<cmath>
+	<cstdint>
+	<cstring>
+	<iterator>
+	<limits>
+	<memory>
+	<tuple>
+	<type_traits>
+	<utility>
+	"absl/base/internal/bits.h"
+	"absl/base/internal/endian.h"
+	"absl/base/optimization.h"
+	"absl/base/port.h"
+	"absl/container/internal/common.h"
+	"absl/container/internal/compressed_tuple.h"
+	"absl/container/internal/container_memory.h"
+	"absl/container/internal/hash_policy_traits.h"
+	"absl/container/internal/hashtable_debug_hooks.h"
+	"absl/container/internal/hashtablez_sampler.h"
+	"absl/container/internal/have_sse.h"
+	"absl/container/internal/layout.h"
+	"absl/memory/memory.h"
+	"absl/meta/type_traits.h"
+	"absl/utility/utility.h"
+
+1621325280 d:\c++\westseer\include\absl\container\internal\common.h
+	<cassert>
+	<type_traits>
+	"absl/meta/type_traits.h"
+	"absl/types/optional.h"
+
+1621325280 d:\c++\westseer\include\absl\container\internal\hash_policy_traits.h
+	<cstddef>
+	<memory>
+	<new>
+	<type_traits>
+	<utility>
+	"absl/meta/type_traits.h"
+
+1621325280 d:\c++\westseer\include\absl\container\internal\hashtable_debug_hooks.h
+	<cstddef>
+	<algorithm>
+	<type_traits>
+	<vector>
+	"absl/base/config.h"
+
+1621325284 d:\c++\westseer\include\absl\container\internal\hashtablez_sampler.h
+	<atomic>
+	<functional>
+	<memory>
+	<vector>
+	"absl/base/internal/per_thread_tls.h"
+	"absl/base/optimization.h"
+	"absl/container/internal/have_sse.h"
+	"absl/synchronization/mutex.h"
+	"absl/utility/utility.h"
+
+1621325280 d:\c++\westseer\include\absl\container\internal\have_sse.h
+	<emmintrin.h>
+	<tmmintrin.h>
+
+1621325284 d:\c++\westseer\include\absl\synchronization\mutex.h
+	<atomic>
+	<cstdint>
+	<string>
+	"absl/base/const_init.h"
+	"absl/base/internal/identity.h"
+	"absl/base/internal/low_level_alloc.h"
+	"absl/base/internal/thread_identity.h"
+	"absl/base/internal/tsan_mutex_interface.h"
+	"absl/base/port.h"
+	"absl/base/thread_annotations.h"
+	"absl/synchronization/internal/kernel_timeout.h"
+	"absl/synchronization/internal/per_thread_sem.h"
+	"absl/time/time.h"
+	"absl/synchronization/internal/mutex_nonprod.inc"
+
+1621325212 d:\c++\westseer\include\absl\base\const_init.h
+	"absl/base/config.h"
+
+1621325281 d:\c++\westseer\include\absl\base\internal\low_level_alloc.h
+	<sys/types.h>
+	<cstdint>
+	"absl/base/attributes.h"
+	"absl/base/config.h"
+	<cstddef>
+	"absl/base/port.h"
+
+1621325214 d:\c++\westseer\include\absl\base\internal\thread_identity.h
+	<pthread.h>
+	<unistd.h>
+	<atomic>
+	<cstdint>
+	"absl/base/config.h"
+	"absl/base/internal/per_thread_tls.h"
+
+1621325214 d:\c++\westseer\include\absl\base\internal\tsan_mutex_interface.h
+	"absl/base/config.h"
+	<sanitizer/tsan_interface.h>
+
+1621325212 d:\c++\westseer\include\absl\base\thread_annotations.h
+	"absl/base/attributes.h"
+	"absl/base/config.h"
+	"absl/base/internal/thread_annotations.h"
+
+1621325212 d:\c++\westseer\include\absl\base\internal\thread_annotations.h
+
+1621325283 d:\c++\westseer\include\absl\synchronization\internal\kernel_timeout.h
+	<time.h>
+	<algorithm>
+	<limits>
+	"absl/base/internal/raw_logging.h"
+	"absl/time/clock.h"
+	"absl/time/time.h"
+
+1621325282 d:\c++\westseer\include\absl\time\clock.h
+	"absl/base/macros.h"
+	"absl/time/time.h"
+
+1621325283 d:\c++\westseer\include\absl\time\time.h
+	<sys/time.h>
+	<chrono>
+	<cmath>
+	<cstdint>
+	<ctime>
+	<ostream>
+	<string>
+	<type_traits>
+	<utility>
+	"absl/base/macros.h"
+	"absl/strings/string_view.h"
+	"absl/time/civil_time.h"
+	"absl/time/internal/cctz/include/cctz/time_zone.h"
+
+1621325282 d:\c++\westseer\include\absl\time\civil_time.h
+	<string>
+	"absl/strings/string_view.h"
+	"absl/time/internal/cctz/include/cctz/civil_time.h"
+
+1621325282 d:\c++\westseer\include\absl\time\internal\cctz\include\cctz\civil_time.h
+	"absl/base/config.h"
+	"absl/time/internal/cctz/include/cctz/civil_time_detail.h"
+
+1621325282 d:\c++\westseer\include\absl\time\internal\cctz\include\cctz\civil_time_detail.h
+	<cstdint>
+	<limits>
+	<ostream>
+	<type_traits>
+	"absl/base/config.h"
+
+1621325282 d:\c++\westseer\include\absl\time\internal\cctz\include\cctz\time_zone.h
+	<chrono>
+	<cstdint>
+	<string>
+	<utility>
+	"absl/base/config.h"
+	"absl/time/internal/cctz/include/cctz/civil_time.h"
+
+1621325284 d:\c++\westseer\include\absl\synchronization\internal\per_thread_sem.h
+	<atomic>
+	"absl/base/internal/thread_identity.h"
+	"absl/synchronization/internal/create_thread_identity.h"
+	"absl/synchronization/internal/kernel_timeout.h"
+
+1621325284 d:\c++\westseer\include\absl\synchronization\internal\create_thread_identity.h
+	"absl/base/internal/thread_identity.h"
+	"absl/base/port.h"
+
+1621325284 d:\c++\westseer\include\absl\synchronization\internal\mutex_nonprod.inc
+	<type_traits>
+	<condition_variable>
+	<mutex>
+	<pthread.h>
+	"absl/base/call_once.h"
+	"absl/time/time.h"
+
+1621325214 d:\c++\westseer\include\absl\base\call_once.h
+	<algorithm>
+	<atomic>
+	<cstdint>
+	<type_traits>
+	<utility>
+	"absl/base/internal/invoke.h"
+	"absl/base/internal/low_level_scheduling.h"
+	"absl/base/internal/raw_logging.h"
+	"absl/base/internal/scheduling_mode.h"
+	"absl/base/internal/spinlock_wait.h"
+	"absl/base/macros.h"
+	"absl/base/optimization.h"
+	"absl/base/port.h"
+
+1621325214 d:\c++\westseer\include\absl\base\internal\low_level_scheduling.h
+	"absl/base/internal/raw_logging.h"
+	"absl/base/internal/scheduling_mode.h"
+	"absl/base/macros.h"
+
+1621325213 d:\c++\westseer\include\absl\base\internal\scheduling_mode.h
+	"absl/base/config.h"
+
+1621325214 d:\c++\westseer\include\absl\base\internal\spinlock_wait.h
+	<stdint.h>
+	<atomic>
+	"absl/base/internal/scheduling_mode.h"
+
+1621325284 d:\c++\westseer\include\absl\container\internal\layout.h
+	<assert.h>
+	<stddef.h>
+	<stdint.h>
+	<ostream>
+	<string>
+	<tuple>
+	<type_traits>
+	<typeinfo>
+	<utility>
+	"absl/base/config.h"
+	"absl/meta/type_traits.h"
+	"absl/strings/str_cat.h"
+	"absl/types/span.h"
+	"absl/utility/utility.h"
+	<sanitizer/asan_interface.h>
+	<cxxabi.h>
+
+1621325274 d:\c++\westseer\include\tensorflow\core\framework\attr_value.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/map.h>
+	<google/protobuf/map_entry.h>
+	<google/protobuf/map_field_inl.h>
+	<google/protobuf/unknown_field_set.h>
+	"tensorflow/core/framework/tensor.pb.h"
+	"tensorflow/core/framework/tensor_shape.pb.h"
+	"tensorflow/core/framework/types.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325267 d:\c++\westseer\include\src\google\protobuf\map_entry.h
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/map_entry_lite.h>
+	<google/protobuf/map_type_handler.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/port.h>
+	<google/protobuf/reflection_ops.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/wire_format_lite.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325269 d:\c++\westseer\include\src\google\protobuf\reflection_ops.h
+	<google/protobuf/stubs/common.h>
+	<google/protobuf/message.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325267 d:\c++\westseer\include\src\google\protobuf\map_field_inl.h
+	<memory>
+	<google/protobuf/stubs/casts.h>
+	<google/protobuf/map.h>
+	<google/protobuf/map_field.h>
+	<google/protobuf/map_type_handler.h>
+
+1621325267 d:\c++\westseer\include\src\google\protobuf\map_field.h
+	<atomic>
+	<google/protobuf/arena.h>
+	<google/protobuf/descriptor.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/map_entry.h>
+	<google/protobuf/map_field_lite.h>
+	<google/protobuf/map_type_handler.h>
+	<google/protobuf/message.h>
+	<google/protobuf/stubs/mutex.h>
+	<google/protobuf/port.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325311 d:\c++\westseer\include\tensorflow\core\framework\attr_value_util.h
+	<functional>
+	<string>
+	<vector>
+	"tensorflow/core/framework/partial_tensor_shape.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/core/status.h"
+	"tensorflow/core/lib/core/stringpiece.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325303 d:\c++\westseer\include\tensorflow\core\framework\partial_tensor_shape.h
+	"tensorflow/core/framework/tensor_shape.h"
+
+1621325275 d:\c++\westseer\include\tensorflow\core\framework\function.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/map.h>
+	<google/protobuf/map_entry.h>
+	<google/protobuf/map_field_inl.h>
+	<google/protobuf/unknown_field_set.h>
+	"tensorflow/core/framework/attr_value.pb.h"
+	"tensorflow/core/framework/node_def.pb.h"
+	"tensorflow/core/framework/op_def.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325275 d:\c++\westseer\include\tensorflow\core\framework\node_def.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/map.h>
+	<google/protobuf/map_entry.h>
+	<google/protobuf/map_field_inl.h>
+	<google/protobuf/unknown_field_set.h>
+	"tensorflow/core/framework/attr_value.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325275 d:\c++\westseer\include\tensorflow\core\framework\op_def.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	"tensorflow/core/framework/attr_value.pb.h"
+	"tensorflow/core/framework/types.pb.h"
+	"tensorflow/core/framework/resource_handle.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325311 d:\c++\westseer\include\tensorflow\core\framework\node_def_util.h
+	<string>
+	<unordered_set>
+	<vector>
+	"tensorflow/core/framework/attr_value_util.h"
+	"tensorflow/core/framework/node_def.pb.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/framework/types.pb.h"
+	"tensorflow/core/lib/core/stringpiece.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+	"tensorflow/core/lib/gtl/flatmap.h"
+	"tensorflow/core/lib/hash/hash.h"
+	"tensorflow/core/platform/hash.h"
+	"tensorflow/core/platform/protobuf.h"
+	"tensorflow/core/platform/status.h"
+	"tensorflow/core/platform/stringpiece.h"
+	"tensorflow/core/platform/types.h"
+	"tensorflow/core/util/padding.h"
+
+1621325294 d:\c++\westseer\include\tensorflow\core\lib\gtl\flatmap.h
+	<stddef.h>
+	<functional>
+	<initializer_list>
+	<iterator>
+	<utility>
+	"tensorflow/core/lib/gtl/flatrep.h"
+	"tensorflow/core/lib/hash/hash.h"
+	"tensorflow/core/platform/logging.h"
+	"tensorflow/core/platform/types.h"
+
+1621325294 d:\c++\westseer\include\tensorflow\core\lib\gtl\flatrep.h
+	<string.h>
+	<utility>
+	"tensorflow/core/platform/prefetch.h"
+	"tensorflow/core/platform/types.h"
+
+1621325294 d:\c++\westseer\include\tensorflow\core\platform\prefetch.h
+	"tensorflow/core/platform/platform.h"
+
+1621325293 d:\c++\westseer\include\tensorflow\core\lib\hash\hash.h
+	"tensorflow/core/platform/hash.h"
+
+1621325293 d:\c++\westseer\include\tensorflow\core\platform\hash.h
+	<stddef.h>
+	<stdint.h>
+	<functional>
+	<string>
+	"tensorflow/core/platform/stringpiece.h"
+	"tensorflow/core/platform/types.h"
+
+1621325311 d:\c++\westseer\include\tensorflow\core\util\padding.h
+	<string>
+	<vector>
+	"tensorflow/core/lib/core/status.h"
+	"tensorflow/core/util/tensor_format.h"
+
+1621325311 d:\c++\westseer\include\tensorflow\core\util\tensor_format.h
+	<array>
+	<vector>
+	"absl/strings/string_view.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+	"tensorflow/core/lib/gtl/inlined_vector.h"
+	"tensorflow/core/platform/types.h"
+
+1621325311 d:\c++\westseer\include\tensorflow\core\framework\op.h
+	<functional>
+	<unordered_map>
+	<vector>
+	"tensorflow/core/framework/op_def_builder.h"
+	"tensorflow/core/framework/op_def_util.h"
+	"tensorflow/core/framework/selective_registration.h"
+	"tensorflow/core/lib/core/errors.h"
+	"tensorflow/core/lib/core/status.h"
+	"tensorflow/core/lib/strings/str_util.h"
+	"tensorflow/core/lib/strings/strcat.h"
+	"tensorflow/core/platform/logging.h"
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/mutex.h"
+	"tensorflow/core/platform/thread_annotations.h"
+	"tensorflow/core/platform/types.h"
+
+1621325311 d:\c++\westseer\include\tensorflow\core\framework\op_def_builder.h
+	<string>
+	<vector>
+	"tensorflow/core/framework/op_def.pb.h"
+	"tensorflow/core/lib/core/status.h"
+	"tensorflow/core/lib/core/stringpiece.h"
+	"tensorflow/core/platform/macros.h"
+
+1621325311 d:\c++\westseer\include\tensorflow\core\framework\op_def_util.h
+	<string>
+	"tensorflow/core/framework/api_def.pb.h"
+	"tensorflow/core/framework/op_def.pb.h"
+	"tensorflow/core/lib/core/status.h"
+	"tensorflow/core/platform/protobuf.h"
+
+1621325274 d:\c++\westseer\include\tensorflow\core\framework\api_def.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/generated_enum_reflection.h>
+	<google/protobuf/unknown_field_set.h>
+	"tensorflow/core/framework/attr_value.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325311 d:\c++\westseer\include\tensorflow\core\framework\selective_registration.h
+	<string.h>
+	<type_traits>
+	<utility>
+	"tensorflow/core/framework/registration_options.h"
+	"ops_to_register.h"
+
+1621325311 d:\c++\westseer\include\tensorflow\core\framework\registration_options.h
+
+1621325290 d:\c++\westseer\include\tensorflow\core\lib\strings\strcat.h
+	"tensorflow/core/platform/strcat.h"
+
+1621325288 d:\c++\westseer\include\tensorflow\core\platform\mutex.h
+	<chrono>
+	<condition_variable>
+	<mutex>
+	"tensorflow/core/platform/platform.h"
+	"tensorflow/core/platform/thread_annotations.h"
+	"tensorflow/core/platform/types.h"
+	"tensorflow/core/platform/google/mutex_data.h"
+	"tensorflow/core/platform/default/mutex_data.h"
+	"tensorflow/core/platform/google/mutex.h"
+	"tensorflow/core/platform/default/mutex.h"
+
+1621325288 d:\c++\westseer\include\tensorflow\core\platform\thread_annotations.h
+
+1621325288 d:\c++\westseer\include\tensorflow\core\platform\default\mutex_data.h
+
+1621325288 d:\c++\westseer\include\tensorflow\core\platform\default\mutex.h
+
+1621325315 d:\c++\westseer\include\tensorflow\core\framework\op_kernel.h
+	<functional>
+	<unordered_set>
+	<utility>
+	<vector>
+	"tensorflow/core/framework/allocator.h"
+	"tensorflow/core/framework/cancellation.h"
+	"tensorflow/core/framework/control_flow.h"
+	"tensorflow/core/framework/device_base.h"
+	"tensorflow/core/framework/graph.pb.h"
+	"tensorflow/core/framework/kernel_def.pb.h"
+	"tensorflow/core/framework/kernel_def_builder.h"
+	"tensorflow/core/framework/node_def.pb.h"
+	"tensorflow/core/framework/node_def_util.h"
+	"tensorflow/core/framework/node_properties.h"
+	"tensorflow/core/framework/op.h"
+	"tensorflow/core/framework/op_requires.h"
+	"tensorflow/core/framework/rendezvous.h"
+	"tensorflow/core/framework/selective_registration.h"
+	"tensorflow/core/framework/session_state.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/tensor_shape.pb.h"
+	"tensorflow/core/framework/tracking_allocator.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/framework/types.pb.h"
+	"tensorflow/core/lib/core/errors.h"
+	"tensorflow/core/lib/core/status.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+	"tensorflow/core/lib/gtl/manual_constructor.h"
+	"tensorflow/core/platform/env.h"
+	"tensorflow/core/platform/logging.h"
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/mutex.h"
+	"tensorflow/core/platform/profile_utils/cpu_utils.h"
+	"tensorflow/core/platform/thread_annotations.h"
+	"tensorflow/core/platform/types.h"
+	"tensorflow/core/protobuf/config.pb.h"
+	"tensorflow/core/util/managed_stack_trace.h"
+
+1621325313 d:\c++\westseer\include\tensorflow\core\framework\cancellation.h
+	<atomic>
+	<functional>
+	"tensorflow/core/lib/core/notification.h"
+	"tensorflow/core/lib/core/status.h"
+	"tensorflow/core/lib/gtl/flatmap.h"
+	"tensorflow/core/lib/hash/hash.h"
+	"tensorflow/core/platform/mutex.h"
+	"tensorflow/core/platform/thread_annotations.h"
+	"tensorflow/core/platform/types.h"
+
+1621325292 d:\c++\westseer\include\tensorflow\core\lib\core\notification.h
+	"tensorflow/core/platform/notification.h"
+
+1621325292 d:\c++\westseer\include\tensorflow\core\platform\notification.h
+	"tensorflow/core/platform/platform.h"
+	"tensorflow/core/platform/google/notification.h"
+	"tensorflow/core/platform/default/notification.h"
+
+1621325292 d:\c++\westseer\include\tensorflow\core\platform\default\notification.h
+	<assert.h>
+	<atomic>
+	<chrono>
+	<condition_variable>
+	"tensorflow/core/platform/mutex.h"
+	"tensorflow/core/platform/types.h"
+
+1621325313 d:\c++\westseer\include\tensorflow\core\framework\control_flow.h
+	"tensorflow/core/lib/hash/hash.h"
+	"tensorflow/core/platform/logging.h"
+	"tensorflow/core/platform/types.h"
+
+1621325314 d:\c++\westseer\include\tensorflow\core\framework\device_base.h
+	<memory>
+	<string>
+	<vector>
+	"absl/base/macros.h"
+	"absl/strings/string_view.h"
+	"tensorflow/core/framework/device_attributes.pb.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/lib/core/errors.h"
+	"tensorflow/core/lib/core/refcount.h"
+	"tensorflow/core/lib/core/status.h"
+	"tensorflow/core/lib/core/stringpiece.h"
+	"tensorflow/core/platform/logging.h"
+
+1621325275 d:\c++\westseer\include\tensorflow\core\framework\device_attributes.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325275 d:\c++\westseer\include\tensorflow\core\framework\graph.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	"tensorflow/core/framework/function.pb.h"
+	"tensorflow/core/framework/node_def.pb.h"
+	"tensorflow/core/framework/versions.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325275 d:\c++\westseer\include\tensorflow\core\framework\versions.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325275 d:\c++\westseer\include\tensorflow\core\framework\kernel_def.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	"tensorflow/core/framework/attr_value.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325314 d:\c++\westseer\include\tensorflow\core\framework\kernel_def_builder.h
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/types.h"
+
+1621325311 d:\c++\westseer\include\tensorflow\core\framework\node_properties.h
+	"tensorflow/core/framework/node_def.pb.h"
+	"tensorflow/core/framework/op_def.pb.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/core/status.h"
+
+1621325315 d:\c++\westseer\include\tensorflow\core\framework\op_requires.h
+	"tensorflow/core/platform/macros.h"
+
+1621325312 d:\c++\westseer\include\tensorflow\core\framework\rendezvous.h
+	<string>
+	"tensorflow/core/framework/cancellation.h"
+	"tensorflow/core/framework/control_flow.h"
+	"tensorflow/core/framework/device_base.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/lib/core/refcount.h"
+	"tensorflow/core/lib/core/status.h"
+	"tensorflow/core/util/device_name_utils.h"
+
+1621325316 d:\c++\westseer\include\tensorflow\core\util\device_name_utils.h
+	<string>
+	"tensorflow/core/lib/core/status.h"
+	"tensorflow/core/lib/core/stringpiece.h"
+
+1621325315 d:\c++\westseer\include\tensorflow\core\framework\session_state.h
+	<string>
+	<unordered_map>
+	<vector>
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/lib/core/errors.h"
+	"tensorflow/core/platform/mutex.h"
+
+1621325302 d:\c++\westseer\include\tensorflow\core\framework\tracking_allocator.h
+	<unordered_map>
+	"tensorflow/core/framework/allocator.h"
+	"tensorflow/core/lib/gtl/inlined_vector.h"
+	"tensorflow/core/platform/mutex.h"
+	"tensorflow/core/platform/thread_annotations.h"
+	"tensorflow/core/platform/types.h"
+
+1621325294 d:\c++\westseer\include\tensorflow\core\lib\gtl\manual_constructor.h
+	<stddef.h>
+	<new>
+	<utility>
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/mem.h"
+
+1621325293 d:\c++\westseer\include\tensorflow\core\platform\env.h
+	<stdint.h>
+	<memory>
+	<string>
+	<unordered_map>
+	<vector>
+	"tensorflow/core/platform/env_time.h"
+	"tensorflow/core/platform/errors.h"
+	"tensorflow/core/platform/file_system.h"
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/mutex.h"
+	"tensorflow/core/platform/numa.h"
+	"tensorflow/core/platform/platform.h"
+	"tensorflow/core/platform/protobuf.h"
+	"tensorflow/core/platform/status.h"
+	"tensorflow/core/platform/stringpiece.h"
+	"tensorflow/core/platform/types.h"
+
+1621325288 d:\c++\westseer\include\tensorflow\core\platform\env_time.h
+	<stdint.h>
+	"tensorflow/core/platform/types.h"
+
+1621325293 d:\c++\westseer\include\tensorflow\core\platform\file_system.h
+	<stdint.h>
+	<functional>
+	<string>
+	<unordered_map>
+	<utility>
+	<vector>
+	"tensorflow/core/platform/cord.h"
+	"tensorflow/core/platform/errors.h"
+	"tensorflow/core/platform/file_statistics.h"
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/platform.h"
+	"tensorflow/core/platform/stringpiece.h"
+	"tensorflow/core/platform/types.h"
+
+1621325293 d:\c++\westseer\include\tensorflow\core\platform\file_statistics.h
+	"tensorflow/core/platform/types.h"
+
+1621325299 d:\c++\westseer\include\tensorflow\core\platform\profile_utils\cpu_utils.h
+	<chrono>
+	<memory>
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/profile_utils/i_cpu_utils_helper.h"
+	"tensorflow/core/platform/types.h"
+	<sys/time.h>
+	<intrin.h>
+
+1621325299 d:\c++\westseer\include\tensorflow\core\platform\profile_utils\i_cpu_utils_helper.h
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/types.h"
+
+1621325276 d:\c++\westseer\include\tensorflow\core\protobuf\config.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/map.h>
+	<google/protobuf/map_entry.h>
+	<google/protobuf/map_field_inl.h>
+	<google/protobuf/generated_enum_reflection.h>
+	<google/protobuf/unknown_field_set.h>
+	"tensorflow/core/framework/cost_graph.pb.h"
+	"tensorflow/core/framework/graph.pb.h"
+	"tensorflow/core/framework/step_stats.pb.h"
+	"tensorflow/core/protobuf/cluster.pb.h"
+	"tensorflow/core/protobuf/debug.pb.h"
+	"tensorflow/core/protobuf/rewriter_config.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325274 d:\c++\westseer\include\tensorflow\core\framework\cost_graph.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	"tensorflow/core/framework/tensor_shape.pb.h"
+	"tensorflow/core/framework/types.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325275 d:\c++\westseer\include\tensorflow\core\framework\step_stats.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/map.h>
+	<google/protobuf/map_entry.h>
+	<google/protobuf/map_field_inl.h>
+	<google/protobuf/unknown_field_set.h>
+	"tensorflow/core/framework/allocation_description.pb.h"
+	"tensorflow/core/framework/tensor_description.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325274 d:\c++\westseer\include\tensorflow\core\framework\allocation_description.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325275 d:\c++\westseer\include\tensorflow\core\framework\tensor_description.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	"tensorflow/core/framework/allocation_description.pb.h"
+	"tensorflow/core/framework/tensor_shape.pb.h"
+	"tensorflow/core/framework/types.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325276 d:\c++\westseer\include\tensorflow\core\protobuf\cluster.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/map.h>
+	<google/protobuf/map_entry.h>
+	<google/protobuf/map_field_inl.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325276 d:\c++\westseer\include\tensorflow\core\protobuf\debug.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325277 d:\c++\westseer\include\tensorflow\core\protobuf\rewriter_config.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/map.h>
+	<google/protobuf/map_entry.h>
+	<google/protobuf/map_field_inl.h>
+	<google/protobuf/generated_enum_reflection.h>
+	<google/protobuf/unknown_field_set.h>
+	"tensorflow/core/framework/attr_value.pb.h"
+	"tensorflow/core/protobuf/verifier_config.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325278 d:\c++\westseer\include\tensorflow\core\protobuf\verifier_config.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/generated_enum_reflection.h>
+	<google/protobuf/unknown_field_set.h>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325298 d:\c++\westseer\include\tensorflow\core\lib\random\random.h
+	"tensorflow/core/platform/random.h"
+
+1621325298 d:\c++\westseer\include\tensorflow\core\platform\random.h
+	"tensorflow/core/platform/types.h"
+
+1621325277 d:\c++\westseer\include\tensorflow\core\protobuf\remote_tensor_handle.pb.h
+	<limits>
+	<string>
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+	<google/protobuf/io/coded_stream.h>
+	<google/protobuf/arena.h>
+	<google/protobuf/arenastring.h>
+	<google/protobuf/generated_message_table_driven.h>
+	<google/protobuf/generated_message_util.h>
+	<google/protobuf/inlined_string_field.h>
+	<google/protobuf/metadata.h>
+	<google/protobuf/generated_message_reflection.h>
+	<google/protobuf/message.h>
+	<google/protobuf/repeated_field.h>
+	<google/protobuf/extension_set.h>
+	<google/protobuf/unknown_field_set.h>
+	"tensorflow/core/framework/tensor_shape.pb.h"
+	"tensorflow/core/framework/types.pb.h"
+	<google/protobuf/port_def.inc>
+	<google/protobuf/port_undef.inc>
+
+1621325316 d:\c++\westseer\include\tensorflow\core\graph\edgeset.h
+	<stddef.h>
+	"tensorflow/core/lib/gtl/flatset.h"
+	"tensorflow/core/platform/logging.h"
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/types.h"
+
+1621325294 d:\c++\westseer\include\tensorflow\core\lib\gtl\flatset.h
+	<stddef.h>
+	<functional>
+	<initializer_list>
+	<iterator>
+	<utility>
+	"tensorflow/core/lib/gtl/flatrep.h"
+	"tensorflow/core/lib/hash/hash.h"
+	"tensorflow/core/platform/logging.h"
+	"tensorflow/core/platform/types.h"
+
+1621325291 d:\c++\westseer\include\tensorflow\core\lib\core\arena.h
+	<assert.h>
+	<vector>
+	"tensorflow/core/platform/logging.h"
+	"tensorflow/core/platform/macros.h"
+	"tensorflow/core/platform/types.h"
+
+1621325294 d:\c++\westseer\include\tensorflow\core\lib\gtl\iterator_range.h
+	<utility>
+
+1621325405 d:\c++\westseer\include\tensorflow\cc\framework\scope.h
+	<memory>
+	<string>
+	<unordered_map>
+	<unordered_set>
+	<vector>
+	"absl/strings/str_cat.h"
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/core/common_runtime/graph_constructor.h"
+	"tensorflow/core/lib/core/status.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325323 d:\c++\westseer\include\tensorflow\core\common_runtime\graph_constructor.h
+	"tensorflow/core/framework/graph.pb.h"
+	"tensorflow/core/graph/graph.h"
+	"tensorflow/core/graph/tensor_id.h"
+	"tensorflow/core/lib/core/status.h"
+
+1621325316 d:\c++\westseer\include\tensorflow\core\graph\tensor_id.h
+	<string>
+	"tensorflow/core/graph/graph.h"
+	"tensorflow/core/lib/core/stringpiece.h"
+	"tensorflow/core/lib/hash/hash.h"
+	"tensorflow/core/lib/strings/strcat.h"
+
+1621325316 d:\c++\westseer\include\tensorflow\core\public\session_options.h
+	<string>
+	"tensorflow/core/platform/types.h"
+	"tensorflow/core/protobuf/config.pb.h"
+
+1621325407 d:\c++\westseer\include\tensorflow\cc\ops\standard_ops.h
+	"tensorflow/cc/ops/array_ops.h"
+	"tensorflow/cc/ops/candidate_sampling_ops.h"
+	"tensorflow/cc/ops/const_op.h"
+	"tensorflow/cc/ops/control_flow_ops.h"
+	"tensorflow/cc/ops/data_flow_ops.h"
+	"tensorflow/cc/ops/image_ops.h"
+	"tensorflow/cc/ops/io_ops.h"
+	"tensorflow/cc/ops/linalg_ops.h"
+	"tensorflow/cc/ops/logging_ops.h"
+	"tensorflow/cc/ops/lookup_ops.h"
+	"tensorflow/cc/ops/math_ops.h"
+	"tensorflow/cc/ops/nn_ops.h"
+	"tensorflow/cc/ops/no_op.h"
+	"tensorflow/cc/ops/parsing_ops.h"
+	"tensorflow/cc/ops/random_ops.h"
+	"tensorflow/cc/ops/sparse_ops.h"
+	"tensorflow/cc/ops/state_ops.h"
+	"tensorflow/cc/ops/string_ops.h"
+	"tensorflow/cc/ops/training_ops.h"
+	"tensorflow/cc/ops/user_ops.h"
+
+1621325405 d:\c++\westseer\include\tensorflow\cc\ops\array_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325406 d:\c++\westseer\include\tensorflow\cc\ops\candidate_sampling_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325405 d:\c++\westseer\include\tensorflow\cc\ops\const_op.h
+	<vector>
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/graph/node_builder.h"
+
+1621325316 d:\c++\westseer\include\tensorflow\core\graph\node_builder.h
+	<vector>
+	"tensorflow/core/framework/node_def_builder.h"
+	"tensorflow/core/framework/op.h"
+	"tensorflow/core/framework/op_def.pb.h"
+	"tensorflow/core/graph/graph.h"
+	"tensorflow/core/lib/core/status.h"
+	"tensorflow/core/lib/core/stringpiece.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325314 d:\c++\westseer\include\tensorflow\core\framework\node_def_builder.h
+	<functional>
+	<vector>
+	"tensorflow/core/framework/attr_value_util.h"
+	"tensorflow/core/framework/node_def.pb.h"
+	"tensorflow/core/framework/node_def_util.h"
+	"tensorflow/core/framework/op.h"
+	"tensorflow/core/framework/op_def.pb.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/graph/graph.h"
+	"tensorflow/core/graph/graph_node_util.h"
+	"tensorflow/core/lib/core/status.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+	"tensorflow/core/lib/strings/strcat.h"
+
+1621325316 d:\c++\westseer\include\tensorflow\core\graph\graph_node_util.h
+	"tensorflow/core/framework/node_def_util.h"
+	"tensorflow/core/lib/core/stringpiece.h"
+	"tensorflow/core/platform/status.h"
+
+1621325406 d:\c++\westseer\include\tensorflow\cc\ops\control_flow_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325406 d:\c++\westseer\include\tensorflow\cc\ops\data_flow_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325406 d:\c++\westseer\include\tensorflow\cc\ops\image_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325406 d:\c++\westseer\include\tensorflow\cc\ops\io_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325406 d:\c++\westseer\include\tensorflow\cc\ops\linalg_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325406 d:\c++\westseer\include\tensorflow\cc\ops\logging_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325406 d:\c++\westseer\include\tensorflow\cc\ops\lookup_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325405 d:\c++\westseer\include\tensorflow\cc\ops\math_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325407 d:\c++\westseer\include\tensorflow\cc\ops\nn_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325407 d:\c++\westseer\include\tensorflow\cc\ops\no_op.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325407 d:\c++\westseer\include\tensorflow\cc\ops\parsing_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325407 d:\c++\westseer\include\tensorflow\cc\ops\random_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325407 d:\c++\westseer\include\tensorflow\cc\ops\sparse_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325407 d:\c++\westseer\include\tensorflow\cc\ops\state_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325407 d:\c++\westseer\include\tensorflow\cc\ops\string_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325407 d:\c++\westseer\include\tensorflow\cc\ops\training_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1621325408 d:\c++\westseer\include\tensorflow\cc\ops\user_ops.h
+	"tensorflow/cc/framework/ops.h"
+	"tensorflow/cc/framework/scope.h"
+	"tensorflow/core/framework/tensor.h"
+	"tensorflow/core/framework/tensor_shape.h"
+	"tensorflow/core/framework/types.h"
+	"tensorflow/core/lib/gtl/array_slice.h"
+
+1687128096 source:d:\c++\westseer\src\tfmodel.cpp
+	"TFModel.h"
+	<wxFFileLog.h>
+	<sstream>
+
+1687128057 d:\c++\westseer\include\tfmodel.h
+	<tensorflow/c/c_api.h>
+	<Eigen/Dense>
+	<vector>
+
+1687201781 d:\c++\westseer\include\timeseriesregression.h
+	<vector>
+
+1687205586 source:d:\c++\westseer\src\timeseriesregression.cpp
+	"TimeSeriesRegression.h"
+	<Eigen/Dense>
+	<wxFFileLog.h>
+	<cmath>
+
+1687209376 source:d:\c++\westseer\src\topicindentification.cpp
+	"TopicIndentification.h"
+	<../WESTSeerApp.h>
+	<GeneralConfig.h>
+
+1687209111 d:\c++\westseer\include\topicindentification.h
+	<AbstractTask.h>
+	<ResearchScope.h>
+	<map>
+	<string>
 

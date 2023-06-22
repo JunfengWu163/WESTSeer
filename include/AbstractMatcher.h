@@ -23,6 +23,7 @@ public:
     std::vector<Type> match(const std::vector<std::string> &term, int i);
     void insertTerm(const std::vector<std::string> &term, int i);
     std::string getTerms();
+    void clear();
 
 protected:
     std::map<std::string, AbstractMatcher *> _subMatchers;

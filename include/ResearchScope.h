@@ -16,11 +16,13 @@ class ResearchScope
         bool init();
         int numCombinations() const;
         std::string getCombination(int i) const;
+        int numPublications(const int y) const;
         bool load(int idxComb, const int y, std::map<uint64_t, Publication> &pubOfY);
         bool load(int idxComb, const int y);
         bool save(int idxComb, const int y, const std::map<uint64_t, Publication> &pubsOfY);
         bool save(const std::map<uint64_t, Publication> &pubsOfY);
         bool save(int idxComb, const int y);
+        bool getExistingRefIds(const int y, std::map<uint64_t, std::vector<uint64_t>> &refIdsOfId);
         bool getMissingRefIds(int idxComb, const int y, std::vector<uint64_t> &missingRefIds);
 
         static std::vector<std::string> getResearchScopes(const std::string path);

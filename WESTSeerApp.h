@@ -21,9 +21,11 @@ class WESTSeerApp : public wxApp
         virtual int OnExit();
         static wxFileConfig *getFileConfig();
         static void FlushLog();
+        static int year();
     private:
         static wxFileConfig *_fileConfig;
         static wxFFileLog *_log;
+        static int _year;
         wxLogChain *_logChain;
 };
 

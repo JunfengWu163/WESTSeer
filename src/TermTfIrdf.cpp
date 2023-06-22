@@ -1,4 +1,5 @@
 #include "TermTfIrdf.h"
+#include <../WESTSeerApp.h>
 #include <GeneralConfig.h>
 #include <CallbackData.h>
 #include <wxFFileLog.h>
@@ -11,12 +12,11 @@
 TermTfIrdf::TermTfIrdf(const std::string path, const std::string kws, TermExtraction *te) : _scope(path, kws)
 {
     //ctor
+    GeneralConfig config;
     _te = te;
-    std::time_t t = std::time(0);
-    std::tm* now = std::localtime(&t);
-    _y2 = now->tm_year + 1900;
+    _y2 = WESTSeerApp::year();
     _y1 = _y2 - 5;
-    _y0 = _y1 - 25;
+    _y0 = _y2 - config.getObYears();
     _numWorks = 0;
 }
 
@@ -257,7 +257,7 @@ bool TermTfIrdf::process(int y)
         return true;
 
     // step 1: load term freqs
-    std::map<uint64_t, std::map<std::string, int>> termFreqs;
+    std::map<uint64_t, std::map<std::string, std::pair<std::string,int>>> termFreqs;
     if (!_te->load(y, &termFreqs, false))
         return false;
     if (_cancelled.load() == true)
@@ -297,7 +297,7 @@ bool TermTfIrdf::process(int y)
         {
             auto termToDf = _dfs.find(termToFreq->first);
             double irdf = logNumWorks - std::log(termToDf->second);
-            double tfirdf = termToFreq->second * irdf;
+            double tfirdf = termToFreq->second.second * irdf;
             myTfirdfs[termToFreq->first] = tfirdf;
         }
         tfirdfs[idToTF->first] = myTfirdfs;

@@ -10,10 +10,7 @@ AbstractMatcher::AbstractMatcher()
 AbstractMatcher::~AbstractMatcher()
 {
     //dtor
-    for (auto tokenToSub: _subMatchers)
-    {
-        delete tokenToSub.second;
-    }
+    clear();
 }
 
 std::vector<AbstractMatcher::Type> AbstractMatcher::match(const std::vector<std::string> &term, int i)
@@ -83,4 +80,13 @@ std::string AbstractMatcher::getTerms()
         ss << terms[i];
     }
     return ss.str();
+}
+
+void AbstractMatcher::clear()
+{
+    for (auto tokenToSub: _subMatchers)
+    {
+        delete tokenToSub.second;
+    }
+    _subMatchers.clear();
 }
