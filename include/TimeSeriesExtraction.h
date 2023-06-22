@@ -39,4 +39,7 @@ class TimeSeriesExtraction: public AbstractTask
         TopicIndentification *_ti;
 };
 
+Eigen::MatrixXd deserializeMatrix(std::string s);
+std::string serializeMatrix(Eigen::MatrixXd &matrix);
+
 #endif // TimeSeriesEXTRACTION_H
