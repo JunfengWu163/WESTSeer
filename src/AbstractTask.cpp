@@ -36,33 +36,35 @@ void AbstractTask::runAll()
         _taskThread = new std::thread([this]()
             {
                 AbstractTask *task = this;
+                int taskId = 0;
+                int nTasks = getNumTasks();
                 while (task != NULL)
                 {
                     if (_cancelled.load() == true)
                     {
                         if (_progressReporter != NULL)
                         {
-                            _progressReporter->report("Cancelled", getTaskId(), getNumTasks(), 0);
+                            _progressReporter->report("Cancelled", taskId, nTasks, 0);
                         }
                         _cancelled.store(false);
                         return;
                     }
                     if (_progressReporter != NULL)
                     {
-                        _progressReporter->report(name(), getTaskId(), getNumTasks(), 0);
+                        _progressReporter->report(task->name(), taskId, nTasks, 0);
                     }
-                    int n = numSteps();
+                    int n = task->numSteps();
                     for (int stepId = 0; stepId < n; stepId++)
                     {
-                        doStep(stepId);
+                        task->doStep(stepId);
                         int taskProgress = 100 * (stepId + 1) / n;
 
                         if (_progressReporter != NULL)
                         {
                             if (_cancelled.load() == true)
-                                _progressReporter->report("Cancelled", getTaskId(), getNumTasks(), taskProgress);
+                                _progressReporter->report("Cancelled", taskId, nTasks, taskProgress);
                             else
-                                _progressReporter->report(name(), getTaskId(), getNumTasks(), taskProgress);
+                                _progressReporter->report(task->name(), taskId, nTasks, taskProgress);
                         }
                         if (_cancelled.load() == true)
                         {
@@ -71,9 +73,10 @@ void AbstractTask::runAll()
                         }
                     }
                     task = task->_next;
+                    taskId++;
                 }
                 if (_progressReporter != NULL)
-                    _progressReporter->report("Done", getNumTasks(), getNumTasks(), 0);
+                    _progressReporter->report("Done", nTasks, nTasks, 0);
             });
     }
     else if (_next != NULL)

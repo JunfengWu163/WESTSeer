@@ -5,7 +5,7 @@
 #include <CallbackData.h>
 
 TimeSeriesExtraction::TimeSeriesExtraction(const std::string path, const std::string kws,
-                                               BitermWeight *bw, CandidateIdentification *ci, TopicIndentification *ti):_scope(path, kws)
+                                               BitermWeight *bw, CandidateIdentification *ci, TopicIdentification *ti):_scope(path, kws)
 {
     //ctor
     GeneralConfig config;
@@ -105,6 +105,7 @@ bool TimeSeriesExtraction::load(int y, std::map<uint64_t, TimeSeriesMatrices> *t
         ss << "SELECT id, scope_keywords, year, plm, prm, slm, srm FROM pub_scope_time_series WHERE keywords = '"
             << keywords << "' AND year = " << y << ";";
         std::string strSql = ss.str();
+        logDebug(strSql.c_str());
         rc = sqlite3_exec(db, strSql.c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK)
         {
@@ -133,6 +134,7 @@ bool TimeSeriesExtraction::load(int y, std::map<uint64_t, TimeSeriesMatrices> *t
         ss << "SELECT keywords, year FROM scope_time_series_token WHERE keywords = '"
             << keywords << "' AND year = " << y << ";";
         std::string strSql = ss.str();
+        logDebug(strSql.c_str());
         rc = sqlite3_exec(db, strSql.c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK)
         {

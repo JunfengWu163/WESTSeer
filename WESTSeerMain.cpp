@@ -8,6 +8,7 @@
  **************************************************************/
 
 #include "WESTSeerMain.h"
+#include "WESTSeerApp.h"
 #include "OpenAlexImportDialog.h"
 #include "SettingsDialog.h"
 #include "SQLDialog.h"
@@ -164,9 +165,9 @@ WESTSeerFrame::WESTSeerFrame(wxWindow* parent,wxWindowID id)
     Menu1->Append(MenuItem1);
     MenuBar1->Append(Menu1, _("&File"));
     Menu3 = new wxMenu();
-    MenuItem3 = new wxMenuItem(Menu3, ID_MENUITEM1, _("&Explore"), wxEmptyString, wxITEM_NORMAL);
+    MenuItem3 = new wxMenuItem(Menu3, ID_MENUITEM1, _("&Explore"), wxEmptyString, wxITEM_RADIO);
     Menu3->Append(MenuItem3);
-    MenuItem4 = new wxMenuItem(Menu3, ID_MENUITEM2, _("&Test"), wxEmptyString, wxITEM_NORMAL);
+    MenuItem4 = new wxMenuItem(Menu3, ID_MENUITEM2, _("&Test"), wxEmptyString, wxITEM_RADIO);
     Menu3->Append(MenuItem4);
     MenuBar1->Append(Menu3, _("&Mode"));
     Menu4 = new wxMenu();
@@ -199,8 +200,11 @@ WESTSeerFrame::WESTSeerFrame(wxWindow* parent,wxWindowID id)
     Connect(ID_BUTTON1,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&WESTSeerFrame::OnButtonNewClick);
     Connect(ID_BUTTON2,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&WESTSeerFrame::OnButtonPauseClick);
     Connect(ID_BUTTON3,wxEVT_COMMAND_BUTTON_CLICKED,(wxObjectEventFunction)&WESTSeerFrame::OnButtonResumeClick);
+    Connect(ID_LISTCTRL1,wxEVT_COMMAND_LIST_ITEM_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnListCtrlPublicationsItemSelect);
     Connect(ID_MENUITEM3,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnMenuItemOptionsSelected);
     Connect(idMenuQuit,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnQuit);
+    Connect(ID_MENUITEM1,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnExploreModeSelected);
+    Connect(ID_MENUITEM2,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnTextModeSelected);
     Connect(ID_MENUITEM6,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnMenuItemSQLSelected);
     Connect(ID_MENUITEM7,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnMenuItemLogSelected);
     Connect(idMenuAbout,wxEVT_COMMAND_MENU_SELECTED,(wxObjectEventFunction)&WESTSeerFrame::OnAbout);
@@ -209,6 +213,14 @@ WESTSeerFrame::WESTSeerFrame(wxWindow* parent,wxWindowID id)
     _openAlex = NULL;
     _termExtraction = NULL;
     _termTfirdf = NULL;
+    _bitermDf = NULL;
+    _bitermWeight = NULL;
+    _candidateIdentification = NULL;
+    _topicIdentification = NULL;
+    _timeSeriesExtraction = NULL;
+    _predictionModel = NULL;
+    _metricModel = NULL;
+    _exploreMode = true;
     _progressReporter = new MyProgressReporter(this);
     GeneralConfig config;
     std::vector<std::string> scopes = ResearchScope::getResearchScopes(config.getDatabase());
@@ -222,6 +234,206 @@ WESTSeerFrame::~WESTSeerFrame()
 {
     //(*Destroy(WESTSeerFrame)
     //*)
+}
+
+void WESTSeerFrame::showCandidate(uint64_t id)
+{
+    if (_metricModel == NULL || _topicIdentification == NULL)
+        return;
+
+    GeneralConfig config;
+    std::string path = config.getDatabase();
+    std::string kws = ChoiceScope->GetString(ChoiceScope->GetSelection()).ToStdString();
+    ResearchScope scope(path, kws);
+    Publication pub = scope.getPublication(id);
+    int ye = _exploreMode ? WESTSeerApp::year() + 5 : WESTSeerApp::year();
+    Publication me = scope.getPublication(id);
+    std::pair<std::string,string> topic = scope.getTopic(id, ye, _topicIdentification);
+    StaticTextTopicSummary->SetLabel(topic.second);
+    StaticTextAbstract->SetLabel(me.abstract());
+    std::map<uint64_t, std::vector<double>> scores;
+    if (_metricModel->load(ye, &scores))
+    {
+        auto idToScore = scores.find(id);
+        if (idToScore != scores.end())
+        {
+            std::stringstream ss;
+            ss << "predicted score = " << idToScore->second[0] << std::endl
+                << "predicted citations: " << std::endl;
+            for (int i = 0; i < 10; i++)
+            {
+                ss << ye - 15 + i << ": " << idToScore->second[2 + i] << std::endl;
+            }
+            for (int i = 0;i < 5; i++)
+            {
+                ss << ye - 5 + i << ": " << idToScore->second[17 + i] << std::endl;
+            }
+            StaticTextPrediction->SetLabel(ss.str().c_str());
+        }
+        if (idToScore != scores.end() && !_exploreMode)
+        {
+            std::stringstream ss;
+            ss << "verified score = " << idToScore->second[1] << std::endl
+                << "verified citations: " << std::endl;
+            for (int i = 0; i < 15; i++)
+            {
+                ss << ye - 15 + i << ": " << idToScore->second[2 + i] << std::endl;
+            }
+            StaticTextVerification->SetLabel(ss.str().c_str());
+        }
+    }
+
+    ListCtrlCitations->ClearAll();
+    ListCtrlCitations->AppendColumn("Year");
+    ListCtrlCitations->AppendColumn("Title", wxLIST_FORMAT_LEFT, 600);
+    ListCtrlCitations->AppendColumn("Authors");
+    ListCtrlCitations->AppendColumn("Source");
+    ListCtrlCitations->AppendColumn("ID");
+    std::vector<Publication> citations = scope.getCitations(id, ye);
+    for (Publication pub: citations)
+    {
+        long row = ListCtrlCitations->InsertItem(0, wxString::Format("%d", pub.year()));
+        ListCtrlCitations->SetItem(row, 1, pub.title().c_str());
+        std::stringstream ssAuthors;
+        std::vector<wxString> authors = pub.authors();
+        for (size_t i = 0; i < authors.size(); i++)
+        {
+            if (i > 0)
+                ssAuthors << ",";
+            ssAuthors << authors[i].ToStdString();
+        }
+        ListCtrlCitations->SetItem(row, 2, ssAuthors.str().c_str());
+        ListCtrlCitations->SetItem(row, 3, pub.source().c_str());
+        ListCtrlCitations->SetItem(row, 4, wxString::Format("%llu", pub.id()));
+    }
+
+    ListCtrlReferences->ClearAll();
+    ListCtrlReferences->AppendColumn("Year");
+    ListCtrlReferences->AppendColumn("Title", wxLIST_FORMAT_LEFT, 600);
+    ListCtrlReferences->AppendColumn("Authors");
+    ListCtrlReferences->AppendColumn("Source");
+    ListCtrlReferences->AppendColumn("ID");
+    std::vector<Publication> references = scope.getReferences(id);
+    for (Publication pub: references)
+    {
+        long row = ListCtrlReferences->InsertItem(0, wxString::Format("%d", pub.year()));
+        ListCtrlReferences->SetItem(row, 1, pub.title().c_str());
+        std::stringstream ssAuthors;
+        std::vector<wxString> authors = pub.authors();
+        for (size_t i = 0; i < authors.size(); i++)
+        {
+            if (i > 0)
+                ssAuthors << ",";
+            ssAuthors << authors[i].ToStdString();
+        }
+        ListCtrlReferences->SetItem(row, 2, ssAuthors.str().c_str());
+        ListCtrlReferences->SetItem(row, 3, pub.source().c_str());
+        ListCtrlReferences->SetItem(row, 4, wxString::Format("%llu", pub.id()));
+    }
+
+    ListCtrlTopicPapers->ClearAll();
+    ListCtrlTopicPapers->AppendColumn("Year");
+    ListCtrlTopicPapers->AppendColumn("Title", wxLIST_FORMAT_LEFT, 600);
+    ListCtrlTopicPapers->AppendColumn("Authors");
+    ListCtrlTopicPapers->AppendColumn("Source");
+    ListCtrlTopicPapers->AppendColumn("ID");
+    std::vector<Publication> topicPapers = scope.getTopicPublications(id, ye, _bitermWeight, _topicIdentification);
+    for (Publication pub: topicPapers)
+    {
+        long row = ListCtrlTopicPapers->InsertItem(0, wxString::Format("%d", pub.year()));
+        ListCtrlTopicPapers->SetItem(row, 1, pub.title().c_str());
+        std::stringstream ssAuthors;
+        std::vector<wxString> authors = pub.authors();
+        for (size_t i = 0; i < authors.size(); i++)
+        {
+            if (i > 0)
+                ssAuthors << ",";
+            ssAuthors << authors[i].ToStdString();
+        }
+        ListCtrlTopicPapers->SetItem(row, 2, ssAuthors.str().c_str());
+        ListCtrlTopicPapers->SetItem(row, 3, pub.source().c_str());
+        ListCtrlTopicPapers->SetItem(row, 4, wxString::Format("%llu", pub.id()));
+    }
+}
+
+void WESTSeerFrame::showCandidates()
+{
+    if (_candidateIdentification == NULL || _metricModel == NULL)
+        return;
+
+    ListCtrlPublications->AppendColumn("Year");
+    ListCtrlPublications->AppendColumn("Title", wxLIST_FORMAT_LEFT, 600);
+    ListCtrlPublications->AppendColumn("Authors");
+    ListCtrlPublications->AppendColumn("Source");
+    ListCtrlPublications->AppendColumn("ID");
+    ListCtrlPublications->AppendColumn("P-Score");
+    ListCtrlPublications->AppendColumn("P-Rank");
+    if (!_exploreMode)
+    {
+        ListCtrlPublications->AppendColumn("V-Score");
+        ListCtrlPublications->AppendColumn("V-Rank");
+    }
+    int ye = _exploreMode ? WESTSeerApp::year() + 5 : WESTSeerApp::year();
+    GeneralConfig config;
+    std::string path = config.getDatabase();
+    std::string kws = ChoiceScope->GetString(ChoiceScope->GetSelection()).ToStdString();
+    ResearchScope scope(path, kws);
+    std::vector<uint64_t> ids;
+    std::map<uint64_t,std::vector<double>> scores;
+    if (_candidateIdentification->load(ye, &ids) && _metricModel->load(ye, &scores))
+    {
+        std::sort(ids.begin(), ids.end(), [scores](const uint64_t &a, const uint64_t &b) {
+                  return scores.at(a).at(0) > scores.at(b).at(0);
+                  });
+        _ids = ids;
+        std::vector<Publication> pubs = scope.getPublications(ids);
+        for (Publication pub: pubs)
+        {
+            long row = ListCtrlPublications->InsertItem(0, wxString::Format("%d", pub.year()));
+            ListCtrlPublications->SetItem(row, 1, pub.title().c_str());
+            std::stringstream ssAuthors;
+            std::vector<wxString> authors = pub.authors();
+            for (size_t i = 0; i < authors.size(); i++)
+            {
+                if (i > 0)
+                    ssAuthors << ",";
+                ssAuthors << authors[i].ToStdString();
+            }
+            ListCtrlPublications->SetItem(row, 2, ssAuthors.str().c_str());
+            ListCtrlPublications->SetItem(row, 3, pub.source().c_str());
+            ListCtrlPublications->SetItem(row, 4, wxString::Format("%llu", pub.id()));
+            double pScore = scores[pub.id()][0];
+            double vScore = scores[pub.id()][1];
+            int pRank = 0, vRank = 0;
+            for (auto idToScore: scores)
+            {
+                if (idToScore.second[0] > pScore)
+                    pRank++;
+                if (idToScore.second[1] > vScore)
+                    vRank++;
+            }
+            ListCtrlPublications->SetItem(row, 5, wxString::Format("^lf", pScore));
+            ListCtrlPublications->SetItem(row, 6, wxString::Format("&d", pRank));
+            if (!_exploreMode)
+            {
+                ListCtrlPublications->SetItem(row, 7, wxString::Format("^lf", vScore));
+                ListCtrlPublications->SetItem(row, 8, wxString::Format("&d", vRank));
+            }
+        }
+    }
+}
+
+void WESTSeerFrame::clearCandidates()
+{
+    ListCtrlPublications->ClearAll();
+    ListCtrlCitations->ClearAll();
+    ListCtrlReferences->ClearAll();
+    ListCtrlTopicPapers->ClearAll();
+    StaticTextAbstract->SetLabel("");
+    StaticTextPrediction->SetLabel("");
+    StaticTextVerification->SetLabel("");
+    StaticTextTopicSummary->SetLabel("");
+    _ids.clear();
 }
 
 WESTSeerFrame::MyProgressReporter::MyProgressReporter(WESTSeerFrame *frame)
@@ -245,7 +457,20 @@ void WESTSeerFrame::MyProgressReporter::report(
     _frame->GaugeStep->SetValue(taskProgress);
     _frame->GaugeOverall->SetValue(100 * taskId / numTasks);
 
-    if (taskId < numTasks)
+    if (strcmp(taskName, "Done") == 0 || strcmp(taskName, "Cancelled") == 0)
+    {
+        if (strcmp(taskName, "Done") == 0)
+        {
+            _frame->showCandidates();
+        }
+        _frame->ButtonPause->Disable();
+        _frame->ButtonResume->Disable();
+        _frame->ChoiceScope->Enable();
+        _frame->ButtonNew->Enable();
+        _frame->ListCtrlPublications->Enable();
+        _frame->NotebookInfo->Enable();
+    }
+    else
     {
         _frame->ButtonPause->Enable();
         _frame->ButtonResume->Disable();
@@ -253,15 +478,6 @@ void WESTSeerFrame::MyProgressReporter::report(
         _frame->ButtonNew->Disable();
         _frame->ListCtrlPublications->Disable();
         _frame->NotebookInfo->Disable();
-    }
-    else
-    {
-        _frame->ButtonPause->Disable();
-        _frame->ButtonResume->Disable();
-        _frame->ChoiceScope->Enable();
-        _frame->ButtonNew->Enable();
-        _frame->ListCtrlPublications->Enable();
-        _frame->NotebookInfo->Enable();
     }
 }
 
@@ -329,15 +545,42 @@ void WESTSeerFrame::OnMenuItemLogSelected(wxCommandEvent& event)
 
 void WESTSeerFrame::OnChoiceScopeSelect(wxCommandEvent& event)
 {
+    clearCandidates();
     clearScope();
     AbstractTask::setProgressReporter(_progressReporter);
     GeneralConfig config;
+    std::string path = config.getDatabase();
+    std::string modelFileName = WESTSeerApp::modelFileName().ToStdString();
     std::string kws = ChoiceScope->GetString(ChoiceScope->GetSelection()).ToStdString();
-    _openAlex = new OpenAlex(config.getEmail(), config.getDatabase(), kws);
-    _termExtraction = new TermExtraction(config.getDatabase(), kws);
-    _termTfirdf = new TermTfIrdf(config.getDatabase(), kws, _termExtraction);
+    _openAlex = new OpenAlex(config.getEmail(), path, kws);
+
+    _termExtraction = new TermExtraction(path, kws);
     _openAlex->setNext(_termExtraction);
+
+    _termTfirdf = new TermTfIrdf(path, kws, _termExtraction);
     _termExtraction->setNext(_termTfirdf);
+
+    _bitermDf = new BitermDf(path, kws, _termTfirdf);
+    _termTfirdf->setNext(_bitermDf);
+
+    _bitermWeight = new BitermWeight(path, kws, _termTfirdf, _bitermDf);
+    _bitermDf->setNext(_bitermWeight);
+
+    _candidateIdentification = new CandidateIdentification(path, kws);
+    _bitermWeight->setNext(_candidateIdentification);
+
+    _topicIdentification = new TopicIdentification(path, kws, _termExtraction, _bitermWeight, _candidateIdentification);
+    _candidateIdentification->setNext(_topicIdentification);
+
+    _timeSeriesExtraction = new TimeSeriesExtraction(path, kws, _bitermWeight, _candidateIdentification, _topicIdentification);
+    _topicIdentification->setNext(_timeSeriesExtraction);
+
+    _predictionModel = new PredictionModel(path, kws, modelFileName, _timeSeriesExtraction);
+    _timeSeriesExtraction->setNext(_predictionModel);
+
+    _metricModel = new MetricModel(path, kws, _timeSeriesExtraction, _predictionModel);
+    _predictionModel->setNext(_metricModel);
+
     _openAlex->runAll();
 }
 
@@ -358,6 +601,41 @@ void WESTSeerFrame::clearScope()
         delete _termTfirdf;
         _termTfirdf = NULL;
     }
+    if (_bitermDf != NULL)
+    {
+        delete _bitermDf;
+        _bitermDf = NULL;
+    }
+    if (_bitermWeight != NULL)
+    {
+        delete _bitermWeight;
+        _bitermWeight = NULL;
+    }
+    if (_candidateIdentification != NULL)
+    {
+        delete _candidateIdentification;
+        _candidateIdentification = NULL;
+    }
+    if (_topicIdentification != NULL)
+    {
+        delete _topicIdentification;
+        _topicIdentification = NULL;
+    }
+    if (_timeSeriesExtraction != NULL)
+    {
+        delete _timeSeriesExtraction;
+        _timeSeriesExtraction = NULL;
+    }
+    if (_predictionModel != NULL)
+    {
+        delete _predictionModel;
+        _predictionModel = NULL;
+    }
+    if (_metricModel != NULL)
+    {
+        delete _metricModel;
+        _metricModel = NULL;
+    }
 }
 
 void WESTSeerFrame::OnButtonPauseClick(wxCommandEvent& event)
@@ -371,4 +649,25 @@ void WESTSeerFrame::OnButtonPauseClick(wxCommandEvent& event)
 void WESTSeerFrame::OnButtonResumeClick(wxCommandEvent& event)
 {
     OnChoiceScopeSelect(event);
+}
+
+void WESTSeerFrame::OnExploreModeSelected(wxCommandEvent& event)
+{
+    _exploreMode = true;
+    clearCandidates();
+    showCandidates();
+}
+
+void WESTSeerFrame::OnTextModeSelected(wxCommandEvent& event)
+{
+    _exploreMode = false;
+    clearCandidates();
+    showCandidates();
+}
+
+void WESTSeerFrame::OnListCtrlPublicationsItemSelect(wxListEvent& event)
+{
+    int idxItem = (int)ListCtrlPublications->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
+    if (idxItem >= 0 && idxItem < (int) _ids.size())
+        showCandidate(_ids[idxItem]);
 }

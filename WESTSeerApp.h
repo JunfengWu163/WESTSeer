@@ -22,6 +22,8 @@ class WESTSeerApp : public wxApp
         static wxFileConfig *getFileConfig();
         static void FlushLog();
         static int year();
+        static wxString modelPath();
+        static wxString modelFileName();
     private:
         static wxFileConfig *_fileConfig;
         static wxFFileLog *_log;

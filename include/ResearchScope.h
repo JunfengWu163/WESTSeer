@@ -5,6 +5,8 @@
 #include <vector>
 #include <map>
 #include <Publication.h>
+class BitermWeight;
+class TopicIdentification;
 
 class ResearchScope
 {
@@ -24,6 +26,12 @@ class ResearchScope
         bool save(int idxComb, const int y);
         bool getExistingRefIds(const int y, std::map<uint64_t, std::vector<uint64_t>> &refIdsOfId);
         bool getMissingRefIds(int idxComb, const int y, std::vector<uint64_t> &missingRefIds);
+        Publication getPublication(uint64_t id);
+        std::vector<Publication> getPublications(std::vector<uint64_t> ids);
+        std::vector<Publication> getReferences(uint64_t id);
+        std::vector<Publication> getCitations(uint64_t id, int ye);
+        std::vector<Publication> getTopicPublications(uint64_t id, int ye, BitermWeight *bw, TopicIdentification *ti);
+        std::pair<std::string,std::string> getTopic(uint64_t id, int ye, TopicIdentification *ti);
 
         static std::vector<std::string> getResearchScopes(const std::string path);
 

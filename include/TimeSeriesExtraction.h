@@ -4,7 +4,7 @@
 #include <ResearchScope.h>
 #include <BitermWeight.h>
 #include <CandidateIdentification.h>
-#include <TopicIndentification.h>
+#include <TopicIdentification.h>
 #include <Eigen/Dense>
 #include <map>
 
@@ -17,7 +17,7 @@ class TimeSeriesExtraction: public AbstractTask
 {
     public:
         TimeSeriesExtraction(const std::string path, const std::string kws,
-                               BitermWeight *bw, CandidateIdentification *ci, TopicIndentification *ti);
+                               BitermWeight *bw, CandidateIdentification *ci, TopicIdentification *ti);
         virtual ~TimeSeriesExtraction();
         virtual bool finished();
         virtual const char *name();
@@ -36,7 +36,7 @@ class TimeSeriesExtraction: public AbstractTask
         ResearchScope _scope;
         BitermWeight *_bw;
         CandidateIdentification *_ci;
-        TopicIndentification *_ti;
+        TopicIdentification *_ti;
 };
 
 Eigen::MatrixXd deserializeMatrix(std::string s);

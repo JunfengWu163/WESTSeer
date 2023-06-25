@@ -8,6 +8,8 @@
 #include <time.h>
 #include <CallbackData.h>
 #include <wxFFileLog.h>
+#include <BitermWeight.h>
+#include <TopicIdentification.h>
 
 std::vector<std::string> ResearchScope::getResearchScopes(const std::string path)
 {
@@ -66,6 +68,167 @@ ResearchScope::ResearchScope(const std::string path, const std::string keywords)
 ResearchScope::~ResearchScope()
 {
     //dtor
+}
+
+Publication ResearchScope::getPublication(uint64_t id)
+{
+    Publication noPub;
+    sqlite3 *db = NULL;
+    int rc = sqlite3_open(_path.c_str(), &db);
+    if (rc != SQLITE_OK)
+    {
+        logError(wxT("Cannot open database at" + _path));
+        return noPub;
+    }
+    char *errorMessage = NULL;
+
+    std::stringstream ss;
+    ss << "SELECT id, year, title, abstract, source, language, authors, ref_ids FROM publications WHERE id = " << id << ";";
+    std::string sqlStr = ss.str();
+    logDebug(sqlStr.c_str());
+    CallbackData data;
+    rc = sqlite3_exec(db, sqlStr.c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
+    if (rc != SQLITE_OK)
+    {
+        logError(errorMessage);
+        sqlite3_close(db);
+        return noPub;
+    }
+    if (data.results.size() == 0)
+    {
+        logError("Publication not found.");
+        sqlite3_close(db);
+        return noPub;
+    }
+    Publication temp(data.results[0]);
+    sqlite3_close(db);
+    return temp;
+}
+
+std::vector<Publication> ResearchScope::getPublications(std::vector<uint64_t> ids)
+{
+    std::vector<Publication> pubs;
+    sqlite3 *db = NULL;
+    int rc = sqlite3_open(_path.c_str(), &db);
+    if (rc != SQLITE_OK)
+    {
+        logError(wxT("Cannot open database at" + _path));
+        return pubs;
+    }
+    char *errorMessage = NULL;
+
+    std::stringstream ss;
+    ss << "SELECT id, year, title, abstract, source, language, authors, ref_ids FROM publications WHERE id IN (";
+    for (size_t i = 0; i < ids.size(); i++)
+    {
+        if (i > 0)
+            ss << ",";
+        ss << ids[i];
+    }
+    ss << ");";
+    std::string sqlStr = ss.str();
+    logDebug(sqlStr.c_str());
+    CallbackData data;
+    rc = sqlite3_exec(db, sqlStr.c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
+    if (rc != SQLITE_OK)
+    {
+        logError(errorMessage);
+        sqlite3_close(db);
+        return pubs;
+    }
+    for (auto &result: data.results)
+    {
+        Publication temp(result);
+        pubs.push_back(temp);
+    }
+    sqlite3_close(db);
+    return pubs;
+}
+
+std::vector<Publication> ResearchScope::getReferences(uint64_t id)
+{
+    Publication me = getPublication(id);
+    return getPublications(me.refIds());
+}
+
+std::vector<Publication> ResearchScope::getCitations(uint64_t id, int ye)
+{
+    std::vector<Publication> myCitations;
+    for (int y = ye - 15; y < ye; y++)
+    {
+        std::map<uint64_t, std::vector<uint64_t>> refIdsOfId;
+        std::vector<uint64_t> myCitIds;
+        if (getExistingRefIds(y, refIdsOfId))
+        {
+            for (auto idToRefIds: refIdsOfId)
+            {
+                for (uint64_t refId: idToRefIds.second)
+                {
+                    if (refId == id)
+                    {
+                        myCitIds.push_back(idToRefIds.first);
+                        break;
+                    }
+                }
+            }
+            if (myCitIds.size() > 0)
+            {
+                std::vector<Publication> temp = getPublications(myCitIds);
+                for (Publication p: temp)
+                {
+                    myCitations.push_back(p);
+                }
+            }
+        }
+    }
+    return myCitations;
+}
+
+std::pair<std::string,std::string> ResearchScope::getTopic(uint64_t id, int ye, TopicIdentification *ti)
+{
+    std::map<uint64_t,std::pair<std::string,std::string>> topics;
+    std::pair<std::string,std::string> noTopic("","");
+    if (!ti->load(ye, &topics))
+        return noTopic;
+    auto idToTopic = topics.find(id);
+    if (idToTopic == topics.end())
+        return noTopic;
+    return idToTopic->second;
+}
+
+std::vector<Publication> ResearchScope::getTopicPublications(uint64_t id, int ye, BitermWeight *bw, TopicIdentification *ti)
+{
+    std::vector<Publication> noPubs;
+    std::pair<std::string,std::string> myTopic = getTopic(id, ye, ti);
+    if (myTopic.first == "")
+        return noPubs;
+
+    std::vector<std::string> biterms = splitString(myTopic.first,"|");
+    std::set<std::string> bitermSet(biterms.begin(),biterms.end());
+
+    std::set<uint64_t> myTidSet;
+    for (int y = ye - 15; y < ye; y++)
+    {
+        std::map<uint64_t, std::map<std::string, double>> bws;
+        if (bw->load(y, &bws))
+        {
+            for (auto cidToBW: bws)
+            {
+                uint64_t cid = cidToBW.first;
+                for (auto bToW: cidToBW.second)
+                {
+                    if (bitermSet.find(bToW.first) != bitermSet.end())
+                    {
+                        myTidSet.insert(cid);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+    std::vector<uint64_t> myTids(myTidSet.begin(), myTidSet.end());
+    return getPublications(myTids);
 }
 
 bool ResearchScope::storable()
@@ -207,10 +370,13 @@ int ResearchScope::numPublications(const int y) const
         {
             logDebug(errorMessage);
         }
-        std::vector<std::string> idStrs = splitString(data.results[0]["ids"], ",");
-        for (std::string idStr: idStrs)
+        if (data.results.size() > 0)
         {
-            ids.insert(std::stoull(idStr));
+            std::vector<std::string> idStrs = splitString(data.results[0]["ids"], ",");
+            for (std::string idStr: idStrs)
+            {
+                ids.insert(std::stoull(idStr));
+            }
         }
     }
 

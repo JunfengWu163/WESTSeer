@@ -24,4 +24,6 @@ string normalize(const string& s);
 
 vector<string> tokenize(const string &phrase);
 
+string getVectorStr(const vector<double> &v);
+
 #endif // STRINGPROCESSING_H_INCLUDED

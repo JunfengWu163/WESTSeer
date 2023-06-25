@@ -23,7 +23,7 @@ BitermWeight::~BitermWeight()
 
 bool BitermWeight::finished()
 {
-    for (int y = _y0; y < _y1; y++)
+    for (int y = _y0; y < _y2; y++)
     {
         if (!load(y, NULL))
             return false;
@@ -38,7 +38,7 @@ const char *BitermWeight::name()
 
 int BitermWeight::numSteps()
 {
-    return _y1 - _y0;
+    return _y2 - _y0;
 }
 
 void BitermWeight::doStep(int stepId)
@@ -130,7 +130,7 @@ bool BitermWeight::save(int y, std::map<uint64_t, std::map<std::string, double>>
     const char*sqls[] =
     {
         "CREATE TABLE IF NOT EXISTS pub_scope_bws("
-        "id INTEGER"
+        "id INTEGER,"
         "scope_keywords TEXT,"
         "year INTEGER,"
         "biterm_weights TEXT,"

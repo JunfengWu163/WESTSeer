@@ -1,33 +1,35 @@
 #include "TFModel.h"
 #include <wxFFileLog.h>
 #include <sstream>
+#include <fstream>
 
 /*
-import tensorflow as tf
+import tensorflow.compat.v1 as tf
+tf.disable_v2_behavior()
 
-k = ?
+k = 3
 in_steps = 10
-num_features = 1 + k + k * (k - 1) / 2
+num_features = 2 + 2 * k + k * (k - 1)
 out_steps = 5
-lstm_units = 32
+lstm_units = in_steps * num_features * 3
 
 multi_lstm_model = tf.keras.Sequential([
     # Shape [batch, in_steps, features] => [batch, lstm_units].
     # Adding more `lstm_units` just overfits more quickly.
     tf.keras.layers.LSTM(lstm_units, return_sequences=False),
     # Shape => [lstm_units, out_steps*features].
-    tf.keras.layers.Dense(OUT_STEPS*num_features,
+    tf.keras.layers.Dense(out_steps*num_features,
                           kernel_initializer=tf.initializers.zeros()),
     # Shape => [batch, out_steps, features].
-    tf.keras.layers.Reshape([OUT_STEPS, num_features])
-])
+    tf.keras.layers.Reshape([out_steps, num_features])
+], name = 'eval')
 
 # Batch of input and target output (matrices)
 x = tf.placeholder(tf.float32, shape=[None, in_steps, num_features], name='input')
 y = tf.placeholder(tf.float32, shape=[None, out_steps, num_features], name='target')
 
 # Trivial linear model
-y_ = multi_lstm_model(x, name='output')
+y_ = multi_lstm_model(x)
 
 # Optimize loss
 loss = tf.reduce_mean(tf.square(y_ - y), name='loss')
@@ -42,13 +44,15 @@ saver_def = tf.train.Saver().as_saver_def()
 
 print('Run this operation to initialize variables     : ', init.name)
 print('Run this operation for a train step            : ', train_op.name)
+print('Run this operation for prediction              : ', y_.name)
 print('Feed this tensor to set the checkpoint filename: ', saver_def.filename_tensor_name)
 print('Run this operation to save a checkpoint        : ', saver_def.save_tensor_name)
 print('Run this operation to restore a checkpoint     : ', saver_def.restore_op_name)
 
 # Write the graph out to a file.
-with open('graph.pb', 'w') as f:
+with open('lstm_3.pb', 'wb') as f:
   f.write(tf.get_default_graph().as_graph_def().SerializeToString())
+
 */
 
 int Okay(TF_Status* status)
@@ -75,20 +79,13 @@ TF_Buffer* ReadFile(const char* filename)
         perror("failed to read file: ");
         return NULL;
     }
+    close(fd);
+
+    std::ifstream file(filename, std::ios::binary);
     char* data = (char*)malloc(stat.st_size);
-    ssize_t nread = read(fd, data, stat.st_size);
-    if (nread < 0)
-    {
-        perror("failed to read file: ");
-        free(data);
-        return NULL;
-    }
-    if (nread != stat.st_size)
-    {
-        fprintf(stderr, "read %zd bytes, expected to read %zd\n", nread, (ssize_t) stat.st_size);
-        free(data);
-        return NULL;
-    }
+    file.read(data, stat.st_size);
+    file.close();
+
     TF_Buffer* ret = TF_NewBufferFromString(data, stat.st_size);
     free(data);
     return ret;
@@ -324,4 +321,28 @@ int TFModel::runTrainStep(const std::vector<Eigen::MatrixXd> &input, const std::
     TF_DeleteTensor(x);
     TF_DeleteTensor(y);
     return Okay(_status);
+}
+
+double TFModel::loss(const std::vector<Eigen::MatrixXd> &input, const std::vector<Eigen::MatrixXd> &target)
+{
+    int nRows = target[0].rows();
+    int nCols = target[0].cols();
+    std::vector<Eigen::MatrixXd> output = predict(input, nCols);
+    double value = 0.0;
+    for (size_t i = 0; i < input.size(); i++)
+    {
+        double valueI = 0.0;
+        const Eigen::MatrixXd &Ao = output[i];
+        const Eigen::MatrixXd &At = target[i];
+        for (int r = 0; r < nRows; r++)
+        {
+            for (int c = 0; c < nCols; c++)
+            {
+                double diff = Ao(r,c) - At(r,c);
+                valueI += diff * diff;
+            }
+        }
+        value += valueI;
+    }
+    return sqrt(value);
 }

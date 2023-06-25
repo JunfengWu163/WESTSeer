@@ -27,6 +27,13 @@
 #include <OpenAlex.h>
 #include <TermExtraction.h>
 #include <TermTfIrdf.h>
+#include <BitermDf.h>
+#include <BitermWeight.h>
+#include <CandidateIdentification.h>
+#include <TopicIdentification.h>
+#include <TimeSeriesExtraction.h>
+#include <PredictionModel.h>
+#include <MetricModel.h>
 
 class WESTSeerFrame: public wxFrame
 {
@@ -47,6 +54,9 @@ class WESTSeerFrame: public wxFrame
         void OnChoiceScopeSelect(wxCommandEvent& event);
         void OnButtonPauseClick(wxCommandEvent& event);
         void OnButtonResumeClick(wxCommandEvent& event);
+        void OnExploreModeSelected(wxCommandEvent& event);
+        void OnTextModeSelected(wxCommandEvent& event);
+        void OnListCtrlPublicationsItemSelect(wxListEvent& event);
         //*)
 
         //(*Identifiers(WESTSeerFrame)
@@ -130,8 +140,20 @@ class WESTSeerFrame: public wxFrame
         OpenAlex *_openAlex;
         TermExtraction *_termExtraction;
         TermTfIrdf *_termTfirdf;
+        BitermDf *_bitermDf;
+        BitermWeight *_bitermWeight;
+        CandidateIdentification *_candidateIdentification;
+        TopicIdentification *_topicIdentification;
+        TimeSeriesExtraction *_timeSeriesExtraction;
+        PredictionModel *_predictionModel;
+        MetricModel *_metricModel;
+        bool _exploreMode;
+        std::vector<uint64_t> _ids;
 
         void clearScope();
+        void showCandidates();
+        void showCandidate(uint64_t id);
+        void clearCandidates();
 };
 
 #endif // WESTSEERMAIN_H

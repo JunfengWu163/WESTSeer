@@ -27,7 +27,7 @@ TermTfIrdf::~TermTfIrdf()
 
 bool TermTfIrdf::finished()
 {
-    for (int y = _y1 - 1; y >= _y0; y--)
+    for (int y = _y2 - 1; y >= _y0; y--)
     {
         if (!load(y, NULL, false))
             return false;
@@ -42,7 +42,7 @@ const char *TermTfIrdf::name()
 
 int TermTfIrdf::numSteps()
 {
-    return _y1 - _y0;
+    return _y2 - _y0;
 }
 
 void TermTfIrdf::doStep(int stepId)

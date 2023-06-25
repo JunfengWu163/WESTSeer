@@ -8,10 +8,12 @@
 
 1687558126 d:\c++\westseer\include\wx\msw\rcdefs.h
 
-1687558126 source:d:\c++\westseer\westseerapp.cpp
+1687693197 source:d:\c++\westseer\westseerapp.cpp
 	"WESTSeerApp.h"
 	<wx/stdpaths.h>
 	<wx/filefn.h>
+	<wx/filename.h>
+	<wx/stdpaths.h>
 	<GeneralConfig.h>
 	<AbstractTask.h>
 	"SettingsDialog.h"
@@ -20,7 +22,7 @@
 	"WESTSeerMain.h"
 	<wx/image.h>
 
-1687558126 d:\c++\westseer\westseerapp.h
+1687673081 d:\c++\westseer\westseerapp.h
 	<wx/app.h>
 	<wx/fileconf.h>
 	<wxFFileLog.h>
@@ -2827,7 +2829,7 @@
 	"wx/compositewin.h"
 	"wx/textctrl.h"
 
-1687558126 d:\c++\westseer\westseermain.h
+1687691778 d:\c++\westseer\westseermain.h
 	<wx/button.h>
 	<wx/choice.h>
 	<wx/frame.h>
@@ -2842,6 +2844,13 @@
 	<OpenAlex.h>
 	<TermExtraction.h>
 	<TermTfIrdf.h>
+	<BitermDf.h>
+	<BitermWeight.h>
+	<CandidateIdentification.h>
+	<TopicIdentification.h>
+	<TimeSeriesExtraction.h>
+	<PredictionModel.h>
+	<MetricModel.h>
 
 1687558126 source:d:\c++\westseer\logdialog.cpp
 	"LogDialog.h"
@@ -3392,14 +3401,14 @@
 	<ResearchScope.h>
 	<ProgressReporter.h>
 
-1687558126 d:\c++\westseer\include\researchscope.h
+1687685238 d:\c++\westseer\include\researchscope.h
 	<cstdint>
 	<string>
 	<vector>
 	<map>
 	<Publication.h>
 
-1687558126 d:\c++\westseer\include\stringprocessing.h
+1687649777 d:\c++\westseer\include\stringprocessing.h
 	<string>
 	<vector>
 	<wx/string.h>
@@ -3473,7 +3482,7 @@
 	<map>
 	<cassert>
 
-1687558127 source:d:\c++\westseer\src\researchscope.cpp
+1687723653 source:d:\c++\westseer\src\researchscope.cpp
 	"ResearchScope.h"
 	<algorithm>
 	<stdexcept>
@@ -3484,6 +3493,8 @@
 	<time.h>
 	<CallbackData.h>
 	<wxFFileLog.h>
+	<BitermWeight.h>
+	<TopicIdentification.h>
 
 1687558127 source:d:\c++\westseer\src\sqlite3.c
 	<vxWorks.h>
@@ -3552,15 +3563,16 @@
 
 1687558126 d:\c++\westseer\include\stopwords.h
 
-1687558127 source:d:\c++\westseer\src\stringprocessing.cpp
+1687649839 source:d:\c++\westseer\src\stringprocessing.cpp
 	<StringProcessing.h>
 	<algorithm>
 	<cstring>
 	<regex>
 	<map>
 
-1687558126 source:d:\c++\westseer\westseermain.cpp
+1687703919 source:d:\c++\westseer\westseermain.cpp
 	"WESTSeerMain.h"
+	"WESTSeerApp.h"
 	"OpenAlexImportDialog.h"
 	"SettingsDialog.h"
 	"SQLDialog.h"
@@ -3605,7 +3617,7 @@
 1687558127 source:d:\c++\westseer\src\callbackdata.cpp
 	"CallbackData.h"
 
-1687558127 source:d:\c++\westseer\src\abstracttask.cpp
+1687729576 source:d:\c++\westseer\src\abstracttask.cpp
 	"AbstractTask.h"
 
 1687558126 d:\c++\westseer\include\abstracttask.h
@@ -3687,7 +3699,7 @@
 	<StopWordMatcher.h>
 	<Matcher.h>
 
-1687558127 source:d:\c++\westseer\src\termtfirdf.cpp
+1687672074 source:d:\c++\westseer\src\termtfirdf.cpp
 	"TermTfIrdf.h"
 	<../WESTSeerApp.h>
 	<GeneralConfig.h>
@@ -7364,15 +7376,26 @@
 	<ResearchScope.h>
 	<vector>
 
-1687558127 source:d:\c++\westseer\src\metricmodel.cpp
+1687671057 source:d:\c++\westseer\src\metricmodel.cpp
 	"MetricModel.h"
+	<../WESTSeerApp.h>
+	<GeneralConfig.h>
+	<CallbackData.h>
+	<wxFFileLog.h>
+	<StringProcessing.h>
+	<ctime>
+	<cstdlib>
+	<sstream>
+	<set>
 
-1687558126 d:\c++\westseer\include\metricmodel.h
+1687654834 d:\c++\westseer\include\metricmodel.h
 	<AbstractTask.h>
 	<ResearchScope.h>
+	<TimeSeriesExtraction.h>
+	<PredictionModel.h>
 	<vector>
 
-1687558127 source:d:\c++\westseer\src\bitermdf.cpp
+1687723402 source:d:\c++\westseer\src\bitermdf.cpp
 	"BitermDf.h"
 	<../WESTSeerApp.h>
 	<GeneralConfig.h>
@@ -7390,7 +7413,7 @@
 	<string>
 	<map>
 
-1687558127 source:d:\c++\westseer\src\bitermweight.cpp
+1687723972 source:d:\c++\westseer\src\bitermweight.cpp
 	"BitermWeight.h"
 	<../WESTSeerApp.h>
 	<GeneralConfig.h>
@@ -8286,14 +8309,14 @@
 
 1687558126 d:\c++\westseer\include\eigen\src\eigenvalues\selfadjointeigensolver_lapacke.h
 
-1687558127 source:d:\c++\westseer\src\predictionmodel.cpp
+1687650857 source:d:\c++\westseer\src\predictionmodel.cpp
 	"PredictionModel.h"
 	<../WESTSeerApp.h>
 	<GeneralConfig.h>
 	<StringProcessing.h>
 	<CallbackData.h>
 
-1687558126 d:\c++\westseer\include\predictionmodel.h
+1687649561 d:\c++\westseer\include\predictionmodel.h
 	<AbstractTask.h>
 	<ResearchScope.h>
 	<TimeSeriesExtraction.h>
@@ -11690,12 +11713,13 @@
 	"tensorflow/core/framework/types.h"
 	"tensorflow/core/lib/gtl/array_slice.h"
 
-1687558127 source:d:\c++\westseer\src\tfmodel.cpp
+1687694232 source:d:\c++\westseer\src\tfmodel.cpp
 	"TFModel.h"
 	<wxFFileLog.h>
 	<sstream>
+	<fstream>
 
-1687558126 d:\c++\westseer\include\tfmodel.h
+1687649999 d:\c++\westseer\include\tfmodel.h
 	<tensorflow/c/c_api.h>
 	<Eigen/Dense>
 	<vector>
@@ -11716,7 +11740,7 @@
 	<StringProcessing.h>
 	<CallbackData.h>
 
-1687558126 d:\c++\westseer\include\topicindentification.h
+1687683865 d:\c++\westseer\include\topicindentification.h
 	<AbstractTask.h>
 	<ResearchScope.h>
 	<CandidateIdentification.h>
@@ -11725,19 +11749,40 @@
 	<map>
 	<string>
 
-1687558126 d:\c++\westseer\include\timeseriesextraction.h
+1687684017 d:\c++\westseer\include\timeseriesextraction.h
 	<AbstractTask.h>
 	<ResearchScope.h>
 	<BitermWeight.h>
 	<CandidateIdentification.h>
-	<TopicIndentification.h>
+	<TopicIdentification.h>
 	<Eigen/Dense>
 	<map>
 
-1687558127 source:d:\c++\westseer\src\timeseriesextraction.cpp
+1687735236 source:d:\c++\westseer\src\timeseriesextraction.cpp
 	"TimeSeriesExtraction.h"
 	<../WESTSeerApp.h>
 	<GeneralConfig.h>
 	<StringProcessing.h>
 	<CallbackData.h>
+
+1687683865 d:\c++\westseer\include\topicidentification.h
+	<AbstractTask.h>
+	<ResearchScope.h>
+	<CandidateIdentification.h>
+	<BitermWeight.h>
+	<TermExtraction.h>
+	<map>
+	<string>
+
+1687733160 source:d:\c++\westseer\src\topicidentification.cpp
+	"TopicIdentification.h"
+	<../WESTSeerApp.h>
+	<GeneralConfig.h>
+	<StringProcessing.h>
+	<CallbackData.h>
+	<queue>
+	<mutex>
+	<thread>
+
+1674896212 d:\c++\westseer\lib\gcc_dll\mswu\wx\setup.h
 

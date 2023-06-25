@@ -73,7 +73,6 @@
 			<Add option="-mthreads" />
 			<Add option="-fopenmp" />
 			<Add library="tensorflow" />
-			<Add library="llama" />
 			<Add library="ssl" />
 			<Add library="crypto" />
 			<Add library="crypt32" />
@@ -118,12 +117,20 @@
 		<Unit filename="include/TermTfIrdf.h" />
 		<Unit filename="include/TimeSeriesExtraction.h" />
 		<Unit filename="include/TimeSeriesRegression.h" />
-		<Unit filename="include/TopicIndentification.h" />
+		<Unit filename="include/TopicIdentification.h" />
 		<Unit filename="include/httplib.h" />
 		<Unit filename="include/porter2_stemmer.h" />
 		<Unit filename="include/sqlite3.h" />
 		<Unit filename="include/sqlite3ext.h" />
 		<Unit filename="include/wxFFileLog.h" />
+		<Unit filename="models/lstm_10.py" />
+		<Unit filename="models/lstm_3.py" />
+		<Unit filename="models/lstm_4.py" />
+		<Unit filename="models/lstm_5.py" />
+		<Unit filename="models/lstm_6.py" />
+		<Unit filename="models/lstm_7.py" />
+		<Unit filename="models/lstm_8.py" />
+		<Unit filename="models/lstm_9.py" />
 		<Unit filename="resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
@@ -152,7 +159,7 @@
 		<Unit filename="src/TermTfIrdf.cpp" />
 		<Unit filename="src/TimeSeriesExtraction.cpp" />
 		<Unit filename="src/TimeSeriesRegression.cpp" />
-		<Unit filename="src/TopicIndentification.cpp" />
+		<Unit filename="src/TopicIdentification.cpp" />
 		<Unit filename="src/porter2_stemmer.cpp" />
 		<Unit filename="src/sqlite3.c">
 			<Option compilerVar="CC" />

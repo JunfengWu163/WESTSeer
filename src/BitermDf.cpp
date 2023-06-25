@@ -41,12 +41,24 @@ const char *BitermDf::name()
 
 int BitermDf::numSteps()
 {
-    return _y1 - _y0;
+    return _y2 - _y0;
 }
 
 void BitermDf::doStep(int stepId)
 {
     process(_y0 + stepId);
+}
+
+void getBitermDfs(std::string strBdfs, std::map<std::string, int> *bitermDfs)
+{
+    std::vector<std::string> bdfStrs = splitString(strBdfs, ",");
+    for (std::string bdfStr: bdfStrs)
+    {
+        std::vector<std::string> bfStrs = splitString(bdfStr, ":");
+        std::string biterm = bfStrs[0];
+        int freq = atoi(bfStrs[1].c_str());
+        (*bitermDfs)[biterm] = freq;
+    }
 }
 
 bool BitermDf::load(int y, std::map<std::string, int> *bitermDfs)
@@ -71,7 +83,7 @@ bool BitermDf::load(int y, std::map<std::string, int> *bitermDfs)
         bitermDfs->clear();
         {
             std::stringstream ss;
-            ss << "SELECT biterm, scope_keywords, year, freq FROM scope_dfs WHERE scope_keywords = '"
+            ss << "SELECT keywords, year, bdfs FROM scope_bdfs WHERE keywords = '"
                 << keywords << "' AND year = " << y << ";";
             logDebug(ss.str().c_str());
             rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
@@ -81,19 +93,19 @@ bool BitermDf::load(int y, std::map<std::string, int> *bitermDfs)
                 sqlite3_close(db);
                 return false;
             }
-            for (auto &result: data.results)
+            if (data.results.size() == 0)
             {
-                std::string biterm = result["biterm"];
-                int freq = atoi(result["freq"].c_str());
-                (*bitermDfs)[biterm] = freq;
+                logDebug("no results found.");
+                sqlite3_close(db);
+                return false;
             }
+            getBitermDfs(data.results[0]["bdfs"], bitermDfs);
         }
     }
-
-    data.results.clear();
+    else
     {
         std::stringstream ss;
-        ss << "SELECT keywords, year FROM scope_bdf_tokens WHERE keywords = '"
+        ss << "SELECT keywords, year FROM scope_bdfs WHERE keywords = '"
             << keywords << "' AND year = " << y << ";";
         logDebug(ss.str().c_str());
         rc = sqlite3_exec(db, ss.str().c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
@@ -103,9 +115,28 @@ bool BitermDf::load(int y, std::map<std::string, int> *bitermDfs)
             sqlite3_close(db);
             return false;
         }
+        if (data.results.size() == 0)
+        {
+            logDebug("no results found.");
+            sqlite3_close(db);
+            return false;
+        }
     }
+
     sqlite3_close(db);
     return data.results.size() > 0;
+}
+
+std::string getStrBdfs(const std::map<std::string, int> &bitermDfs)
+{
+    std::stringstream ss;
+    for (auto bToF = bitermDfs.begin(); bToF != bitermDfs.end(); bToF++)
+    {
+        if (bToF != bitermDfs.begin())
+            ss << ",";
+        ss << bToF->first << ":" << bToF->second;
+    }
+    return ss.str();
 }
 
 bool BitermDf::save(int y, const std::map<std::string, int> &bitermDfs)
@@ -126,15 +157,9 @@ bool BitermDf::save(int y, const std::map<std::string, int> &bitermDfs)
     const char*sqls[] =
     {
         "CREATE TABLE IF NOT EXISTS scope_bdfs("
-        "biterm TEXT,"
-        "scope_keywords TEXT,"
-        "year INTEGER,"
-        "freq INTEGER,"
-        "PRIMARY KEY(biterm,scope_keywords,year))",
-
-        "CREATE TABLE IF NOT EXISTS scope_bdf_tokens("
         "keywords TEXT,"
         "year INTEGER,"
+        "bdfs TEXT,"
         "update_time INTEGER,"
         "PRIMARY KEY(keywords,year))",
     };
@@ -150,33 +175,15 @@ bool BitermDf::save(int y, const std::map<std::string, int> &bitermDfs)
         }
     }
 
-    // step 2: save biterm dfs
+    // step 2: save scope bdf token
     std::string keywords = _scope.getKeywords();
-    for (auto btToDf = bitermDfs.begin(); btToDf != bitermDfs.end(); btToDf++)
-    {
-        std::string bt = btToDf->first;
-        int freq = btToDf->second;
-        std::stringstream ss;
-        ss << "INSERT OR IGNORE INTO scope_bdfs(biterm, scope_keywords, year, freq) VALUES ('"
-            << bt << "','" << keywords << "'," << y << "," << freq << ");";
-        std::string strSql = ss.str();
-        logDebug(strSql.c_str());
-        rc = sqlite3_exec(db, strSql.c_str(), NULL, NULL, &errorMessage);
-        if (rc != SQLITE_OK)
-        {
-            logError(errorMessage);
-            sqlite3_close(db);
-            return false;
-        }
-    }
-
-    // step 3: save scope bdf token
     {
         time_t t;
         time(&t);
         std::stringstream ss;
-        ss << "INSERT OR IGNORE INTO scope_bdf_tokens(keywords, year, update_time) VALUES ('"
-            << keywords << "'," << y << "," << (int)t << ");";
+        std::string strBdfs = getStrBdfs(bitermDfs);
+        ss << "INSERT OR IGNORE INTO scope_bdfs(keywords, year, bdfs, update_time) VALUES ('"
+            << keywords << "'," << y << ",'" << strBdfs << "'," << (int)t << ");";
         std::string strSql = ss.str();
         logDebug(strSql.c_str());
         rc = sqlite3_exec(db, strSql.c_str(), NULL, NULL, &errorMessage);

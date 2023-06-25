@@ -88,7 +88,7 @@ bool PredictionModel::load(int y, std::map<uint64_t, std::pair<Eigen::MatrixXd,E
         CallbackData data;
         std::stringstream ss;
         ss << "SELECT keywords, year FROM scope_prediction_token WHERE keywords = '"
-            << keywords << "' AND year = " << y << ";";
+            << keywords << "' AND year = " << _y2 << ";";
         std::string strSql = ss.str();
         rc = sqlite3_exec(db, strSql.c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK)
@@ -127,6 +127,7 @@ bool PredictionModel::save(int y, std::map<uint64_t, std::pair<Eigen::MatrixXd,E
         "CREATE TABLE IF NOT EXISTS scope_prediction_token("
         "keywords TEXT,"
         "year INTEGER,"
+        "loss TEXT,"
         "update_time INTEGER,"
         "PRIMARY KEY(keywords,year));",
 
@@ -152,8 +153,6 @@ bool PredictionModel::save(int y, std::map<uint64_t, std::pair<Eigen::MatrixXd,E
 
     // step 2: insert publication scope time series
     std::string keywords = _scope.getKeywords();
-    time_t t;
-    time(&t);
     {
         std::stringstream ss;
         ss << "INSERT OR IGNORE INTO pub_scope_prediction(id, scope_keywords, year, prm, srm) VALUES ";
@@ -181,11 +180,32 @@ bool PredictionModel::save(int y, std::map<uint64_t, std::pair<Eigen::MatrixXd,E
         }
     }
 
-    // step 3: insert token
+    sqlite3_close(db);
+    return true;
+}
+
+bool PredictionModel::save(int y, std::vector<double> &loss)
+{
+    GeneralConfig config;
+    std::string path = config.getDatabase();
+
+    sqlite3 *db = NULL;
+    int rc = sqlite3_open(path.c_str(), &db);
+    if (rc != SQLITE_OK)
+    {
+        logError(wxT("Cannot open database at" + path));
+        return false;
+    }
+    char *errorMessage = NULL;
+
+    // insert token
+    std::string keywords = _scope.getKeywords();
+    time_t t;
+    time(&t);
     {
         std::stringstream ss;
-        ss << "INSERT OR IGNORE INTO scope_prediction_token(keywords,year,update_time) VALUES ('"
-            << keywords << "'," << y << "," << (int) t << ");";
+        ss << "INSERT OR IGNORE INTO scope_prediction_token(keywords,year,loss,update_time) VALUES ('"
+            << keywords << "'," << y << ",'" << getVectorStr(loss) << "'," << (int) t << ");";
         std::string strSql = ss.str();
         logDebug(strSql.c_str());
         rc = sqlite3_exec(db, strSql.c_str(), NULL, NULL, &errorMessage);
@@ -201,6 +221,54 @@ bool PredictionModel::save(int y, std::map<uint64_t, std::pair<Eigen::MatrixXd,E
     return true;
 }
 
+Eigen::MatrixXd mergeRows(const Eigen::MatrixXd &A1, const Eigen::MatrixXd &A2)
+{
+    int nRows1 = A1.rows();
+    int nRows2 = A2.rows();
+    int nCols1 = A1.cols();
+    int nCols2 = A2.cols();
+    if (nRows1 != nRows2 || nCols1 != nCols2)
+    {
+        logError("The sizes of matrices to merge are different in mergeRows.");
+    }
+    int nRows = nRows1 + nRows2;
+    int nCols = nCols1;
+    Eigen::MatrixXd A(nRows, nCols);
+    for (int r = 0; r < nRows; r++)
+    {
+        for (int c = 0; c < nCols; c++)
+        {
+            A(r,c) = r < nRows1 ? A1(r,c):A2(r-nRows1,c);
+        }
+    }
+    return A;
+}
+
+std::pair<Eigen::MatrixXd,Eigen::MatrixXd> splitRows(const Eigen::MatrixXd &A)
+{
+    int nRows = A.rows();
+    int nCols = A.cols();
+    int nRows1 = nRows / 2;
+    int nRows2 = nRows - nRows1;
+    Eigen::MatrixXd A1(nRows1, nCols), A2(nRows2, nCols);
+    for (int r = 0; r < nRows1; r++)
+    {
+        for (int c = 0; c < nCols; c++)
+        {
+            A1(r,c) = A(r,c);
+        }
+    }
+    for (int r = 0; r < nRows2; r++)
+    {
+        for (int c = 0; c < nCols; c++)
+        {
+            A2(r,c) = A(r-nRows1,c);
+        }
+    }
+    std::pair<Eigen::MatrixXd, Eigen::MatrixXd> result(A1,A2);
+    return result;
+}
+
 bool PredictionModel::process()
 {
     // step 1: load time series for training
@@ -214,72 +282,52 @@ bool PredictionModel::process()
             return false;
         for (auto &idToMatrices: timeSeries)
         {
-            input.push_back(idToMatrices.second.first.first);
-            target.push_back(idToMatrices.second.first.second);
-            input.push_back(idToMatrices.second.second.first);
-            target.push_back(idToMatrices.second.second.second);
+            input.push_back(mergeRows(idToMatrices.second.first.first,idToMatrices.second.second.first));
+            target.push_back(mergeRows(idToMatrices.second.first.second,idToMatrices.second.second.second));
         }
     }
 
     // step 2: start training
     const int numTrainingSteps = 300;
-    const int batchSize = 100;
+    const int batchSize = 1000;
     _model.init();
+    std::vector<double> loss;
     for (int step = 0; step < numTrainingSteps; step++)
     {
         _model.runTrainStep(input, target, batchSize);
+        if (step % 10 == 9)
+        {
+            loss.push_back(_model.loss(input, target));
+        }
     }
 
     // step 3: predict
+    int ys[2] = {_y2, _y2 + 5};
+    for (int y: ys)
     {
         std::map<uint64_t, std::pair<Eigen::MatrixXd,Eigen::MatrixXd>> prediction;
 
         std::map<uint64_t, TimeSeriesMatrices> timeSeries;
-        if (!_tse->load(_y2, &timeSeries))
+        if (!_tse->load(y, &timeSeries))
             return false;
         std::vector<Eigen::MatrixXd> predInput;
         std::vector<uint64_t> ids;
         for (auto &idToMatrices: timeSeries)
         {
-            predInput.push_back(idToMatrices.second.first.first);
-            predInput.push_back(idToMatrices.second.second.first);
+            predInput.push_back(mergeRows(idToMatrices.second.first.first,idToMatrices.second.second.first));
             ids.push_back(idToMatrices.first);
         }
         std::vector<Eigen::MatrixXd> predOutput = _model.predict(predInput, 5);
         for (size_t i = 0; i < ids.size(); i++)
         {
             uint64_t id = ids[i];
-            std::pair<Eigen::MatrixXd,Eigen::MatrixXd> tsm(predOutput[i + i], predOutput[i + i + 1]);
-            prediction[id] = tsm;
+            prediction[id] = splitRows(predOutput[i]);
         }
 
-        save(_y2, prediction);
+        save(y, prediction);
     }
 
-    {
-        std::map<uint64_t, std::pair<Eigen::MatrixXd,Eigen::MatrixXd>> prediction;
-
-        std::map<uint64_t, TimeSeriesMatrices> timeSeries;
-        if (!_tse->load(_y2 + 5, &timeSeries))
-            return false;
-        std::vector<Eigen::MatrixXd> predInput;
-        std::vector<uint64_t> ids;
-        for (auto &idToMatrices: timeSeries)
-        {
-            predInput.push_back(idToMatrices.second.first.first);
-            predInput.push_back(idToMatrices.second.second.first);
-            ids.push_back(idToMatrices.first);
-        }
-        std::vector<Eigen::MatrixXd> predOutput = _model.predict(predInput, 5);
-        for (size_t i = 0; i < ids.size(); i++)
-        {
-            uint64_t id = ids[i];
-            std::pair<Eigen::MatrixXd,Eigen::MatrixXd> tsm(predOutput[i + i], predOutput[i + i + 1]);
-            prediction[id] = tsm;
-        }
-
-        save(_y2 + 5, prediction);
-    }
+    save(_y2, loss);
 
     return true;
 }

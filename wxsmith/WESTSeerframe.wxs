@@ -96,6 +96,7 @@
 			<object class="sizeritem">
 				<object class="wxListCtrl" name="ID_LISTCTRL1" variable="ListCtrlPublications" member="yes">
 					<style>wxLC_REPORT|wxVSCROLL|wxHSCROLL</style>
+					<handler function="OnListCtrlPublicationsItemSelect" entry="EVT_LIST_ITEM_SELECTED" />
 				</object>
 				<flag>wxALL|wxEXPAND</flag>
 				<border>5</border>
@@ -182,9 +183,13 @@
 				<label>&amp;Mode</label>
 				<object class="wxMenuItem" name="ID_MENUITEM1" variable="MenuItem3" member="yes">
 					<label>&amp;Explore</label>
+					<handler function="OnExploreModeSelected" entry="EVT_MENU" />
+					<radio>1</radio>
 				</object>
 				<object class="wxMenuItem" name="ID_MENUITEM2" variable="MenuItem4" member="yes">
 					<label>&amp;Test</label>
+					<handler function="OnTextModeSelected" entry="EVT_MENU" />
+					<radio>1</radio>
 				</object>
 			</object>
 			<object class="wxMenu" variable="Menu4" member="yes">

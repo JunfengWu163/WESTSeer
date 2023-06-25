@@ -10,6 +10,8 @@
 #include "WESTSeerApp.h"
 #include <wx/stdpaths.h>
 #include <wx/filefn.h>
+#include <wx/filename.h>
+#include <wx/stdpaths.h>
 #include <GeneralConfig.h>
 #include <AbstractTask.h>
 #include "SettingsDialog.h"
@@ -40,6 +42,34 @@ void WESTSeerApp::FlushLog()
 int WESTSeerApp::year()
 {
     return _year;
+}
+
+wxString WESTSeerApp::modelPath()
+{
+    GeneralConfig config;
+    int k = config.getBiterms();
+    wxFileName appFile(wxStandardPaths::Get().GetExecutablePath());
+    wxString appPath(appFile.GetPath());
+    wxString relModelPath = "\\models";
+    wxFileName modelFile(appPath + relModelPath, wxString::Format("lstm_%d.pb", k));
+    for (int i = 0; i < 10; i++)
+    {
+        if (modelFile.Exists())
+            return appPath + relModelPath;
+        relModelPath = "\\.." + relModelPath;
+        modelFile = wxFileName(appPath + relModelPath, wxString::Format("lstm_%d.pb", k));
+    }
+    logError("Model path cannot be found.");
+    return appPath;
+}
+
+wxString WESTSeerApp::modelFileName()
+{
+    GeneralConfig config;
+    int k = config.getBiterms();
+    wxString path = modelPath();
+    wxFileName fileName(path, wxString::Format("lstm_%d.pb", k));
+    return fileName.GetAbsolutePath();
 }
 
 bool WESTSeerApp::OnInit()

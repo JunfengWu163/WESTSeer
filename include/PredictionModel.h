@@ -19,6 +19,7 @@ class PredictionModel: public AbstractTask
 
     protected:
         bool save(int y, std::map<uint64_t, std::pair<Eigen::MatrixXd,Eigen::MatrixXd>> &prediction);
+        bool save(int y, std::vector<double> &loss);
         bool process();
 
     private:

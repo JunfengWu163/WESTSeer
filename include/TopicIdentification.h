@@ -1,5 +1,5 @@
-#ifndef TOPICINDENTIFICATION_H
-#define TOPICINDENTIFICATION_H
+#ifndef TopicIdentification_H
+#define TopicIdentification_H
 #include <AbstractTask.h>
 #include <ResearchScope.h>
 #include <CandidateIdentification.h>
@@ -8,12 +8,12 @@
 #include <map>
 #include <string>
 
-class TopicIndentification
+class TopicIdentification: public AbstractTask
 {
     public:
-        TopicIndentification(const std::string path, const std::string kws,
+        TopicIdentification(const std::string path, const std::string kws,
                              TermExtraction *te, BitermWeight *bw, CandidateIdentification *ci);
-        virtual ~TopicIndentification();
+        virtual ~TopicIdentification();
         virtual bool finished();
         virtual const char *name();
         virtual int numSteps();
@@ -34,4 +34,4 @@ class TopicIndentification
         CandidateIdentification *_ci;
 };
 
-#endif // TOPICINDENTIFICATION_H
+#endif // TopicIdentification_H
