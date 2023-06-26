@@ -5,7 +5,7 @@ k = 5
 in_steps = 10
 num_features = 2 + 2 * k + k * (k - 1)
 out_steps = 5
-lstm_units = num_features * 6
+lstm_units = k + 2;
 
 multi_lstm_model = tf.keras.Sequential([
     # Shape [batch, in_steps, features] => [batch, lstm_units].
@@ -27,7 +27,7 @@ y_ = tf.identity(multi_lstm_model(x), name='output')
 
 # Optimize loss
 loss = tf.reduce_mean(tf.square(y_ - y), name='loss')
-optimizer = tf.train.GradientDescentOptimizer(learning_rate=0.01)
+optimizer = tf.train.AdamOptimizer(learning_rate=0.001)
 train_op = optimizer.minimize(loss, name='train')
 
 init = tf.global_variables_initializer()

@@ -123,7 +123,8 @@ bool MetricModel::load(int y, std::map<uint64_t, std::vector<double>> *scores)
         rc = sqlite3_exec(db, strSql.c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
         if (rc != SQLITE_OK || data.results.size() == 0)
         {
-            logDebug(errorMessage);
+            if (rc!=SQLITE_OK)
+                logDebug(errorMessage);
             sqlite3_close(db);
             return false;
         }
@@ -283,10 +284,12 @@ bool MetricModel::process(int y)
     for (auto idToP: prediction)
     {
         uint64_t id = idToP.first;
+        Eigen::MatrixXd plm = timeSeries[idToP.first].first.first;
+        Eigen::MatrixXd slm = timeSeries[idToP.first].second.first;
         Eigen::MatrixXd prm = idToP.second.first;
-        int realOldCitations[10], realNewCitations[5];
+        int realOldCitations[10], oldTopicHits[10], oldPubHits[10], realNewCitations[5];
         double predNewCitations[5];
-        double sumOld = 0;
+        double sumOld = 0, sumP = 0;
         for (int i = 0; i < 10; i++)
         {
             auto idToC = oldCitations[i].find(id);
@@ -298,8 +301,31 @@ bool MetricModel::process(int y)
             {
                 realOldCitations[i] = 0;
             }
+            oldTopicHits[i] = slm(0,i);
+            oldPubHits[i] = plm(0, i);
             sumOld += realOldCitations[i];
+            sumP += oldPubHits[i];
         }
+        /*
+        double sum11op = 0, sum12op = 0, sum22op = 0, sum11pt = 0, sum12pt = 0, sum22pt = 0;
+        for (int i = 0; i < 10; i++)
+        {
+            sum11op += realOldCitations[i] * realOldCitations[i];
+            sum12op += realOldCitations[i] * oldPubHits[i];
+            sum22op += oldPubHits[i] * oldPubHits[i];
+            sum11pt += oldPubHits[i] * oldPubHits[i];
+            sum12pt += oldPubHits[i] * oldTopicHits[i];
+            sum22pt += oldTopicHits[i] * oldTopicHits[i];
+        }
+        double rop = sqrt(sum11op * sum22op);
+        double cosop = rop == 0.0 ? 0 : sum12op / rop;
+        double rpt = sqrt(sum11pt * sum22pt);
+        double cospt = rpt == 0.0 ? 0 : sum12pt / rpt;
+        */
+
+        if (sumP == 0)
+            sumP = 1;
+
         double realSumNew = 0, predSumNew = 0;
         for (int i = 0; i < 5; i++)
         {
@@ -318,16 +344,20 @@ bool MetricModel::process(int y)
             predSumNew += predNewCitations[i];
         }
 
+        //predSumNew *= sqrt(sumOld / sumP);
+
         double irdf = log(sumOldPubs / sumOld);
+        double predIrdf = log(sumOldPubs / sumP);
         double meanOld = sumOld * 0.1;
+        double predMeanOld = sumP * 0.1;
         double realMeanNew = realSumNew * 0.2;
         double predMeanNew = predSumNew * 0.2;
         if (predMeanNew < 0)
             predMeanNew = 0;
         double realGrowth = realMeanNew / meanOld;
-        double predGrowth = predMeanNew / meanOld;
-        double predScore = predGrowth * irdf;
-        double realScore = realGrowth * irdf;
+        double predGrowth = predMeanNew / predMeanOld;
+        double predScore = log(1 + predGrowth) * predIrdf;
+        double realScore = log(1 + realGrowth) * irdf;
 
         std::vector<double> myScores;
         myScores.push_back(predScore);

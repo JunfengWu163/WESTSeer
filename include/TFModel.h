@@ -12,7 +12,7 @@ class TFModel
         int init();
         int checkpoint(const char* checkpoint_prefix, bool save);
         std::vector<Eigen::MatrixXd> predict(const std::vector<Eigen::MatrixXd> &input, int out_steps);
-        int runTrainStep(const std::vector<Eigen::MatrixXd> &input, const std::vector<Eigen::MatrixXd> &target, int batch_size);
+        int runTrainStep(const std::vector<Eigen::MatrixXd> &input, const std::vector<Eigen::MatrixXd> &target);
         double loss(const std::vector<Eigen::MatrixXd> &input, const std::vector<Eigen::MatrixXd> &target);
 
     protected:

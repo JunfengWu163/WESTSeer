@@ -3570,7 +3570,7 @@
 	<regex>
 	<map>
 
-1687781316 source:d:\c++\westseer\westseermain.cpp
+1687817860 source:d:\c++\westseer\westseermain.cpp
 	"WESTSeerMain.h"
 	"WESTSeerApp.h"
 	"OpenAlexImportDialog.h"
@@ -7382,7 +7382,7 @@
 	<ResearchScope.h>
 	<vector>
 
-1687780799 source:d:\c++\westseer\src\metricmodel.cpp
+1687817268 source:d:\c++\westseer\src\metricmodel.cpp
 	"MetricModel.h"
 	<../WESTSeerApp.h>
 	<GeneralConfig.h>
@@ -8321,14 +8321,14 @@
 
 1687736241 d:\c++\westseer\include\eigen\src\eigenvalues\selfadjointeigensolver_lapacke.h
 
-1687777707 source:d:\c++\westseer\src\predictionmodel.cpp
+1687817224 source:d:\c++\westseer\src\predictionmodel.cpp
 	"PredictionModel.h"
 	<../WESTSeerApp.h>
 	<GeneralConfig.h>
 	<StringProcessing.h>
 	<CallbackData.h>
 
-1687736241 d:\c++\westseer\include\predictionmodel.h
+1687813592 d:\c++\westseer\include\predictionmodel.h
 	<AbstractTask.h>
 	<ResearchScope.h>
 	<TimeSeriesExtraction.h>
@@ -11725,13 +11725,13 @@
 	"tensorflow/core/framework/types.h"
 	"tensorflow/core/lib/gtl/array_slice.h"
 
-1687777276 source:d:\c++\westseer\src\tfmodel.cpp
+1687783831 source:d:\c++\westseer\src\tfmodel.cpp
 	"TFModel.h"
 	<wxFFileLog.h>
 	<sstream>
 	<fstream>
 
-1687736241 d:\c++\westseer\include\tfmodel.h
+1687783743 d:\c++\westseer\include\tfmodel.h
 	<tensorflow/c/c_api.h>
 	<Eigen/Dense>
 	<vector>

@@ -273,14 +273,9 @@ std::vector<Eigen::MatrixXd> TFModel::predict(const std::vector<Eigen::MatrixXd>
     return results;
 }
 
-int TFModel::runTrainStep(const std::vector<Eigen::MatrixXd> &input, const std::vector<Eigen::MatrixXd> &target, int batch_size)
+int TFModel::runTrainStep(const std::vector<Eigen::MatrixXd> &input, const std::vector<Eigen::MatrixXd> &target)
 {
-    std::vector<int> selections;
-    for (int i = 0; i < batch_size; i++)
-    {
-        selections.push_back(rand() % input.size());
-    }
-
+    int batch_size = (int)input.size();
     int num_features = input[0].rows();
     int in_steps = input[0].cols();
     int out_steps = target[0].cols();
@@ -292,7 +287,7 @@ int TFModel::runTrainStep(const std::vector<Eigen::MatrixXd> &input, const std::
     int offset = 0;
     for (int i_batch = 0; i_batch < batch_size; i_batch++)
     {
-        const Eigen::MatrixXd &batch = input[selections[i_batch]];
+        const Eigen::MatrixXd &batch = input[i_batch];
         for (int i_step = 0; i_step < in_steps; i_step++)
         {
             for (int i_feature = 0; i_feature < num_features; i_feature++)
@@ -309,7 +304,7 @@ int TFModel::runTrainStep(const std::vector<Eigen::MatrixXd> &input, const std::
     offset = 0;
     for (int i_batch = 0; i_batch < batch_size; i_batch++)
     {
-        const Eigen::MatrixXd &batch = target[selections[i_batch]];
+        const Eigen::MatrixXd &batch = target[i_batch];
         for (int i_step = 0; i_step < out_steps; i_step++)
         {
             for (int i_feature = 0; i_feature < num_features; i_feature++)

@@ -20,7 +20,7 @@ class PredictionModel: public AbstractTask
     protected:
         bool save(int y, std::map<uint64_t, std::pair<Eigen::MatrixXd,Eigen::MatrixXd>> &prediction);
         bool save(int y, std::vector<double> &loss);
-        bool process();
+        bool process(int iStep);
 
     private:
         int _y0;
@@ -29,6 +29,10 @@ class PredictionModel: public AbstractTask
         ResearchScope _scope;
         TimeSeriesExtraction *_tse;
         TFModel _model;
+        std::vector<Eigen::MatrixXd> _input;
+        std::vector<Eigen::MatrixXd> _target;
+        std::vector<double> _loss;
+        std::string _name;
 };
 
 #endif // PREDICTIONMODEL_H

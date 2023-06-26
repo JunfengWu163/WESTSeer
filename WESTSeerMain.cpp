@@ -331,6 +331,7 @@ void WESTSeerFrame::showCandidate(uint64_t id)
         ListCtrlReferences->SetItem(row, 4, wxString::Format("%llu", pub.id()));
     }
 
+    /*
     ListCtrlTopicPapers->ClearAll();
     ListCtrlTopicPapers->AppendColumn("Year");
     ListCtrlTopicPapers->AppendColumn("Title", wxLIST_FORMAT_LEFT, 600);
@@ -354,6 +355,7 @@ void WESTSeerFrame::showCandidate(uint64_t id)
         ListCtrlTopicPapers->SetItem(row, 3, pub.source().c_str());
         ListCtrlTopicPapers->SetItem(row, 4, wxString::Format("%llu", pub.id()));
     }
+    */
 }
 
 void WESTSeerFrame::showCandidates()
@@ -695,5 +697,5 @@ void WESTSeerFrame::OnListCtrlPublicationsItemSelect(wxListEvent& event)
 {
     int idxItem = (int)ListCtrlPublications->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
     if (idxItem >= 0 && idxItem < (int) _ids.size())
-        showCandidate(_ids[idxItem]);
+        showCandidate(_ids[_ids.size() - 1 - idxItem]);
 }

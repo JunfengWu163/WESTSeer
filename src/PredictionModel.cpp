@@ -12,6 +12,7 @@ PredictionModel::PredictionModel(const std::string path, const std::string kws, 
     _y1 = _y2 - 5;
     _y0 = _y2 - config.getObYears();
     _tse = tse;
+    _name = "Prediction Training";
 }
 
 PredictionModel::~PredictionModel()
@@ -30,17 +31,23 @@ bool PredictionModel::finished()
 
 const char *PredictionModel::name()
 {
-    return "Prediction Model";
+    if (_loss.size() > 0)
+    {
+        std::stringstream ss;
+        ss << "Prediction Training (" << _loss[_loss.size() - 1] << ")";
+        _name = ss.str();
+    }
+    return _name.c_str();
 }
 
 int PredictionModel::numSteps()
 {
-    return 1;
+    return 100;
 }
 
 void PredictionModel::doStep(int stepId)
 {
-    process();
+    process(stepId);
 }
 
 bool PredictionModel::load(int y, std::map<uint64_t, std::pair<Eigen::MatrixXd,Eigen::MatrixXd>> *prediction)
@@ -236,9 +243,10 @@ Eigen::MatrixXd mergeRows(const Eigen::MatrixXd &A1, const Eigen::MatrixXd &A2)
     Eigen::MatrixXd A(nRows, nCols);
     for (int r = 0; r < nRows; r++)
     {
+        //double w = r == 0 ? 1.0 : 0.1;
         for (int c = 0; c < nCols; c++)
         {
-            A(r,c) = r < nRows1 ? A1(r,c):A2(r-nRows1,c);
+            A(r,c) = r < nRows1 ? A1(r,c): A2(r-nRows1,c);
         }
     }
     return A;
@@ -253,6 +261,7 @@ std::pair<Eigen::MatrixXd,Eigen::MatrixXd> splitRows(const Eigen::MatrixXd &A)
     Eigen::MatrixXd A1(nRows1, nCols), A2(nRows2, nCols);
     for (int r = 0; r < nRows1; r++)
     {
+        //double w = r == 0 ? 1.0 : 10.0;
         for (int c = 0; c < nCols; c++)
         {
             A1(r,c) = A(r,c);
@@ -260,6 +269,7 @@ std::pair<Eigen::MatrixXd,Eigen::MatrixXd> splitRows(const Eigen::MatrixXd &A)
     }
     for (int r = 0; r < nRows2; r++)
     {
+        //double w = 10.0;
         for (int c = 0; c < nCols; c++)
         {
             A2(r,c) = A(r+nRows1,c);
@@ -269,66 +279,66 @@ std::pair<Eigen::MatrixXd,Eigen::MatrixXd> splitRows(const Eigen::MatrixXd &A)
     return result;
 }
 
-bool PredictionModel::process()
+bool PredictionModel::process(int iStep)
 {
     // step 1: load time series for training
-    int nTrainingWindows = _y1 - _y0 - 14;
-    std::vector<Eigen::MatrixXd> input;
-    std::vector<Eigen::MatrixXd> target;
-    for (int i = 0; i < nTrainingWindows; i++)
+    if (iStep == 0)
     {
-        std::map<uint64_t, TimeSeriesMatrices> timeSeries;
-        if (!_tse->load(_y1 - nTrainingWindows + 1 + i, &timeSeries))
-            return false;
-        for (auto &idToMatrices: timeSeries)
+        int nTrainingWindows = _y1 - _y0 - 14;
+        for (int i = 0; i < nTrainingWindows; i++)
         {
-            input.push_back(mergeRows(idToMatrices.second.first.first,idToMatrices.second.second.first));
-            target.push_back(mergeRows(idToMatrices.second.first.second,idToMatrices.second.second.second));
+            std::map<uint64_t, TimeSeriesMatrices> timeSeries;
+            if (!_tse->load(_y1 - nTrainingWindows + 1 + i, &timeSeries))
+                return false;
+            for (auto &idToMatrices: timeSeries)
+            {
+                _input.push_back(mergeRows(idToMatrices.second.first.first,idToMatrices.second.second.first));
+                _target.push_back(mergeRows(idToMatrices.second.first.second,idToMatrices.second.second.second));
+            }
         }
+        _model.init();
+        _loss.push_back(_model.loss(_input, _target));
     }
+
 
     // step 2: start training
-    const int numTrainingSteps = 1000;
-    const int batchSize = 100;
-    _model.init();
-    std::vector<double> loss;
-    loss.push_back(_model.loss(input, target));
-    for (int step = 0; step < numTrainingSteps; step++)
+    for (int step = 0; step < 300; step++)
     {
-        _model.runTrainStep(input, target, batchSize);
-        if (step % 10 == 9)
-        {
-            loss.push_back(_model.loss(input, target));
-        }
+        _model.runTrainStep(_input, _target);
     }
+    _loss.push_back(_model.loss(_input, _target));
 
     // step 3: predict
-    int ys[2] = {_y2, _y2 + 5};
-    for (int y: ys)
+    if (iStep == 99)
     {
-        std::map<uint64_t, std::pair<Eigen::MatrixXd,Eigen::MatrixXd>> prediction;
-
-        std::map<uint64_t, TimeSeriesMatrices> timeSeries;
-        if (!_tse->load(y, &timeSeries))
-            return false;
-        std::vector<Eigen::MatrixXd> predInput;
-        std::vector<uint64_t> ids;
-        for (auto &idToMatrices: timeSeries)
+        int ys[2] = {_y2, _y2 + 5};
+        for (int y: ys)
         {
-            predInput.push_back(mergeRows(idToMatrices.second.first.first,idToMatrices.second.second.first));
-            ids.push_back(idToMatrices.first);
-        }
-        std::vector<Eigen::MatrixXd> predOutput = _model.predict(predInput, 5);
-        for (size_t i = 0; i < ids.size(); i++)
-        {
-            uint64_t id = ids[i];
-            prediction[id] = splitRows(predOutput[i]);
+            std::map<uint64_t, std::pair<Eigen::MatrixXd,Eigen::MatrixXd>> prediction;
+
+            std::map<uint64_t, TimeSeriesMatrices> timeSeries;
+            if (!_tse->load(y, &timeSeries))
+                return false;
+            std::vector<Eigen::MatrixXd> predInput;
+            std::vector<uint64_t> ids;
+            for (auto &idToMatrices: timeSeries)
+            {
+                predInput.push_back(mergeRows(idToMatrices.second.first.first,idToMatrices.second.second.first));
+                ids.push_back(idToMatrices.first);
+            }
+            std::vector<Eigen::MatrixXd> predOutput = _model.predict(predInput, 5);
+            for (size_t i = 0; i < ids.size(); i++)
+            {
+                uint64_t id = ids[i];
+                prediction[id] = splitRows(predOutput[i]);
+            }
+
+            save(y, prediction);
         }
 
-        save(y, prediction);
+        save(_y2, _loss);
     }
 
-    save(_y2, loss);
 
     return true;
 }
