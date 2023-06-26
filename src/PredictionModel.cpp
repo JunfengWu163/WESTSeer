@@ -63,7 +63,7 @@ bool PredictionModel::load(int y, std::map<uint64_t, std::pair<Eigen::MatrixXd,E
     {
         CallbackData data;
         std::stringstream ss;
-        ss << "SELECT id, scope_keywords, year, prm, srm FROM pub_scope_prediction WHERE keywords = '"
+        ss << "SELECT id, scope_keywords, year, prm, srm FROM pub_scope_prediction WHERE scope_keywords = '"
             << keywords << "' AND year = " << y << ";";
         std::string strSql = ss.str();
         rc = sqlite3_exec(db, strSql.c_str(), CallbackData::sqliteCallback, &data, &errorMessage);
@@ -262,7 +262,7 @@ std::pair<Eigen::MatrixXd,Eigen::MatrixXd> splitRows(const Eigen::MatrixXd &A)
     {
         for (int c = 0; c < nCols; c++)
         {
-            A2(r,c) = A(r-nRows1,c);
+            A2(r,c) = A(r+nRows1,c);
         }
     }
     std::pair<Eigen::MatrixXd, Eigen::MatrixXd> result(A1,A2);
@@ -288,10 +288,11 @@ bool PredictionModel::process()
     }
 
     // step 2: start training
-    const int numTrainingSteps = 300;
-    const int batchSize = 1000;
+    const int numTrainingSteps = 1000;
+    const int batchSize = 100;
     _model.init();
     std::vector<double> loss;
+    loss.push_back(_model.loss(input, target));
     for (int step = 0; step < numTrainingSteps; step++)
     {
         _model.runTrainStep(input, target, batchSize);

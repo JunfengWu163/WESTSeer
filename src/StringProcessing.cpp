@@ -62,6 +62,42 @@ string& trim(string& s, const char* t)
 // split string according to a specific delimiter, with optional trimming
 vector<string> splitString(string text, string delimiter, bool needTrimming)
 {
+    if (delimiter.size() == 1)
+    {
+        char c = delimiter[0];
+        int n = (int) text.size();
+        int i0 = 0;
+        vector<string> elems;
+        for (int i1 = 0; i1 < n; i1++)
+        {
+            if (text[i1] == c)
+            {
+                int len = i1 - i0;
+                if (len > 0)
+                {
+                    string elem = text.substr(i0, len);
+                    string& trimmedElem = trim(elem);
+                    if (trimmedElem.size() > 0)
+                    {
+                        elems.push_back(trimmedElem);
+                    }
+                }
+                i0 = i1 + 1;
+            }
+        }
+        if (i0 < n)
+        {
+            int len = n - i0;
+            string elem = text.substr(i0, len);
+            string& trimmedElem = trim(elem);
+            if (trimmedElem.size() > 0)
+            {
+                elems.push_back(trimmedElem);
+            }
+        }
+        return elems;
+    }
+
     regex reg(delimiter);
     vector<string> untrimmedElems(
         sregex_token_iterator(text.begin(), text.end(), reg, -1),

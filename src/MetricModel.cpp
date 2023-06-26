@@ -116,7 +116,7 @@ bool MetricModel::load(int y, std::map<uint64_t, std::vector<double>> *scores)
     {
         CallbackData data;
         std::stringstream ss;
-        ss << "SELECT keywords, year, FROM scope_metric WHERE keywords = '"
+        ss << "SELECT keywords, year FROM scope_metric WHERE keywords = '"
             << keywords << "' AND year = " << y << ";";
         std::string strSql = ss.str();
         logDebug(strSql.c_str());
@@ -175,7 +175,7 @@ bool MetricModel::save(int y, const std::map<uint64_t, std::vector<double>> &sco
     time(&t);
     {
         std::stringstream ss;
-        ss << "INSERT OR IGNORE INTO scope_metric(id, scope_keywords, year, prm, srm) VALUES ('"
+        ss << "INSERT OR IGNORE INTO scope_metric(keywords, year, scores, update_time) VALUES ('"
             << keywords << "'," << y << ",'" << getScoreStr(scores) << "'," << (int)t << ");";
         std::string strSql = ss.str();
         logDebug(strSql.c_str());
@@ -195,6 +195,9 @@ bool MetricModel::save(int y, const std::map<uint64_t, std::vector<double>> &sco
 
 bool MetricModel::process(int y)
 {
+    if (load(y, NULL))
+        return true;
+
     // step 1: load time series
     std::map<uint64_t, TimeSeriesMatrices> timeSeries;
     if (!_tse->load(y, &timeSeries))
@@ -213,6 +216,9 @@ bool MetricModel::process(int y)
         for (int i = 0; i < 15; i++)
         {
             int yi = y - 1 - i;
+            if (yi >= WESTSeerApp::year())
+                continue;
+
             std::map<uint64_t, std::vector<uint64_t>> pubs;
             if (!_scope.getExistingRefIds(yi, pubs))
                 return false;

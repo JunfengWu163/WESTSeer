@@ -7,6 +7,9 @@
 #include <cstdlib>
 #include <sstream>
 #include <set>
+#include <queue>
+#include <thread>
+#include <mutex>
 
 BitermDf::BitermDf(const std::string path, const std::string kws, TermTfIrdf *tt) : _scope(path, kws)
 {
@@ -200,6 +203,9 @@ bool BitermDf::save(int y, const std::map<std::string, int> &bitermDfs)
 
 bool BitermDf::process(int y)
 {
+    if (load(y, NULL))
+        return true;
+
     // step 1: load publication scope tfirdfs
     std::map<uint64_t, std::map<std::string, double>> tfirdfs;
     if (!_tt->load(y, &tfirdfs, false))
@@ -207,56 +213,147 @@ bool BitermDf::process(int y)
 
     // step 2: compute mean tfirdf in publication
     std::map<uint64_t, double> meanTfirdfs;
+    int nThreads = std::thread::hardware_concurrency();
+    std::queue<uint64_t> q;
     for (auto idToWorkTfirdfs = tfirdfs.begin(); idToWorkTfirdfs != tfirdfs.end(); idToWorkTfirdfs++)
     {
-        double sumTfirdfs = 0.0;
-        int n = 0;
-        for (auto termToTfirdf = idToWorkTfirdfs->second.begin(); termToTfirdf != idToWorkTfirdfs->second.end(); termToTfirdf++)
-        {
-            sumTfirdfs += termToTfirdf->second;
-            n++;
-        }
-        double meanTfirdf = sumTfirdfs / n;
-        meanTfirdfs[idToWorkTfirdfs->first] = meanTfirdf;
-        if (_cancelled.load() == true)
-        {
-            return false;
-        }
+        q.push(idToWorkTfirdfs->first);
     }
+    std::mutex mq;
+    std::thread *threads[nThreads];
+    for (int tid = 0; tid < nThreads; tid++)
+    {
+        threads[tid] = new std::thread(
+            [&q, &mq, &tfirdfs, &meanTfirdfs, this]
+            {
+                for (;;)
+                {
+                    uint64_t id = 0;
+                    {
+                        std::lock_guard<std::mutex> lock(mq);
+                        if (!q.empty())
+                        {
+                            id = q.front();
+                            q.pop();
+                        }
+                        else
+                            return;
+                    }
+                    auto idToWorkTfirdfs = tfirdfs.find(id);
+                    if (idToWorkTfirdfs == tfirdfs.end())
+                        return;
+                    double sumTfirdfs = 0.0;
+                    int n = 0;
+                    for (auto termToTfirdf = idToWorkTfirdfs->second.begin(); termToTfirdf != idToWorkTfirdfs->second.end(); termToTfirdf++)
+                    {
+                        sumTfirdfs += termToTfirdf->second;
+                        n++;
+                    }
+                    double meanTfirdf = sumTfirdfs / n;
+                    {
+                        std::lock_guard<std::mutex> lock(mq);
+                        meanTfirdfs[idToWorkTfirdfs->first] = meanTfirdf;
+                    }
+                    if (_cancelled.load() == true)
+                    {
+                        return;
+                    }
+                }
+            });
+    }
+    for (int tid = 0; tid < nThreads; tid++)
+    {
+        threads[tid]->join();
+        delete threads[tid];
+    }
+
+    if (meanTfirdfs.size() < tfirdfs.size())
+        return false;
 
     // step 3: count biterm df for those with two terms of tfirdf above mean
     std::map<std::string, int> bdfs;
     for (auto idToWorkTfirdfs = tfirdfs.begin(); idToWorkTfirdfs != tfirdfs.end(); idToWorkTfirdfs++)
     {
-        double mean = meanTfirdfs[idToWorkTfirdfs->first];
-        for (auto iter1 = idToWorkTfirdfs->second.begin(); iter1 != idToWorkTfirdfs->second.end(); iter1++)
-        {
-            if (iter1->second < mean)
-                continue;
-            for (auto iter2 = idToWorkTfirdfs->second.begin(); iter2 != idToWorkTfirdfs->second.end(); iter2++)
+        q.push(idToWorkTfirdfs->first);
+    }
+    for (int tid = 0; tid < nThreads; tid++)
+    {
+        threads[tid] = new std::thread(
+            [&q, &mq, &tfirdfs, &meanTfirdfs, this, &bdfs]
             {
-                if (iter2->second < mean)
-                    continue;
-                if (iter1->first < iter2->first)
+                std::map<std::string, int> myBdfs;
+                for (;;)
                 {
-                    std::string biterm = iter1->first + "&" + iter2->first;
-                    auto btToDf = bdfs.find(biterm);
-                    if (btToDf == bdfs.end())
+                    uint64_t id = 0;
                     {
-                        bdfs[biterm] = 1;
+                        std::lock_guard<std::mutex> lock(mq);
+                        if (!q.empty())
+                        {
+                            id = q.front();
+                            q.pop();
+                        }
+                        else
+                            break;
                     }
-                    else
+                    auto idToWorkTfirdfs = tfirdfs.find(id);
+                    if (idToWorkTfirdfs == tfirdfs.end())
+                        return;
+                    double mean = meanTfirdfs[idToWorkTfirdfs->first];
+
+                    for (auto iter1 = idToWorkTfirdfs->second.begin(); iter1 != idToWorkTfirdfs->second.end(); iter1++)
                     {
-                        bdfs[biterm] = btToDf->second + 1;
+                        if (iter1->second < mean)
+                            continue;
+                        for (auto iter2 = idToWorkTfirdfs->second.begin(); iter2 != idToWorkTfirdfs->second.end(); iter2++)
+                        {
+                            if (iter2->second < mean)
+                                continue;
+                            if (iter1->first < iter2->first)
+                            {
+                                std::string biterm = iter1->first + "&" + iter2->first;
+                                auto btToDf = myBdfs.find(biterm);
+                                if (btToDf == myBdfs.end())
+                                {
+                                    myBdfs[biterm] = 1;
+                                }
+                                else
+                                {
+                                    myBdfs[biterm] = btToDf->second + 1;
+                                }
+                            }
+                        }
+                    }
+                    if (_cancelled.load() == true)
+                    {
+                        return;
+                    }
+                }
+
+                {
+                    std::lock_guard<std::mutex> lock(mq);
+                    for (auto btToDfSrc = myBdfs.begin(); btToDfSrc != myBdfs.end(); btToDfSrc++)
+                    {
+                        auto btToDfDst = bdfs.find(btToDfSrc->first);
+                        if (btToDfDst == bdfs.end())
+                        {
+                            bdfs[btToDfSrc->first] = btToDfSrc->second;
+                        }
+                        else
+                        {
+                            bdfs[btToDfSrc->first] = btToDfSrc->second + btToDfDst->second;
+                        }
                     }
                 }
             }
-        }
-        if (_cancelled.load() == true)
-        {
-            return false;
-        }
+        );
     }
+    for (int tid = 0; tid < nThreads; tid++)
+    {
+        threads[tid]->join();
+        delete threads[tid];
+    }
+    if (_cancelled.load() == true)
+        return false;
 
     // step 4: save biterm dfs
     return save(y, bdfs);

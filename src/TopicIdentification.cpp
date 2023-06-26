@@ -53,9 +53,10 @@ int TopicIdentification::numSteps()
 
 void TopicIdentification::doStep(int stepId)
 {
-    if (stepId > 1)
-        process(_y1 - stepId + 2);
-    else if (stepId == 1)
+    int n = numSteps();
+    if (stepId < n - 2)
+        process(_y1 - n + 3 + stepId);
+    else if (stepId == n - 2)
         process(_y2);
     else
         process(_y2 + 5);
@@ -168,6 +169,7 @@ bool TopicIdentification::save(int y, std::map<uint64_t,std::pair<std::string,st
 
     // step 2: save topics
     std::string keywords = _scope.getKeywords();
+    if (topics.size() > 0)
     {
         std::stringstream ss;
         ss << "INSERT OR IGNORE INTO pub_scope_topics(id, scope_keywords, year, topic) VALUES ";
@@ -200,6 +202,7 @@ bool TopicIdentification::save(int y, std::map<uint64_t,std::pair<std::string,st
             << keywords << "'," << y << "," << (int)t << ");";
         std::string strSql = ss.str();
         logDebug(strSql.c_str());
+        rc = sqlite3_exec(db, strSql.c_str(), NULL, NULL, &errorMessage);
         if (rc != SQLITE_OK)
         {
             logError(errorMessage);
@@ -214,14 +217,22 @@ bool TopicIdentification::save(int y, std::map<uint64_t,std::pair<std::string,st
 
 bool TopicIdentification::process(int y)
 {
+    if (load(y, NULL))
+        return true;
+
     // step 1: load candidates
     logDebug("load candidates");
+    std::map<uint64_t, std::pair<std::string, std::string>> topics;
     std::set<uint64_t> candidateSet;
     {
         std::vector<uint64_t> candidates;
         if (!_ci->load(y, &candidates))
             return false;
         candidateSet.insert(candidates.begin(), candidates.end());
+    }
+    if (candidateSet.size() == 0)
+    {
+        return save(y, topics);
     }
 
     // step 2: load publications to get citers
@@ -282,7 +293,6 @@ bool TopicIdentification::process(int y)
 
     // step 6: for each candidate, identify topic by the weights of the biterms
     logDebug("identify topic");
-    std::map<uint64_t, std::pair<std::string, std::string>> topics;
     GeneralConfig config;
     size_t numBitermsPerTopic = (size_t)config.getBiterms();
     std::queue<uint64_t> q;
@@ -298,183 +308,187 @@ bool TopicIdentification::process(int y)
     {
         threads[tid] = new std::thread([&q,&mq,&citers,&pubTerms,&pubBWs,numBitermsPerTopic,&topics]
         {
-            uint64_t cid = 0;
+            for (;;)
             {
-                std::lock_guard<std::mutex> lock(mq);
-                if (!q.empty())
+                uint64_t cid = 0;
                 {
-                    cid = q.front();
-                    q.pop();
-                }
-            }
-            if (cid == 0)
-                return;
-
-            // create counters for the biterms
-            std::map<std::string, double> sumBWs;
-            auto refIdToIds = citers.find(cid);
-            if (refIdToIds == citers.end())
-                return;
-            for (uint64_t id : refIdToIds->second)
-            {
-                auto idToBWs = pubBWs.find(id);
-                if (idToBWs == pubBWs.end())
-                    continue;
-
-                // compute mean and var
-                double sum1 = 0.0, sum2 = 0.0;
-                for (auto bToW: idToBWs->second)
-                {
-                    sum1 += bToW.second;
-                    sum2 += bToW.second * bToW.second;
-                }
-                size_t n = idToBWs->second.size();;
-                double mu = sum1 / n;
-                double sigma = sum2 / n - mu * mu;
-                if (sigma <= 0.0)
-                    sigma = 1.0;
-                else
-                    sigma = sqrt(sigma);
-                double sqrt2 = sqrt(2.0);
-                double sigmaSqrt2 = sigma * sqrt2;
-
-                // normalize weights and add them to sumBWs
-                for (auto bToW: idToBWs->second)
-                {
-                    double t = (bToW.second - mu) / sigmaSqrt2;
-                    double w = 0.5 + 0.5 * erf(t);
-                    auto bToSumW = sumBWs.find(bToW.first);
-                    if (bToSumW != sumBWs.end())
+                    std::lock_guard<std::mutex> lock(mq);
+                    if (!q.empty())
                     {
-                        sumBWs[bToW.first] = bToSumW->second + w;
-                    }
-                    else
-                    {
-                        sumBWs[bToW.first] = w;
+                        cid = q.front();
+                        q.pop();
                     }
                 }
-            }
+                if (cid == 0)
+                    return;
 
-            // find top k biterms
-            std::vector<double> ws;
-            for (auto bToSumW: sumBWs)
-            {
-                ws.push_back(bToSumW.second);
-            }
-            std::sort(ws.begin(), ws.end());
-            double threshold = 0.0;
-            if (ws.size() > numBitermsPerTopic)
-            {
-                threshold = ws[ws.size() - 1 - numBitermsPerTopic];
-            }
-            std::vector<std::string> topKBiterms;
-            for (auto bToSumW: sumBWs)
-            {
-                if (bToSumW.second > threshold)
-                {
-                    topKBiterms.push_back(bToSumW.first);
-                }
-            }
-            // handles the situation where some top k weights equal threshold
-            if (topKBiterms.size() < numBitermsPerTopic && topKBiterms.size() < sumBWs.size())
-            {
-                for (auto bToSumW: sumBWs)
-                {
-                    if (bToSumW.second == threshold && topKBiterms.size() < numBitermsPerTopic)
-                    {
-                        topKBiterms.push_back(bToSumW.first);
-                        if (topKBiterms.size() == numBitermsPerTopic)
-                            break;
-                    }
-                }
-            }
-
-            // find the most frequent representations of the top k biterms
-            std::vector<std::string> topKBiterms2;
-            topKBiterms2.resize(topKBiterms.size());
-            for (size_t i = 0; i < topKBiterms.size(); i++)
-            {
-                std::vector<std::string> terms = splitString(topKBiterms[i], "&");
-                std::map<std::string, int> term1Dfs;
-                std::map<std::string, int> term2Dfs;
+                // create counters for the biterms
+                std::map<std::string, double> sumBWs;
+                auto refIdToIds = citers.find(cid);
+                if (refIdToIds == citers.end())
+                    return;
                 for (uint64_t id : refIdToIds->second)
                 {
-                    auto idToTerms = pubTerms.find(id);
-                    if (idToTerms == pubTerms.end())
+                    auto idToBWs = pubBWs.find(id);
+                    if (idToBWs == pubBWs.end())
                         continue;
-                    auto term1Info = idToTerms->second.find(terms[0]);
-                    if (term1Info == idToTerms->second.end())
-                        continue;
-                    auto term2Info = idToTerms->second.find(terms[1]);
-                    if (term2Info == idToTerms->second.end())
-                        continue;
-                    std::string term1 = term1Info->second.first;
-                    std::string term2 = term2Info->second.first;
 
-                    auto term1ToDf = term1Dfs.find(term1);
-                    if (term1ToDf == term1Dfs.end())
+                    // compute mean and var
+                    double sum1 = 0.0, sum2 = 0.0;
+                    for (auto bToW: idToBWs->second)
                     {
-                        term1Dfs[term1] = 1;
+                        sum1 += bToW.second;
+                        sum2 += bToW.second * bToW.second;
                     }
+                    size_t n = idToBWs->second.size();;
+                    double mu = sum1 / n;
+                    double sigma = sum2 / n - mu * mu;
+                    if (sigma <= 0.0)
+                        sigma = 1.0;
                     else
-                    {
-                        term1Dfs[term1] = term1ToDf->second + 1;
-                    }
+                        sigma = sqrt(sigma);
+                    double sqrt2 = sqrt(2.0);
+                    double sigmaSqrt2 = sigma * sqrt2;
 
-                    auto term2ToDf = term2Dfs.find(term2);
-                    if (term2ToDf == term2Dfs.end())
+                    // normalize weights and add them to sumBWs
+                    for (auto bToW: idToBWs->second)
                     {
-                        term2Dfs[term2] = 1;
-                    }
-                    else
-                    {
-                        term2Dfs[term2] = term2ToDf->second + 1;
+                        double t = (bToW.second - mu) / sigmaSqrt2;
+                        double w = 0.5 + 0.5 * erf(t);
+                        auto bToSumW = sumBWs.find(bToW.first);
+                        if (bToSumW != sumBWs.end())
+                        {
+                            sumBWs[bToW.first] = bToSumW->second + w;
+                        }
+                        else
+                        {
+                            sumBWs[bToW.first] = w;
+                        }
                     }
                 }
 
-                int maxDf1 = 0;
-                std::string term1 = terms[0];
-                for (auto term1ToDf: term1Dfs)
+                // find top k biterms
+                std::vector<double> ws;
+                for (auto bToSumW: sumBWs)
                 {
-                    if (term1ToDf.second > maxDf1)
+                    ws.push_back(bToSumW.second);
+                }
+                std::sort(ws.begin(), ws.end());
+                double threshold = 0.0;
+                if (ws.size() > numBitermsPerTopic)
+                {
+                    threshold = ws[ws.size() - 1 - numBitermsPerTopic];
+                }
+                std::vector<std::string> topKBiterms;
+                for (auto bToSumW: sumBWs)
+                {
+                    if (bToSumW.second > threshold)
                     {
-                        maxDf1 = term1ToDf.second;
-                        term1 = term1ToDf.first;
+                        topKBiterms.push_back(bToSumW.first);
+                    }
+                }
+                // handles the situation where some top k weights equal threshold
+                if (topKBiterms.size() < numBitermsPerTopic && topKBiterms.size() < sumBWs.size())
+                {
+                    for (auto bToSumW: sumBWs)
+                    {
+                        if (bToSumW.second == threshold && topKBiterms.size() < numBitermsPerTopic)
+                        {
+                            topKBiterms.push_back(bToSumW.first);
+                            if (topKBiterms.size() == numBitermsPerTopic)
+                                break;
+                        }
                     }
                 }
 
-                int maxDf2 = 0;
-                std::string term2 = terms[1];
-                for (auto term2ToDf: term2Dfs)
+                // find the most frequent representations of the top k biterms
+                std::vector<std::string> topKBiterms2;
+                topKBiterms2.resize(topKBiterms.size());
+                for (size_t i = 0; i < topKBiterms.size(); i++)
                 {
-                    if (term2ToDf.second > maxDf2)
+                    std::vector<std::string> terms = splitString(topKBiterms[i], "&");
+                    std::map<std::string, int> term1Dfs;
+                    std::map<std::string, int> term2Dfs;
+                    for (uint64_t id : refIdToIds->second)
                     {
-                        maxDf2 = term2ToDf.second;
-                        term2 = term2ToDf.first;
+                        auto idToTerms = pubTerms.find(id);
+                        if (idToTerms == pubTerms.end())
+                            continue;
+                        auto term1Info = idToTerms->second.find(terms[0]);
+                        if (term1Info == idToTerms->second.end())
+                            continue;
+                        auto term2Info = idToTerms->second.find(terms[1]);
+                        if (term2Info == idToTerms->second.end())
+                            continue;
+                        std::string term1 = term1Info->second.first;
+                        std::string term2 = term2Info->second.first;
+
+                        auto term1ToDf = term1Dfs.find(term1);
+                        if (term1ToDf == term1Dfs.end())
+                        {
+                            term1Dfs[term1] = 1;
+                        }
+                        else
+                        {
+                            term1Dfs[term1] = term1ToDf->second + 1;
+                        }
+
+                        auto term2ToDf = term2Dfs.find(term2);
+                        if (term2ToDf == term2Dfs.end())
+                        {
+                            term2Dfs[term2] = 1;
+                        }
+                        else
+                        {
+                            term2Dfs[term2] = term2ToDf->second + 1;
+                        }
                     }
+
+                    int maxDf1 = 0;
+                    std::string term1 = terms[0];
+                    for (auto term1ToDf: term1Dfs)
+                    {
+                        if (term1ToDf.second > maxDf1)
+                        {
+                            maxDf1 = term1ToDf.second;
+                            term1 = term1ToDf.first;
+                        }
+                    }
+
+                    int maxDf2 = 0;
+                    std::string term2 = terms[1];
+                    for (auto term2ToDf: term2Dfs)
+                    {
+                        if (term2ToDf.second > maxDf2)
+                        {
+                            maxDf2 = term2ToDf.second;
+                            term2 = term2ToDf.first;
+                        }
+                    }
+
+                    topKBiterms2[i] = term1 + "&" + term2;
                 }
 
-                topKBiterms2[i] = term1 + "&" + term2;
-            }
-
-            // create topic representation
-            std::string rep1, rep2;
-            for (size_t i = 0; i < topKBiterms.size(); i++)
-            {
-                if (i > 0)
+                // create topic representation
+                std::string rep1, rep2;
+                for (size_t i = 0; i < topKBiterms.size(); i++)
                 {
-                    rep1 += "|";
-                    rep2 += "|";
+                    if (i > 0)
+                    {
+                        rep1 += "|";
+                        rep2 += "|";
+                    }
+                    rep1 += topKBiterms[i];
+                    rep2 += topKBiterms2[i];
                 }
-                rep1 += topKBiterms[i];
-                rep2 += topKBiterms2[i];
-            }
 
-            // record topic
-            std::pair<std::string,std::string> topic(rep1,rep2);
-            {
-                std::lock_guard<std::mutex> lock(mq);
-                topics[cid] = topic;
+                // record topic
+                std::pair<std::string,std::string> topic(rep1,rep2);
+                {
+                    std::lock_guard<std::mutex> lock(mq);
+                    topics[cid] = topic;
+                }
+
             }
         });
     }

@@ -49,9 +49,10 @@ int TimeSeriesExtraction::numSteps()
 
 void TimeSeriesExtraction::doStep(int stepId)
 {
-    if (stepId > 1)
-        process(_y1 - stepId + 2);
-    else if (stepId == 1)
+    int n = numSteps();
+    if (stepId < n - 2)
+        process(_y1 - n + 3 + stepId);
+    else if (stepId == n - 2)
         process(_y2);
     else
         process(_y2 + 5);
@@ -102,7 +103,7 @@ bool TimeSeriesExtraction::load(int y, std::map<uint64_t, TimeSeriesMatrices> *t
     {
         CallbackData data;
         std::stringstream ss;
-        ss << "SELECT id, scope_keywords, year, plm, prm, slm, srm FROM pub_scope_time_series WHERE keywords = '"
+        ss << "SELECT id, scope_keywords, year, plm, prm, slm, srm FROM pub_scope_time_series WHERE scope_keywords = '"
             << keywords << "' AND year = " << y << ";";
         std::string strSql = ss.str();
         logDebug(strSql.c_str());
@@ -219,6 +220,7 @@ bool TimeSeriesExtraction::save(int y, const std::map<uint64_t, TimeSeriesMatric
     std::string keywords = _scope.getKeywords();
     time_t t;
     time(&t);
+    if (timeSeries.size() > 0)
     {
         std::stringstream ss;
         ss << "INSERT OR IGNORE INTO pub_scope_time_series(id, scope_keywords, year, plm, prm, slm, srm) VALUES ";
@@ -270,243 +272,207 @@ bool TimeSeriesExtraction::save(int y, const std::map<uint64_t, TimeSeriesMatric
     return true;
 }
 
-std::vector<int> getRows(int numBiterms, uint64_t cid, const std::set<std::string> &foundBiterms,
-                         const std::map<uint64_t,std::pair<std::string,std::string>> &topics)
-{
-    std::vector<int> rows;
-    auto cidToTopic = topics.find(cid);
-    if (cidToTopic == topics.end())
-        return rows;
-
-    std::vector<std::string> biterms = splitString(cidToTopic->second.first,"|");
-    if (foundBiterms.size() > 0)
-    {
-        rows.push_back(0);
-    }
-    int cooccurOffset = 0;
-    for (size_t i1 = 0; i1 < biterms.size(); i1++)
-    {
-        if (foundBiterms.find(biterms[i1]) != foundBiterms.end())
-        {
-            rows.push_back(1 + i1);
-            for (size_t i2 = i1 + 1; i2 < biterms.size(); i2++)
-            {
-                if (foundBiterms.find(biterms[i2]) != foundBiterms.end())
-                {
-                    rows.push_back(1 + numBiterms + cooccurOffset + i2 - i1 - 1);
-                }
-            }
-        }
-        cooccurOffset += (int)(biterms.size() - i1 - 1);
-    }
-    return rows;
-}
-
-void getCids(const std::map<std::string, double> &bws,
-             const std::vector<uint64_t> &refIds,
-             const std::map<std::string, std::vector<uint64_t>> &bitermCids,
-             std::map<uint64_t,std::set<std::string>> &topicCids,
-             std::map<uint64_t,std::set<std::string>> &citeCids)
-{
-    std::set<uint64_t> refIdSet(refIds.begin(), refIds.end());
-    for (auto bToW: bws)
-    {
-        std::string biterm = bToW.first;
-        auto bToCids = bitermCids.find(biterm);
-        if (bToCids == bitermCids.end())
-            return;
-        for (uint64_t cid: bToCids->second)
-        {
-            auto cidToTBs = topicCids.find(cid);
-            if (cidToTBs != topicCids.end())
-            {
-                topicCids[cid].insert(biterm);
-            }
-            else
-            {
-                std::set<std::string> temp;
-                temp.insert(biterm);
-                topicCids[cid] = temp;
-            }
-
-            if (refIdSet.find(cid) != refIdSet.end())
-            {
-                auto cidToCBs = citeCids.find(cid);
-                if (cidToCBs != citeCids.end())
-                {
-                    citeCids[cid].insert(biterm);
-                }
-                else
-                {
-                    std::set<std::string> temp;
-                    temp.insert(biterm);
-                    citeCids[cid] = temp;
-                }
-            }
-        }
-    }
-}
-
 bool TimeSeriesExtraction::process(int y)
 {
+    if (load(y, NULL))
+        return true;
+
     // step 1: load candidates
-    std::set<uint64_t> candidateSet;
+    std::map<uint64_t, TimeSeriesMatrices> timeSeries;
+    std::map<uint64_t, int> candidateMap;
     {
         std::vector<uint64_t> candidates;
         if (!_ci->load(y, &candidates))
             return false;
-        candidateSet.insert(candidates.begin(), candidates.end());
+        for (int i = 0; i < (int)candidates.size(); i++)
+        {
+            candidateMap[candidates[i]] = i;
+        }
     }
-
-    // step 2: load publications
-    std::map<uint64_t, std::vector<uint64_t>> oldPubs[10], newPubs[5];
-    for (int i = 0; i < 15; i++)
+    if (candidateMap.size() == 0)
     {
-        int yi = y - 1 - i;
-        std::map<uint64_t, std::vector<uint64_t>> pubs;
-        if (!_scope.getExistingRefIds(yi, pubs))
-            return false;
-        if (i < 5)
-        {
-            newPubs[4 - i] = pubs;
-        }
-        else
-        {
-            oldPubs[9 - (i - 5)] = pubs;
-        }
+        save(y, timeSeries);
+        return true;
     }
-
-    // step 3: load biterm weights
-    std::map<uint64_t, std::map<std::string, double>> oldPubBWs[10], newPubBWs[5];
-    for (int i = 0; i < 15; i++)
+    GeneralConfig config;
+    int k = config.getBiterms();
+    int numFeatures = 2 + 2 * k + k * (k - 1);
+    int halfNF = numFeatures / 2;
+    int numCandidates = (int) candidateMap.size();
+    std::vector<std::vector<std::vector<int>>> hits;
+    hits.resize(numCandidates);
+    for (int iC = 0; iC < numCandidates; iC++)
     {
-        int yi = y - 1 - i;
-        std::map<uint64_t, std::map<std::string, double>> pubBWs;
-        if (!_bw->load(yi, &pubBWs))
-            return false;
-        if (i < 5)
+        hits[iC].resize(numFeatures);
+        for (int iF = 0; iF < numFeatures; iF++)
         {
-            newPubBWs[4 - i] = pubBWs;
-        }
-        else
-        {
-            oldPubBWs[9 - (i - 5)] = pubBWs;
+            hits[iC][iF].resize(15);
+            for (int iY = 0; iY < 15; iY++)
+            {
+                hits[iC][iF][iY] = 0;
+            }
         }
     }
 
-    // step 4: load topics
+    // step 2: load topics
     std::map<uint64_t,std::pair<std::string,std::string>> topics;
     if (!_ti->load(y, &topics))
         return false;
 
-    // step 5: extract candidates corresponding to topic biterms
-    // also initialze matrices
-    std::map<std::string, std::vector<uint64_t>> bitermCids;
-    std::map<uint64_t, TimeSeriesMatrices> timeSeries;
-    GeneralConfig config;
-    int numBiterms = config.getBiterms();
-    // rows include: 1 in topic, 1 in biterm for each biterm, 1 in two biterms for each pair of distinct biterms
-    int nRows = 1 + numBiterms + numBiterms * (numBiterms - 1) / 2;
-    Eigen::MatrixXd A(nRows, 10);
-    Eigen::MatrixXd B(nRows, 5);
-    for (int r = 0; r < nRows; r++)
-    {
-        for (int c = 0; c < A.cols(); c++)
-        {
-            A(r, c) = 0.0;
-        }
-        for (int c = 0; c < B.cols(); c++)
-        {
-            B(r, c) = 0.0;
-        }
-    }
-    std::pair<Eigen::MatrixXd, Eigen::MatrixXd> pm(A,B), sm(A,B);
-    TimeSeriesMatrices matrices(pm, sm);
+    // step 3: create mapping that maps biterm to candidate positions
+    std::map<std::string, std::vector<std::pair<uint64_t,int>>> bitermCandidatePositions;
     for (auto cidToTopic: topics)
     {
-        uint64_t cid = cidToTopic.first;
-        timeSeries[cid] = matrices;
         std::vector<std::string> biterms = splitString(cidToTopic.second.first, "|");
-        for (std::string biterm: biterms)
+        for (int i = 0; i < (int)biterms.size(); i++)
         {
-            auto bitermToCids = bitermCids.find(biterm);
-            if (bitermToCids != bitermCids.end())
+            std::pair<uint64_t,int> candidatePosition(cidToTopic.first,i);
+            auto bToCP = bitermCandidatePositions.find(biterms[i]);
+            if (bToCP == bitermCandidatePositions.end())
             {
-                bitermCids[biterm].push_back(cid);
+                std::vector<std::pair<uint64_t,int>> temp;
+                temp.push_back(candidatePosition);
+                bitermCandidatePositions[biterms[i]] = temp;
             }
             else
             {
-                std::vector<uint64_t> temp;
-                temp.push_back(cid);
-                bitermCids[biterm] = temp;
+                bitermCandidatePositions[biterms[i]].push_back(candidatePosition);
             }
         }
     }
 
-    // step 6: scan through old publications to find biterm old occurrences
-    for (int i = 0; i <10; i++)
+    // step 4: scan through publications to find biterm hits
+    std::map<uint64_t, std::vector<uint64_t>> oldPubs[10], newPubs[5];
+    for (int i = 0; i < 15; i++)
     {
-        for (auto &idToBWs: oldPubBWs[i])
-        {
-            uint64_t id = idToBWs.first;
-            auto idToRefIds= oldPubs[i].find(id);
-            if (idToRefIds == oldPubs[i].end())
-                continue;
-            std::map<uint64_t,std::set<std::string>> topicCids;
-            std::map<uint64_t,std::set<std::string>> citeCids;
-            getCids(idToBWs.second, idToRefIds->second, bitermCids, topicCids, citeCids);
+        int yi = y - 1 - i;
+        if (yi >= WESTSeerApp::year())
+            continue;
+        int iY = 14 - i;
 
-            for (auto &cidToCBs: citeCids)
+        std::map<uint64_t, std::vector<uint64_t>> pubs;
+        if (!_scope.getExistingRefIds(yi, pubs))
+            return false;
+
+        std::map<uint64_t, std::map<std::string, double>> pubBWs;
+        if (!_bw->load(yi, &pubBWs))
+            return false;
+
+        for (auto &idToBWs: pubBWs)
+        {
+            std::set<uint64_t> refs(pubs[idToBWs.first].begin(), pubs[idToBWs.first].end());
+
+            // calculate pHits and tHits
+            std::map<uint64_t, int> pHits, tHits;
+            for (auto &bToW: idToBWs.second)
             {
-                std::vector<int> rows = getRows(numBiterms, cidToCBs.first, cidToCBs.second, topics);
-                for (int row: rows)
+                auto bToCP = bitermCandidatePositions.find(bToW.first);
+                if (bToCP != bitermCandidatePositions.end())
                 {
-                    timeSeries[cidToCBs.first].first.first(row, i) += 1.0;
+                    for (auto cp: bToCP->second)
+                    {
+                        uint64_t cid = cp.first;
+
+                        // update tHits
+                        auto cidToTHit = tHits.find(cid);
+                        if (cidToTHit == tHits.end())
+                        {
+                            int hit = 1 << cp.second;
+                            tHits[cid] = hit;
+                        }
+                        else
+                        {
+                            int hit = (1 << cp.second) | cidToTHit->second;
+                            tHits[cid] = hit;
+                        }
+
+                        // update pHits
+                        if (refs.find(cid) != refs.end())
+                        {
+                            auto cidToPHit = pHits.find(cid);
+                            if (cidToPHit == pHits.end())
+                            {
+                                int hit = 1 << cp.second;
+                                pHits[cid] = hit;
+                            }
+                            else
+                            {
+                                int hit = (1 << cp.second) | cidToPHit->second;
+                                pHits[cid] = hit;
+                            }
+                        }
+                    }
                 }
             }
 
-            for (auto &cidToTBs: topicCids)
+            // update hits according to pHits and tHits
+            for (auto cidToPHit: pHits)
             {
-                std::vector<int> rows = getRows(numBiterms, cidToTBs.first, cidToTBs.second, topics);
-                for (int row: rows)
+                int iC = candidateMap[cidToPHit.first];
+                hits[iC][0][iY]++;
+                int coocurrOffset = 0;
+                for (int iF = 0; iF < k; iF++)
                 {
-                    timeSeries[cidToTBs.first].second.first(row, i) += 1.0;
+                    if ((cidToPHit.second & (1 << iF)) != 0)
+                    {
+                        hits[iC][iF + 1][iY]++;
+                    }
+                    for (int iF2 = iF + 1; iF2 < k; iF2++)
+                    {
+                        if ((cidToPHit.second & (1 << iF2)) != 0)
+                        {
+                            hits[iC][1 + k + coocurrOffset][iY]++;
+                        }
+                        coocurrOffset ++;
+                    }
+                }
+            }
+            for (auto cidToTHit: tHits)
+            {
+                int iC = candidateMap[cidToTHit.first];
+                hits[iC][halfNF][iY]++;
+                int coocurrOffset = 0;
+                for (int iF = 0; iF < k; iF++)
+                {
+                    if ((cidToTHit.second & (1 << iF)) != 0)
+                    {
+                        hits[iC][iF + 1 + halfNF][iY]++;
+                    }
+                    for (int iF2 = iF + 1; iF2 < k; iF2++)
+                    {
+                        if ((cidToTHit.second & (1 << iF2)) != 0)
+                        {
+                            hits[iC][1 + k + coocurrOffset + halfNF][iY]++;
+                        }
+                        coocurrOffset ++;
+                    }
                 }
             }
         }
     }
 
-    // step 7: scan through new publications to find biterm new occurrences
-    for (int i = 0; i <5; i++)
+    // step 5: encode hits to time series
+    for (auto idToiC: candidateMap)
     {
-        for (auto &idToBWs: newPubBWs[i])
+        Eigen::MatrixXd plm(halfNF, 10), prm(halfNF, 5), slm(halfNF, 10), srm(halfNF, 5);
+        uint64_t id = idToiC.first;
+        int iC = idToiC.second;
+        for (int iF = 0; iF < halfNF; iF++)
         {
-            uint64_t id = idToBWs.first;
-            auto idToRefIds = newPubs[i].find(id);
-            if (idToRefIds == newPubs[i].end())
-                continue;
-            std::map<uint64_t,std::set<std::string>> topicCids;
-            std::map<uint64_t,std::set<std::string>> citeCids;
-            getCids(idToBWs.second, idToRefIds->second, bitermCids, topicCids, citeCids);
-
-            for (auto &cidToCBs: citeCids)
+            for (int iY = 0; iY < 10; iY++)
             {
-                std::vector<int> rows = getRows(numBiterms, cidToCBs.first, cidToCBs.second, topics);
-                for (int row: rows)
-                {
-                    timeSeries[cidToCBs.first].first.second(row, i) += 1.0;
-                }
+                plm(iF,iY) = hits[iC][iF][iY];
+                slm(iF,iY) = hits[iC][iF+halfNF][iY];
             }
-
-            for (auto &cidToTBs: topicCids)
+            for (int iY = 10; iY < 15; iY++)
             {
-                std::vector<int> rows = getRows(numBiterms, cidToTBs.first, cidToTBs.second, topics);
-                for (int row: rows)
-                {
-                    timeSeries[cidToTBs.first].second.second(row, i) += 1.0;
-                }
+                prm(iF,iY-10) = hits[iC][iF][iY];
+                srm(iF,iY-10) = hits[iC][iF+halfNF][iY];
             }
         }
+        std::pair<Eigen::MatrixXd,Eigen::MatrixXd> pm(plm,prm), sm(slm,srm);
+        TimeSeriesMatrices tsm(pm,sm);
+        timeSeries[id] = tsm;
     }
 
     // step 8: save time series

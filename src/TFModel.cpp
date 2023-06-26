@@ -142,7 +142,7 @@ TFModel::TFModel(const char* graph_def_filename)
     _input.index = 0;
     _target.oper = TF_GraphOperationByName(g, "target");
     _target.index = 0;
-    _output.oper = TF_GraphOperationByName(g, "output");
+    _output.oper = TF_GraphOperationByName(g, "output" /*"eval/reshape/Reshape"*/);
     _output.index = 0;
 
     _init_op = TF_GraphOperationByName(g, "init");
@@ -202,11 +202,16 @@ int TFModel::checkpoint(const char* checkpoint_prefix, bool save)
 std::vector<Eigen::MatrixXd> TFModel::predict(const std::vector<Eigen::MatrixXd> &input, int out_steps)
 {
     int batch_size = input.size();
-    int in_steps = input[0].rows();
-    int num_features = input[0].cols();
+    int in_steps = input[0].cols();
+    int num_features = input[0].rows();
+
     const int64_t dims[3] = {batch_size, in_steps, num_features};
     const size_t nbytes_in = batch_size * in_steps * num_features * sizeof(float);
     TF_Tensor* t = TF_AllocateTensor(TF_FLOAT, dims, 3, nbytes_in);
+
+    const size_t nbytes_out = batch_size * out_steps * num_features * sizeof(float);
+    //TF_Tensor* tOut = TF_AllocateTensor(TF_FLOAT, dimsOut, 3, nbytes_out);
+
     float *t_data = (float *)TF_TensorData(t);
     int offset = 0;
     for (int i_batch = 0; i_batch < batch_size; i_batch++)
@@ -216,7 +221,7 @@ std::vector<Eigen::MatrixXd> TFModel::predict(const std::vector<Eigen::MatrixXd>
         {
             for (int i_feature = 0; i_feature < num_features; i_feature++)
             {
-                t_data[offset++] = batch(i_step, i_feature);
+                t_data[offset++] = (float)batch(i_feature, i_step);
             }
         }
     }
@@ -235,10 +240,10 @@ std::vector<Eigen::MatrixXd> TFModel::predict(const std::vector<Eigen::MatrixXd>
     if (!Okay(_status))
     {
         logError("Cannot run session.");
+        //TF_DeleteTensor(tOut);
         return results;
     }
 
-    int nbytes_out = batch_size * out_steps * num_features;
     if (TF_TensorByteSize(output_values[0]) != (size_t)nbytes_out)
     {
         std::stringstream ss;
@@ -248,21 +253,22 @@ std::vector<Eigen::MatrixXd> TFModel::predict(const std::vector<Eigen::MatrixXd>
         return results;
     }
 
-    float *out_data = (float *)TF_TensorData(output_values[0]);
+    TF_Tensor* tOut = output_values[0];
+    float *out_data = (float *)TF_TensorData(tOut);
     offset = 0;
     for (int i_batch = 0; i_batch < batch_size; i_batch++)
     {
-        Eigen::MatrixXd result(out_steps, num_features);
+        Eigen::MatrixXd result(num_features, out_steps);
         for (int i_step = 0; i_step < out_steps; i_step++)
         {
             for (int i_feature = 0; i_feature < num_features; i_feature++)
             {
-                result(i_step, i_feature) = out_data[offset++];
+                result(i_feature, i_step) = out_data[offset++];
             }
         }
         results.push_back(result);
     }
-    TF_DeleteTensor(output_values[0]);
+    TF_DeleteTensor(tOut);
 
     return results;
 }
@@ -275,9 +281,9 @@ int TFModel::runTrainStep(const std::vector<Eigen::MatrixXd> &input, const std::
         selections.push_back(rand() % input.size());
     }
 
-    int in_steps = input[0].rows();
-    int num_features = input[0].cols();
-    int out_steps = target[0].rows();
+    int num_features = input[0].rows();
+    int in_steps = input[0].cols();
+    int out_steps = target[0].cols();
 
     const int64_t dims_x[3] = {batch_size, in_steps, num_features};
     const size_t nbytes_in = batch_size * in_steps * num_features * sizeof(float);
@@ -291,7 +297,7 @@ int TFModel::runTrainStep(const std::vector<Eigen::MatrixXd> &input, const std::
         {
             for (int i_feature = 0; i_feature < num_features; i_feature++)
             {
-                x_data[offset++] = batch(i_step, i_feature);
+                x_data[offset++] = (float)batch(i_feature, i_step);
             }
         }
     }
@@ -308,7 +314,7 @@ int TFModel::runTrainStep(const std::vector<Eigen::MatrixXd> &input, const std::
         {
             for (int i_feature = 0; i_feature < num_features; i_feature++)
             {
-                y_data[offset++] = batch(i_step, i_feature);
+                y_data[offset++] = (float)batch(i_feature, i_step);
             }
         }
     }
@@ -338,7 +344,9 @@ double TFModel::loss(const std::vector<Eigen::MatrixXd> &input, const std::vecto
         {
             for (int c = 0; c < nCols; c++)
             {
-                double diff = Ao(r,c) - At(r,c);
+                double eao = Ao(r,c);
+                double eat = At(r,c);
+                double diff = eao - eat;
                 valueI += diff * diff;
             }
         }

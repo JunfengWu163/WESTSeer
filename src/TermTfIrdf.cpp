@@ -8,6 +8,9 @@
 #include <cstdlib>
 #include <sstream>
 #include <set>
+#include <thread>
+#include <mutex>
+#include <queue>
 
 TermTfIrdf::TermTfIrdf(const std::string path, const std::string kws, TermExtraction *te) : _scope(path, kws)
 {
@@ -290,22 +293,62 @@ bool TermTfIrdf::process(int y)
     // step 3: compute tfirdfs
     std::map<uint64_t, std::map<std::string, double>> tfirdfs;
     double logNumWorks = std::log(_numWorks);
+    std::queue<uint64_t> q;
+    std::mutex mq;
     for (auto idToTF = termFreqs.begin(); idToTF != termFreqs.end(); idToTF++)
     {
-        std::map<std::string, double> myTfirdfs;
-        for (auto termToFreq = idToTF->second.begin(); termToFreq != idToTF->second.end(); termToFreq++)
-        {
-            auto termToDf = _dfs.find(termToFreq->first);
-            double irdf = logNumWorks - std::log(termToDf->second);
-            double tfirdf = termToFreq->second.second * irdf;
-            myTfirdfs[termToFreq->first] = tfirdf;
-        }
-        tfirdfs[idToTF->first] = myTfirdfs;
-        if (_cancelled.load() == true)
-        {
-            return false;
-        }
+        q.push(idToTF->first);
     }
+    int nThreads = std::thread::hardware_concurrency();
+    std::thread *threads[nThreads];
+    for (int tid = 0; tid < nThreads; tid++)
+    {
+        threads[tid] = new std::thread([&q, &mq, &termFreqs, &tfirdfs, logNumWorks, this]
+            {
+                for (;;)
+                {
+                    uint64_t id = 0;
+                    {
+                        std::lock_guard<std::mutex> lock(mq);
+                        if (!q.empty())
+                        {
+                            id = q.front();
+                            q.pop();
+                        }
+                        else
+                            return;
+                    }
+                    auto idToTF = termFreqs.find(id);
+                    if (idToTF == termFreqs.end())
+                        return;
+
+                    std::map<std::string, double> myTfirdfs;
+                    for (auto termToFreq = idToTF->second.begin(); termToFreq != idToTF->second.end(); termToFreq++)
+                    {
+                        auto termToDf = _dfs.find(termToFreq->first);
+                        double irdf = logNumWorks - std::log(termToDf->second);
+                        double tfirdf = termToFreq->second.second * irdf;
+                        myTfirdfs[termToFreq->first] = tfirdf;
+                    }
+                    {
+                        std::lock_guard<std::mutex> lock(mq);
+                        tfirdfs[id] = myTfirdfs;
+                    }
+                    if (_cancelled.load() == true)
+                    {
+                        return;
+                    }
+                }
+            });
+    }
+    for (int tid = 0; tid < nThreads; tid++)
+    {
+        threads[tid]->join();
+        delete threads[tid];
+    }
+
+    if (tfirdfs.size() < termFreqs.size())
+        return false;
 
     // step 4: save results
     save(y, tfirdfs);

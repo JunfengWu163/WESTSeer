@@ -149,6 +149,7 @@ class WESTSeerFrame: public wxFrame
         MetricModel *_metricModel;
         bool _exploreMode;
         std::vector<uint64_t> _ids;
+        std::vector<int> _vRanks;
 
         void clearScope();
         void showCandidates();

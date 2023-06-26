@@ -23,7 +23,7 @@ x = tf.placeholder(tf.float32, shape=[None, in_steps, num_features], name='input
 y = tf.placeholder(tf.float32, shape=[None, out_steps, num_features], name='target')
 
 # Trivial linear model
-y_ = multi_lstm_model(x)
+y_ = tf.identity(multi_lstm_model(x), name='output')
 
 # Optimize loss
 loss = tf.reduce_mean(tf.square(y_ - y), name='loss')

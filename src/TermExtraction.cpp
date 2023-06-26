@@ -9,6 +9,9 @@
 #include <cstdlib>
 #include <sstream>
 #include <set>
+#include <thread>
+#include <mutex>
+#include <queue>
 
 TermExtraction::TermExtraction(const std::string path, const std::string kws) : _scope(path, kws)
 {
@@ -468,85 +471,122 @@ bool TermExtraction::process(int y)
     }
 
     // step 3: flexible extraction of terms in titles, abstracts and reference titles
-    std::map<uint64_t, std::map<std::string, std::pair<std::string, int>>> termFreqs;
+    std::queue<uint64_t> q;
     for (auto iter = texts.begin(); iter != texts.end(); iter++)
     {
-        uint64_t id = iter->first;
-        std::vector<std::string> &texts = iter->second;
-        std::map<std::string, std::map<std::string,int>> termFreqsOfWork;
-        for (size_t idxText = 0; idxText < texts.size(); idxText++)
-        {
-            std::vector<std::vector<std::string>> terms = split(texts[idxText]);
-            for (size_t idxTerm = 0; idxTerm < terms.size(); idxTerm++)
+        q.push(iter->first);
+    }
+    int nThreads = std::thread::hardware_concurrency();
+    std::thread *threads[nThreads];
+    std::mutex mq;
+    std::map<uint64_t, std::map<std::string, std::pair<std::string, int>>> termFreqs;
+
+    for (int tid = 0; tid < nThreads; tid++)
+    {
+        threads[tid] = new std::thread([&q, &mq, &texts, this, &termFreqs]
             {
-                std::vector<std::string> &term = terms[idxTerm];
-                for (size_t i = 0; i < term.size(); i++)
+                for (;;)
                 {
-                    std::vector<AbstractMatcher::Type> m = _matcher.match(term, i);
-                    std::string s;
-                    std::string t;
-                    for (size_t j = 0; j < m.size(); j++)
+                    uint64_t id = 0;
                     {
-                        if (j > 0)
+                        std::lock_guard<std::mutex> lock(mq);
+                        if (!q.empty())
                         {
-                            s += " ";
-                            t += " ";
+                            id = q.front();
+                            q.pop();
                         }
-                        std::string token = term[i + j];
-                        t += token;
-                        Porter2Stemmer::stem(token);
-                        s += token;
-                        if (m[j] == AbstractMatcher::TERM)
+                        else
+                            return;
+                    }
+
+                    auto iter = texts.find(id);
+                    std::vector<std::string> &texts = iter->second;
+                    std::map<std::string, std::map<std::string,int>> termFreqsOfWork;
+                    for (size_t idxText = 0; idxText < texts.size(); idxText++)
+                    {
+                        std::vector<std::vector<std::string>> terms = split(texts[idxText]);
+                        for (size_t idxTerm = 0; idxTerm < terms.size(); idxTerm++)
                         {
-                            auto sToTFreq = termFreqsOfWork.find(s);
-                            if (sToTFreq != termFreqsOfWork.end())
+                            std::vector<std::string> &term = terms[idxTerm];
+                            for (size_t i = 0; i < term.size(); i++)
                             {
-                                auto tToFreq = sToTFreq->second.find(t);
-                                if (tToFreq != sToTFreq->second.end())
+                                std::vector<AbstractMatcher::Type> m = _matcher.match(term, i);
+                                std::string s;
+                                std::string t;
+                                for (size_t j = 0; j < m.size(); j++)
                                 {
-                                    termFreqsOfWork[s][t] = tToFreq->second + 1;
+                                    if (j > 0)
+                                    {
+                                        s += " ";
+                                        t += " ";
+                                    }
+                                    std::string token = term[i + j];
+                                    t += token;
+                                    Porter2Stemmer::stem(token);
+                                    s += token;
+                                    if (m[j] == AbstractMatcher::TERM)
+                                    {
+                                        auto sToTFreq = termFreqsOfWork.find(s);
+                                        if (sToTFreq != termFreqsOfWork.end())
+                                        {
+                                            auto tToFreq = sToTFreq->second.find(t);
+                                            if (tToFreq != sToTFreq->second.end())
+                                            {
+                                                termFreqsOfWork[s][t] = tToFreq->second + 1;
+                                            }
+                                            else
+                                            {
+                                                termFreqsOfWork[s][t] = 1;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            std::map<std::string,int> temp;
+                                            temp[t] = 1;
+                                            termFreqsOfWork[s] = temp;
+                                        }
+                                    }
                                 }
-                                else
-                                {
-                                    termFreqsOfWork[s][t] = 1;
-                                }
-                            }
-                            else
-                            {
-                                std::map<std::string,int> temp;
-                                temp[t] = 1;
-                                termFreqsOfWork[s] = temp;
                             }
                         }
                     }
+                    std::map<std::string, std::pair<std::string, int>> stf;
+                    for (auto &sToTf: termFreqsOfWork)
+                    {
+                        int sumF = 0;
+                        int maxF = 0;
+                        std::string tMaxF = "";
+                        for (auto &tToF: sToTf.second)
+                        {
+                            sumF += tToF.second;
+                            if (tToF.second > maxF)
+                            {
+                                maxF = tToF.second;
+                                tMaxF = tToF.first;
+                            }
+                        }
+                        std::pair<std::string,int> tf(tMaxF,sumF);
+                        stf[sToTf.first] = tf;
+                    }
+                    {
+                        std::lock_guard<std::mutex> lock(mq);
+                        termFreqs[id] = stf;
+                    }
+                    if (_cancelled.load() == true)
+                    {
+                        return;
+                    }
                 }
-            }
-        }
-        std::map<std::string, std::pair<std::string, int>> stf;
-        for (auto &sToTf: termFreqsOfWork)
-        {
-            int sumF = 0;
-            int maxF = 0;
-            std::string tMaxF = "";
-            for (auto &tToF: sToTf.second)
-            {
-                sumF += tToF.second;
-                if (tToF.second > maxF)
-                {
-                    maxF = tToF.second;
-                    tMaxF = tToF.first;
-                }
-            }
-            std::pair<std::string,int> tf(tMaxF,sumF);
-            stf[sToTf.first] = tf;
-        }
-        termFreqs[id] = stf;
-        if (_cancelled.load() == true)
-        {
-            return false;
-        }
+            });
+    }
+    for (int tid = 0; tid < nThreads; tid++)
+    {
+        threads[tid]->join();
+        delete threads[tid];
     }
 
+    if (termFreqs.size() < texts.size())
+        return false;
     // step 4: save extraction results
     save(y, termFreqs);
     if (y == _y2 - 1)

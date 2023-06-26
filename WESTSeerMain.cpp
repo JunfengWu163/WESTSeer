@@ -379,16 +379,50 @@ void WESTSeerFrame::showCandidates()
     std::string kws = ChoiceScope->GetString(ChoiceScope->GetSelection()).ToStdString();
     ResearchScope scope(path, kws);
     std::vector<uint64_t> ids;
+    std::vector<int> pRanks, vRanks;
     std::map<uint64_t,std::vector<double>> scores;
     if (_candidateIdentification->load(ye, &ids) && _metricModel->load(ye, &scores))
     {
-        std::sort(ids.begin(), ids.end(), [scores](const uint64_t &a, const uint64_t &b) {
-                  return scores.at(a).at(0) > scores.at(b).at(0);
-                  });
-        _ids = ids;
-        std::vector<Publication> pubs = scope.getPublications(ids);
+        pRanks.resize(ids.size());
+        vRanks.resize(ids.size());
+        for (size_t i = 0; i < ids.size(); i++)
+        {
+            int myPRank = 0, myVRank = 0;
+            for (size_t j = 0; j < ids.size(); j++)
+            {
+                if (j == i)
+                    continue;
+
+                if (scores[ids[j]][0] > scores[ids[i]][0])
+                    myPRank++;
+                else if (scores[ids[j]][0] == scores[ids[i]][0] && j < i)
+                    myPRank++;
+
+                if (scores[ids[j]][1] > scores[ids[i]][1])
+                    myVRank++;
+                else if (scores[ids[j]][1] == scores[ids[i]][1] && j < i)
+                    myVRank++;
+            }
+            pRanks[i] = myPRank;
+            vRanks[i] = myVRank;
+        }
+        _ids.resize(ids.size());
+        _vRanks.resize(ids.size());
+        for (size_t i = 0; i < ids.size(); i++)
+        {
+            _ids[pRanks[i]] = ids[i];
+            _vRanks[pRanks[i]] = vRanks[i];
+        }
+
+        std::vector<Publication> pubs = scope.getPublications(_ids);
+        std::map<uint64_t,Publication> pubMap;
         for (Publication pub: pubs)
         {
+            pubMap[pub.id()] = pub;
+        }
+        for (int i = (int)_ids.size() - 1; i >= 0 ; i--)
+        {
+            Publication pub = pubMap[_ids[i]];
             long row = ListCtrlPublications->InsertItem(0, wxString::Format("%d", pub.year()));
             ListCtrlPublications->SetItem(row, 1, pub.title().c_str());
             std::stringstream ssAuthors;
@@ -404,20 +438,12 @@ void WESTSeerFrame::showCandidates()
             ListCtrlPublications->SetItem(row, 4, wxString::Format("%llu", pub.id()));
             double pScore = scores[pub.id()][0];
             double vScore = scores[pub.id()][1];
-            int pRank = 0, vRank = 0;
-            for (auto idToScore: scores)
-            {
-                if (idToScore.second[0] > pScore)
-                    pRank++;
-                if (idToScore.second[1] > vScore)
-                    vRank++;
-            }
-            ListCtrlPublications->SetItem(row, 5, wxString::Format("^lf", pScore));
-            ListCtrlPublications->SetItem(row, 6, wxString::Format("&d", pRank));
+            ListCtrlPublications->SetItem(row, 5, wxString::Format("%lf", pScore));
+            ListCtrlPublications->SetItem(row, 6, wxString::Format("%d", (int)i));
             if (!_exploreMode)
             {
-                ListCtrlPublications->SetItem(row, 7, wxString::Format("^lf", vScore));
-                ListCtrlPublications->SetItem(row, 8, wxString::Format("&d", vRank));
+                ListCtrlPublications->SetItem(row, 7, wxString::Format("%lf", vScore));
+                ListCtrlPublications->SetItem(row, 8, wxString::Format("%d", _vRanks[i]));
             }
         }
     }
